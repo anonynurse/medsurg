@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Med Surg Study Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    @media screen and (pointer: coarse) and (orientation: portrait) {
+      #rotate-msg { display: flex !important; }
+      body > *:not(#rotate-msg) { display: none !important; }
+    }
+
+    #rotate-msg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #020d14;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      color: #7fdbff;
+      font-family: 'Share Tech Mono', monospace;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #rotate-msg .rotate-icon {
+      font-size: 3rem;
+      animation: rotateHint 2s ease-in-out infinite;
+    }
+
+    @keyframes rotateHint {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(90deg); }
+    }
+
+    #rotate-msg p {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #4aa8c8;
+    }
+
+    @media screen and (pointer: coarse) {
+      .drug-pill.tap-selected {
+        background: rgba(127, 219, 255, 0.3) !important;
+        border-color: #7fdbff !important;
+        box-shadow: 0 0 16px rgba(127, 219, 255, 0.6) !important;
+        transform: scale(1.08);
+      }
+
+      .sub-pills.tap-target {
+        border-color: #7fdbff88 !important;
+        background: rgba(127, 219, 255, 0.06) !important;
+      }
+    }
+
+    .nested-zone-wrapper {
+      margin-top: 3px;
+      margin-left: 6px;
+      border-left: 1px solid #1a5a7a;
+      padding-left: 6px;
+    }
+
+    .nested-zone-label {
+      font-size: 0.38rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #3a8aaa;
+      margin-bottom: 2px;
+      margin-top: 2px;
+    }
+
+    .drug-pill.locked {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .drug-pill.locked:hover {
+      transform: none;
+      border-color: #2a7a9a;
+      box-shadow: none;
+      background: rgba(127, 219, 255, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div id="rotate-msg">
+    <div class="rotate-icon">&#x21BA;</div>
+    <p>Please rotate your device to landscape mode</p>
+  </div>
+
+  <header class="app-header">
+    <div class="title-block">
+      <h1>Med Surg Study Game</h1>
+      <div class="subtitle">Sort each item into the matching study table</div>
+    </div>
+
+    <div class="header-controls">
+      <label class="picker-control" for="unit-select">
+        <span>Unit</span>
+        <select id="unit-select" aria-label="Choose a unit">
+          <option>Loading units...</option>
+        </select>
+      </label>
+
+      <button id="local-load-btn" type="button">Local Files</button>
+      <input id="local-files-input" type="file" accept=".json,application/json" multiple hidden>
+    </div>
+  </header>
+
+  <div id="error-banner" role="alert"></div>
+
+  <div class="layout">
+    <div class="pool-wrapper">
+      <div class="pool" id="pool"></div>
+      <button id="reset-btn" type="button">Reinitialise</button>
+    </div>
+
+    <div class="grid-wrapper">
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

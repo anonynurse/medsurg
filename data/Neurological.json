@@ -1,0 +1,142 @@
+{
+  "title": "Neurological",
+  "tables": [
+    {
+      "table_name": "Cranial Nerves",
+      "rows": [
+        {
+          "Nerve": 1,
+          "Name": "Olfactory",
+          "Type": "Sensory",
+          "Function": "Sense of smell"
+        },
+        {
+          "Nerve": 2,
+          "Name": "Optic",
+          "Type": "Sensory",
+          "Function": "Vision"
+        },
+        {
+          "Nerve": 3,
+          "Name": "Oculomotor",
+          "Type": "Motor",
+          "Function": "Moves the eye"
+        },
+        {
+          "Nerve": 4,
+          "Name": "Trochlear",
+          "Type": "Motor",
+          "Function": "Moves the eye downwards"
+        },
+        {
+          "Nerve": 5,
+          "Name": "Trigeminal",
+          "Type": "Both",
+          "Function": "Facial sensation and chewing"
+        },
+        {
+          "Nerve": 6,
+          "Name": "Abducens",
+          "Type": "Motor",
+          "Function": "Moves the eye laterally"
+        },
+        {
+          "Nerve": 7,
+          "Name": "Facial",
+          "Type": "Both",
+          "Function": "Facial expression and taste"
+        },
+        {
+          "Nerve": 8,
+          "Name": "Vestibulocochlear",
+          "Type": "Sensory",
+          "Function": "Hearing and balance"
+        },
+        {
+          "Nerve": 9,
+          "Name": "Glossopharyngeal",
+          "Type": "Both",
+          "Function": "Taste and swallowing"
+        },
+        {
+          "Nerve": 10,
+          "Name": "Vagus",
+          "Type": "Both",
+          "Function": "Parasympathetic functions"
+        },
+        {
+          "Nerve": 11,
+          "Name": "Accessory",
+          "Type": "Motor",
+          "Function": "Turns head and shrugs shoulders"
+        },
+        {
+          "Nerve": 12,
+          "Name": "Hypoglossal",
+          "Type": "Motor",
+          "Function": "Moves the tongue"
+        }
+      ]
+    },
+    {
+      "table_name": "Trigeminal Neuralgia",
+      "rows": {
+        "Name": "Trigeminal Neuralgia",
+        "Description": "Cranial nerve disorder",
+        "Etiology": "Degeneration or pressure on the trigeminal nerve (from inflammation, infection, trauma, tumor)",
+        "Clinical Manifestations": "Abrupt stabbing pain along nerve branches lasting several seconds to minutes, unpredictable recurring",
+        "Clusters": [
+          "1 - Around eyes, over forehead",
+          "2 - Upper lip, nose, cheek",
+          "3 - Side of tongue, lower lip, jaw"
+        ],
+        "Management": [
+          "Pain management",
+          "Nutrition - high protein, soft foods, chew on opposite side",
+          "Hygiene and oral care - lukewarm water, soft cloths and toothbrush, warm mouth rinse",
+          "Alternate forms of communication when acute",
+          "Artificial tears"
+        ],
+        "Treatment": [
+          "Carbamazepine - anticonvulsant",
+          "Baclofen - reduces muscle spasticity",
+          "Gabapentin and Pregabalin - treat neuropathic pain",
+          "Nerve block - lasts 6 - 18 months",
+          "Percutaneous radiofrequency rhizotomy (nerve ablation) - post op care, assessment of: pain, corneal reflex, ocular muscles, hearing, sensation, facial nerve"
+        ]
+      }
+    },
+    {
+      "table_name": "Bells Palsy",
+      "rows": {
+        "Name": "Bells Palsy",
+        "Description": "Unilateral paralysis of the facial nerve (CN VII)",
+        "Etiology": "Trauma, compression, or infection (herpes simplex virus - HSV)",
+        "Pathophysiology": [
+          "Usually resolves over weeks but can leave some permanent damage",
+          "Onset often acute, affecting muscles of upper and lower face"
+        ],
+        "Diagnostics": [
+          "CT to rule out CVA",
+          "Electromyography (EMG) can help predict nerve recovery"
+        ],
+        "Clinical Manifestations": [
+          "Any or all branches of facial nerve may be affected",
+          "Facial drooping",
+          "Inability to close an eyelid",
+          "Inability to frown or smile",
+          "Excessive tearing or dryness"
+        ],
+        "Management": [
+          "Corticosteroids within 72 hours for 2-3 weeks - decreases pain and edema",
+          "Mild analgesia",
+          "Acyclovir if HSV related for 5 - 10 days",
+          "Hot wet compresses can reduce discomfort and aid circulation",
+          "Artificial tears and sunglasses for affected eye",
+          "Chew on unaffected side",
+          "Therapeutic communication for change in appearance"
+        ]
+      }
+    }
+  ]
+}

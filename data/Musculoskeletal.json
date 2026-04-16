@@ -1,0 +1,388 @@
+{
+  "title": "Musculoskeletal",
+  "tables": [
+    {
+      "table_name": "Osteomyelitis",
+      "rows": {
+        "Name": "Osteomyelitis",
+        "Description": "Severe infection of the bone, marrow, and surrounding tissue",
+        "Etiology": "Most commonly staphylococcus aureus through direct or indirect infection (indirect more common in pediatrics)",
+        "Risk Factors": [
+          "Age (< 20 or > 50)",
+          "Open wounds, recent surgery, pressure injuries",
+          "Immunocompromised",
+          "Diabetes"
+        ],
+        "Pathophysiology": [
+          "1. Bacterial colonization/growth",
+          "2. Areas of ischemia",
+          "3. Devascularization and necrosis",
+          "4. Dead bone separates and becomes sequestra (island surrounded by purulent drainage)"
+        ],
+        "Diagnostics": [
+          "Labs: CRP, ESR, WBC",
+          "Imaging: X-ray, CT, MRI (informs debridement)",
+          "Bone biopsy (informs antibiotic choice)",
+          "Physical exam (probe-to-bone test)"
+        ],
+        "Clinical Manifestations": [
+          "Pain (worse with activity)",
+          "Tenderness",
+          "Warmth"
+        ],
+        "Treatment": [
+          "IV antibiotics based on cultures, 4 - 6 weeks (sometimes up to 3 to 6 months)",
+          "Surgical debridement if needed"
+        ],
+        "Nursing": [
+          "Monitor for infections and sepsis",
+          "Pain management (NSAID, opioid)"
+        ]
+      }
+    },
+    {
+      "table_name": "Osteoporosis",
+      "rows": {
+        "Name": "Osteoporosis",
+        "Description": "Chronic progressive metabolic bone disease",
+        "Etiology": [
+          "1st degree / primary - occurs in women after menopause and men later in life, result of failure to develop optimal peak bone mass earlier in life",
+          "2nd degree / secondary - result of medications or other conditions that affect bone metabolism (e.g. hyperparathyroidism)"
+        ],
+        "Risk Factors": [
+          "Smoking, alcohol, caffeine",
+          "Female or low testosterone",
+          "Corticosteroids and anticonvulsants",
+          "Medical conditions that reduce calcium absorption",
+          "Immobility or lack of activity",
+          "Family history",
+          "Advanced age",
+          "Calcium or vitamin D deficiency"
+        ],
+        "Pathophysiology": [
+          "Osteoblasts (bone creation) can't keep up with osteoclasts (bone destruction)",
+          "Bones become porous and brittle"
+        ],
+        "Diagnostics": [
+          "DEXA (Dual Energy X-ray Absorptiometry) bone density scan",
+          "CT, MRI",
+          "Bone turnover markers",
+          "Quantitative ultrasound (measures density in heel, kneecap, or shin)",
+          "FRAX (fracture assessment tool)"
+        ],
+        "Clinical Manifestations": [
+          "Loss of height (spinal compression and kyphosis)",
+          "Bone fractures from minimal injury",
+          "Back pain",
+          "\"Silent disease\" - often without symptoms"
+        ],
+        "Management": [
+          "Calcium and Vitamin D supplementation",
+          "Weight-bearing exercise (injury prevention)",
+          "Minimize steroid use",
+          "Cigarette and alcohol cessation",
+          "Pain relief (positioning / posture)"
+        ],
+        "Treatment": [
+          "Hormone replacement therapy - must be weighed against risks",
+          "Calcitonin IM or intranasal - inhibits osteoclasts (give with calcium supplement to prevent secondary hyperparathyroidism)",
+          "Bisphosphonates - bind to bone and poison osteoclasts (take with water, remain upright for 30 min)"
+        ]
+      }
+    },
+    {
+      "table_name": "Osteoarthritis",
+      "rows": {
+        "Name": "Osteoarthritis",
+        "Description": "\"Wear and tear\". Cartilage wears down over time until bone-on-bone contact.",
+        "Etiology": [
+          "Degenerative origin, not inflammatory",
+          "Cartilage destruction with inadequate repair"
+        ],
+        "Risk Factors": [
+          "Age > 50",
+          "Female",
+          "High BMI"
+        ],
+        "Pathophysiology": [
+          "Cartilage damage triggers chondrocytes",
+          "Cartilage goes from smooth, white, translucent -> dull, yellow, granular",
+          "Affected cartilage becomes less elastic"
+        ],
+        "Diagnostics": [
+          "Bone scan, CT, MRI, X-ray",
+          "Joint fluid analysis",
+          "Physical exam",
+          "CBC, renal function, LFTs to rule out other causes"
+        ],
+        "Clinical Manifestations": [
+          "Crepitation",
+          "Pain, stiffness, reduced flexibility",
+          "Joint deformity",
+          "Mild swelling",
+          "Asymmetry",
+          "Bone spurs"
+        ],
+        "Management": [
+          "Heat to reduce pain",
+          "Weight reduction to reduce joint strain",
+          "Joint rest",
+          "Orthotic devices",
+          "Mild pain - acetaminophen, NSAID (celecoxib), topical analgesic",
+          "Moderate pain - intra-articular corticosteroid injections, hyaluronate injection, supportive devices, tramadol, duloxetine, colchicine",
+          "Intractable pain / loss of function - opioids, surgery"
+        ]
+      }
+    },
+    {
+      "table_name": "Rheumatoid Arthritis",
+      "rows": {
+        "Name": "Rheumatoid Arthritis",
+        "Description": "Chronic systemic autoimmune disorder, inflammation of connective tissue in synovial joints. Periods of inflammation and remission. Flare-ups can affect other areas.",
+        "Etiology": "Unknown, likely combination of environmental and genetic factors",
+        "Risk Factors": [
+          "High BMI",
+          "Autoimmunity",
+          "Smoking",
+          "Older age (40 - 60)",
+          "Genetics"
+        ],
+        "Pathophysiology": [
+          "1. Antigen triggers the formation of abnormal IgG",
+          "2. Antibodies form against IgG known as rheumatoid factor",
+          "3. IgG and RF join to form inflammation in joints",
+          "4. Neutrophils go to inflamed area, inflammation causes synovial lining to thicken"
+        ],
+        "Diagnostics": [
+          "History and physical findings",
+          "CRP, ESR, ANA titres, anti-citrullinated protein antibody",
+          "Synovial fluid analysis",
+          "Radiological studies"
+        ],
+        "Clinical Manifestations": [
+          "Insidious onset",
+          "Fatigue, malaise",
+          "Anorexia, weight loss",
+          "Generalized stiffness",
+          "Symmetrical joint affectation",
+          "Leads to deformity and disability: Ulnar drift (fingers towards pinky), Boutonniere deformity (middle finger joint stays flexed), Hallux valgus (bunion), Swan neck (middle finger joint hyperextended, outer joint flexed)",
+          "Rheumatoid nodules (20% prevalence)",
+          "Sjogren syndrome - severe dry eyes and mouth (immune system destroys moisture glands)",
+          "Felty syndrome - splenomegaly and low WBC"
+        ],
+        "Treatment": [
+          "DMARDs (methotrexate [marrow suppression, hepatotoxicity], sulfasalazine, hydroxychloroquine, leflunomide)",
+          "JAK inhibitor (tofacitinib)",
+          "TNF drugs (also a DMARD, block TNF-α protein to reduce inflammation) - adalimumab, etanercept"
+        ],
+        "Management": [
+          "Pain management",
+          "PT/OT",
+          "Joint protection, minimize functional loss",
+          "Maintain positive self image",
+          "Hospitalization for systemic complications if necessary"
+        ]
+      }
+    },
+    {
+      "table_name": "Soft Tissue Injury",
+      "rows": {
+        "Name": "Soft Tissue Injury",
+        "Description": [
+          "Strain - overstretching of muscle or tendon (muscle to bone)",
+          "Sprain - injury of ligament (bone to bone)"
+        ],
+        "Diagnostics": [
+          "X-ray sometimes"
+        ],
+        "Clinical Manifestations": [
+          "Pain, swelling, warmth",
+          "Decreased function / ROM",
+          "Bruising"
+        ],
+        "Management": [
+          "RICE",
+          "Limit movement, but prolonged rest is not necessary",
+          "Heat after 24-48 hours",
+          "NSAIDs, acetaminophen"
+        ],
+        "Treatment": [
+          "Sprains usually heal in 3 - 4 weeks"
+        ],
+        "Notes": [
+          "Sprains may result in an avulsion fracture where ligament pulls away a piece of bone"
+        ]
+      }
+    },
+    {
+      "table_name": "Fractures",
+      "rows": {
+        "Name": "Fractures",
+        "Description": "Bone is broken, typically by trauma",
+        "6 Ps Assessment": [
+          "Pain",
+          "Poikilothermia - coolness or inability to regulate temperature",
+          "Paresthesia - numbness, tingling",
+          "Paralysis",
+          "Pulse",
+          "Pallor"
+        ],
+        "Neurovascular Assessment": [
+          "Extremities: color, temperature, pulse, edema, sensation, strength"
+        ],
+        "Clinical Manifestations": [
+          "Immediate localized pain",
+          "Decreased function",
+          "Inability to bear weight or use affected part",
+          "Guarding",
+          "May not have obvious bone deformity"
+        ],
+        "Management": [
+          "Immobilize if fracture is suspected",
+          "Avoid unnecessary movement"
+        ],
+        "Healing Process": [
+          "1. Hematoma forms",
+          "2. Granulation tissue forms (lasts 3-14 days)",
+          "3. Callus forms (contains calcium, phosphorus, magnesium) - ossification begins",
+          "4. Ossification occurs 3 weeks to 6 months post fracture, visible on X-ray, mobility still limited",
+          "5. Consolidation - callus continues to develop",
+          "6. Remodeling - can take up to a year for the bone to heal completely"
+        ],
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Traction",
+      "rows": {
+        "Name": "Traction",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Cast Care",
+      "rows": {
+        "Name": "Cast Care",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Compartment Syndrome",
+      "rows": {
+        "Name": "Compartment Syndrome",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Hip Fractures",
+      "rows": {
+        "Name": "Hip Fractures",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Sprain and Strain Grades",
+      "rows": {
+        "Sprain": [
+          {
+            "Grade": 1,
+            "Description": "Stretching and microscopic damage to ligament"
+          },
+          {
+            "Grade": 2,
+            "Description": "Partial tearing of the ligament"
+          },
+          {
+            "Grade": 3,
+            "Description": "Complete tear or rupture of the ligament"
+          }
+        ],
+        "Strain": [
+          {
+            "Grade": 1,
+            "Description": "Minor tearing or overstretching of muscle / tendon"
+          },
+          {
+            "Grade": 2,
+            "Description": "Partial tear of muscle / tendon"
+          },
+          {
+            "Grade": 3,
+            "Description": "Complete tear of muscle / tendon"
+          }
+        ]
+      }
+    },
+    {
+      "table_name": "Fracture Types",
+      "rows": [
+        {
+          "Type": "Transverse",
+          "Description": "Straight across break that runs perpendicular to the long axis of the bone"
+        },
+        {
+          "Type": "Stress",
+          "Description": "Crack from repetitive loading or overuse"
+        },
+        {
+          "Type": "Oblique, Displaced",
+          "Description": "Angled break where bone fragments are out of normal alignment"
+        },
+        {
+          "Type": "Greenstick",
+          "Description": "Incomplete fracture where bone bends and cracks but not all the way through (often held on by periosteum) - usually pediatrics"
+        },
+        {
+          "Type": "Comminuted",
+          "Description": "Bone is broken in 3 or more pieces"
+        },
+        {
+          "Type": "Open fracture",
+          "Description": "Skin is broken and wound communicates with the fracture site (high infection risk)"
+        },
+        {
+          "Type": "Closed fracture",
+          "Description": "Skin remains intact"
+        }
+      ]
+    }
+  ]
+}
