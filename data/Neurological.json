@@ -3,6 +3,10 @@
   "tables": [
     {
       "table_name": "Cranial Nerves",
+      "game_type": "row-match",
+      "prefill_keys": [
+        "Nerve"
+      ],
       "rows": [
         {
           "Nerve": 1,

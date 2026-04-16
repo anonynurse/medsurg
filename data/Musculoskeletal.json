@@ -320,39 +320,50 @@
     },
     {
       "table_name": "Sprain and Strain Grades",
-      "rows": {
-        "Sprain": [
-          {
-            "Grade": 1,
-            "Description": "Stretching and microscopic damage to ligament"
-          },
-          {
-            "Grade": 2,
-            "Description": "Partial tearing of the ligament"
-          },
-          {
-            "Grade": 3,
-            "Description": "Complete tear or rupture of the ligament"
-          }
-        ],
-        "Strain": [
-          {
-            "Grade": 1,
-            "Description": "Minor tearing or overstretching of muscle / tendon"
-          },
-          {
-            "Grade": 2,
-            "Description": "Partial tear of muscle / tendon"
-          },
-          {
-            "Grade": 3,
-            "Description": "Complete tear of muscle / tendon"
-          }
-        ]
-      }
+      "game_type": "row-match",
+      "prefill_keys": [
+        "Category",
+        "Grade"
+      ],
+      "rows": [
+        {
+          "Category": "Sprain",
+          "Grade": "Grade 1",
+          "Description": "Stretching and microscopic damage to ligament"
+        },
+        {
+          "Category": "Sprain",
+          "Grade": "Grade 2",
+          "Description": "Partial tearing of the ligament"
+        },
+        {
+          "Category": "Sprain",
+          "Grade": "Grade 3",
+          "Description": "Complete tear or rupture of the ligament"
+        },
+        {
+          "Category": "Strain",
+          "Grade": "Grade 1",
+          "Description": "Minor tearing or overstretching of muscle / tendon"
+        },
+        {
+          "Category": "Strain",
+          "Grade": "Grade 2",
+          "Description": "Partial tear of muscle / tendon"
+        },
+        {
+          "Category": "Strain",
+          "Grade": "Grade 3",
+          "Description": "Complete tear of muscle / tendon"
+        }
+      ]
     },
     {
       "table_name": "Fracture Types",
+      "game_type": "row-match",
+      "prefill_keys": [
+        "Type"
+      ],
       "rows": [
         {
           "Type": "Transverse",

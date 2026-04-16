@@ -1,6 +1,6 @@
 const DATA_MANIFEST_PATH = './data/manifest.json';
 const ALL_UNITS_OPTION = 'all-units';
-const META_KEYS = new Set(['id', 'label', 'unitName', 'prefilledSections']);
+const META_KEYS = new Set(['id', 'label', 'unitName', 'prefilledSections', 'gameType', 'tableName']);
 
 const POOL_GROUPS = [
   {
@@ -206,7 +206,7 @@ function normalizeUnitData(rawData, unitName) {
   if (rawData && Array.isArray(rawData.tables)) {
     const displayUnitName = String(rawData.title || unitName).trim() || unitName;
     return rawData.tables
-      .map((table, index) => normalizeTableCategory(table, displayUnitName, unitSlug, index))
+      .flatMap((table, index) => normalizeTableCategories(table, displayUnitName, unitSlug, index))
       .filter(Boolean);
   }
 
@@ -234,12 +234,17 @@ function normalizeLegacyCategory(category, unitName, unitSlug, index) {
   return subsectionsFor(normalized).length ? normalized : null;
 }
 
-function normalizeTableCategory(table, unitName, unitSlug, index) {
+function normalizeTableCategories(table, unitName, unitSlug, index) {
+  if (table.game_type === 'row-match') {
+    return normalizeRowMatchTable(table, unitName, unitSlug, index);
+  }
+
   const label = String(table.table_name || table.name || `Table ${index + 1}`).trim();
   const normalized = {
     id: `${unitSlug}-${slugify(label || `table-${index + 1}`)}`,
     label: label || `Table ${index + 1}`,
     unitName,
+    tableName: label || `Table ${index + 1}`,
   };
 
   const rows = table.rows;
@@ -259,7 +264,43 @@ function normalizeTableCategory(table, unitName, unitSlug, index) {
     });
   }
 
-  return subsectionsFor(normalized).length ? normalized : null;
+  return subsectionsFor(normalized).length ? [normalized] : [];
+}
+
+function normalizeRowMatchTable(table, unitName, unitSlug, index) {
+  const tableLabel = String(table.table_name || table.name || `Table ${index + 1}`).trim() || `Table ${index + 1}`;
+  const prefillKeys = new Set(Array.isArray(table.prefill_keys) ? table.prefill_keys : []);
+  const rows = Array.isArray(table.rows) ? table.rows : [];
+
+  return rows
+    .map((row, rowIndex) => {
+      const category = {
+        id: `${unitSlug}-${slugify(tableLabel)}-row-${rowIndex + 1}`,
+        label: tableLabel,
+        unitName,
+        tableName: tableLabel,
+        gameType: 'row-match',
+        prefilledSections: {},
+      };
+
+      Object.entries(row || {}).forEach(([key, value]) => {
+        const entries = normalizeSectionEntries(value);
+        if (!entries.length) {
+          return;
+        }
+
+        category[key] = entries;
+
+        if (prefillKeys.has(key)) {
+          category.prefilledSections[key] = entries;
+        }
+      });
+
+      return Object.keys(category.prefilledSections).length || subsectionsFor(category).length
+        ? category
+        : null;
+    })
+    .filter(Boolean);
 }
 
 function normalizeTabularRows(rows) {
@@ -308,7 +349,12 @@ function normalizeCollectionEntry(entry) {
 
   if (typeof entry === 'string') {
     const trimmed = entry.trim();
-    return trimmed || null;
+    if (!trimmed) {
+      return null;
+    }
+
+    const orderedEntry = parseOrderedEntry(trimmed);
+    return orderedEntry || trimmed;
   }
 
   if (typeof entry === 'number' || typeof entry === 'boolean') {
@@ -321,6 +367,22 @@ function normalizeCollectionEntry(entry) {
   }
 
   if (typeof entry === 'object') {
+    if (typeof entry.text === 'string' && entry.text.trim()) {
+      const normalizedEntry = {
+        text: entry.text.trim(),
+      };
+
+      if (Number.isFinite(entry.order)) {
+        normalizedEntry.order = Number(entry.order);
+      }
+
+      if (typeof entry.hint === 'string' && entry.hint.trim()) {
+        normalizedEntry.hint = entry.hint.trim();
+      }
+
+      return normalizedEntry;
+    }
+
     if (typeof entry.label === 'string' && entry.label.trim()) {
       const normalizedNested = { label: entry.label.trim() };
 
@@ -366,6 +428,10 @@ function formatInlineValue(value) {
   }
 
   if (typeof value === 'object') {
+    if (typeof value.text === 'string') {
+      return value.text.trim();
+    }
+
     return formatObjectEntry(value);
   }
 
@@ -418,6 +484,13 @@ function redundantNameRowValue(category) {
 }
 
 function prepareCategoryForAllUnits(category) {
+  if (category.gameType === 'row-match') {
+    return {
+      ...category,
+      label: `${category.unitName} | ${category.label}`,
+    };
+  }
+
   const nameValue = redundantNameRowValue(category);
   if (!nameValue) {
     return {
@@ -436,6 +509,10 @@ function prepareCategoryForAllUnits(category) {
 }
 
 function prepareCategoryForSingleUnit(category) {
+  if (category.gameType === 'row-match') {
+    return { ...category };
+  }
+
   const nameValue = redundantNameRowValue(category);
   if (!nameValue) {
     return { ...category };
@@ -459,8 +536,9 @@ function isPrefilledSection(category, key) {
 function parseData(categories) {
   const itemMap = {};
 
-  function addItem(label, hint, typeId, typeKey, poolLabel, categoryId, parentId) {
-    const itemKey = `${label.toLowerCase()}|${typeId}` + (parentId ? `|child-of-${parentId}` : '');
+  function addItem(label, hint, typeId, typeKey, poolLabel, categoryId, parentId, sortOrder) {
+    const orderKey = sortOrder === null || sortOrder === undefined ? '' : `|order-${sortOrder}`;
+    const itemKey = `${label.toLowerCase()}|${typeId}${orderKey}` + (parentId ? `|child-of-${parentId}` : '');
     const id = itemKey.replace(/[^a-z0-9]/g, '-');
 
     if (!itemMap[itemKey]) {
@@ -474,6 +552,7 @@ function parseData(categories) {
         correctCats: new Set(),
         parentId: parentId || null,
         children: [],
+        sortOrder: sortOrder ?? null,
       };
     }
 
@@ -490,11 +569,18 @@ function parseData(categories) {
       const entries = category[subsection.key] || [];
 
       entries.forEach(rawEntry => {
-        if (typeof rawEntry === 'string') {
-          const match = rawEntry.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
-          const label = match ? match[1].trim() : rawEntry.trim();
-          const hint = match ? match[2].trim() : null;
-          addItem(label, hint, subsection.id, subsection.key, poolLabelFor(subsection.key), category.id, null);
+        const parsedEntry = parseDisplayEntry(rawEntry);
+        if (parsedEntry) {
+          addItem(
+            parsedEntry.label,
+            parsedEntry.hint,
+            subsection.id,
+            subsection.key,
+            poolLabelFor(subsection.key),
+            category.id,
+            null,
+            parsedEntry.order
+          );
           return;
         }
 
@@ -517,9 +603,9 @@ function parseData(categories) {
               const nestedTypeLabel = keyToLabel(nestedKey);
 
               nestedEntries.forEach(childRaw => {
-                const match = typeof childRaw === 'string' && childRaw.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
-                const childLabel = match ? match[1].trim() : String(childRaw).trim();
-                const childHint = match ? match[2].trim() : null;
+                const childEntry = parseDisplayEntry(childRaw);
+                const childLabel = childEntry ? childEntry.label : String(childRaw).trim();
+                const childHint = childEntry ? childEntry.hint : null;
                 const childId = addItem(
                   childLabel,
                   childHint,
@@ -527,7 +613,8 @@ function parseData(categories) {
                   nestedKey,
                   nestedTypeLabel,
                   category.id,
-                  parentId
+                  parentId,
+                  childEntry ? childEntry.order : null
                 );
 
                 const parentItem = Object.values(itemMap).find(item => item.id === parentId);
@@ -593,10 +680,14 @@ function applyPrefilledSections(category) {
     zone.dataset.prefilled = 'true';
     zone.innerHTML = '';
 
-    entries.forEach(entry => {
+    sortEntriesForDisplay(entries).forEach(entry => {
       const placed = document.createElement('span');
       placed.className = 'placed-pill';
-      placed.textContent = entry;
+      placed.textContent = displayTextForEntry(entry);
+      const entryOrder = orderForEntry(entry);
+      if (entryOrder !== null) {
+        placed.dataset.sortOrder = String(entryOrder);
+      }
       zone.appendChild(placed);
     });
 
@@ -835,6 +926,9 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   placed.className = 'placed-pill';
   placed.dataset.itemId = item.id;
   placed.dataset.cat = categoryId;
+  if (item.sortOrder !== null) {
+    placed.dataset.sortOrder = String(item.sortOrder);
+  }
   placed.innerHTML = item.hint
     ? `${item.label} <span class="hint">(${item.hint})</span>`
     : item.label;
@@ -845,7 +939,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   const zone = document.getElementById(zoneId);
 
   if (zone) {
-    zone.appendChild(placed);
+    insertPlacedPill(zone, placed, item.sortOrder);
     updateZoneCompletionState(zone);
   }
 
@@ -864,6 +958,115 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   }
 
   checkComplete();
+}
+
+function parseOrderedEntry(text) {
+  const dotMatch = text.match(/^\s*(\d+)[.)]\s+(.+)$/);
+  if (dotMatch) {
+    return { text: dotMatch[2].trim(), order: Number(dotMatch[1]) };
+  }
+
+  const hyphenMatch = text.match(/^\s*(\d+)\s*[-\u2013]\s*(\D.+)$/);
+  if (hyphenMatch) {
+    return { text: hyphenMatch[2].trim(), order: Number(hyphenMatch[1]) };
+  }
+
+  return null;
+}
+
+function parseDisplayEntry(rawEntry) {
+  if (typeof rawEntry === 'string') {
+    return parseDisplayText(rawEntry);
+  }
+
+  if (rawEntry && typeof rawEntry === 'object' && typeof rawEntry.text === 'string') {
+    return {
+      label: rawEntry.text.trim(),
+      hint: typeof rawEntry.hint === 'string' && rawEntry.hint.trim() ? rawEntry.hint.trim() : null,
+      order: Number.isFinite(rawEntry.order) ? Number(rawEntry.order) : null,
+    };
+  }
+
+  return null;
+}
+
+function parseDisplayText(rawText) {
+  let text = rawText.trim();
+  let order = null;
+  const ordered = parseOrderedEntry(text);
+
+  if (ordered) {
+    text = ordered.text;
+    order = ordered.order;
+  }
+
+  const hintMatch = text.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+  return {
+    label: hintMatch ? hintMatch[1].trim() : text.trim(),
+    hint: hintMatch ? hintMatch[2].trim() : null,
+    order,
+  };
+}
+
+function displayTextForEntry(entry) {
+  if (typeof entry === 'string') {
+    return entry;
+  }
+
+  if (entry && typeof entry === 'object' && typeof entry.text === 'string') {
+    return entry.text;
+  }
+
+  return String(entry ?? '');
+}
+
+function orderForEntry(entry) {
+  return entry && typeof entry === 'object' && Number.isFinite(entry.order)
+    ? Number(entry.order)
+    : null;
+}
+
+function sortEntriesForDisplay(entries) {
+  return [...entries].sort((left, right) => {
+    const leftOrder = orderForEntry(left);
+    const rightOrder = orderForEntry(right);
+
+    if (leftOrder === null && rightOrder === null) {
+      return 0;
+    }
+
+    if (leftOrder === null) {
+      return 1;
+    }
+
+    if (rightOrder === null) {
+      return -1;
+    }
+
+    return leftOrder - rightOrder;
+  });
+}
+
+function insertPlacedPill(zone, placedPill, sortOrder) {
+  if (sortOrder === null || sortOrder === undefined) {
+    zone.appendChild(placedPill);
+    return;
+  }
+
+  const existingPills = [...zone.children].filter(child => child.classList && child.classList.contains('placed-pill'));
+  const nextPill = existingPills.find(child => {
+    const childOrder = Number.isFinite(Number(child.dataset.sortOrder))
+      ? Number(child.dataset.sortOrder)
+      : null;
+
+    return childOrder === null || childOrder > sortOrder;
+  });
+
+  if (nextPill) {
+    zone.insertBefore(placedPill, nextPill);
+  } else {
+    zone.appendChild(placedPill);
+  }
 }
 
 function shake(pill) {
