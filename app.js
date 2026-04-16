@@ -17,8 +17,6 @@ const POOL_SECTION_ORDER = [
 const elements = {
   errorBanner: document.getElementById('error-banner'),
   grid: document.getElementById('grid'),
-  localFilesInput: document.getElementById('local-files-input'),
-  localLoadBtn: document.getElementById('local-load-btn'),
   pool: document.getElementById('pool'),
   resetBtn: document.getElementById('reset-btn'),
   unitSelect: document.getElementById('unit-select'),
@@ -108,14 +106,6 @@ function bindUi() {
   elements.unitSelect.addEventListener('change', () => {
     void initGame();
   });
-
-  elements.localLoadBtn.addEventListener('click', () => {
-    elements.localFilesInput.click();
-  });
-
-  elements.localFilesInput.addEventListener('change', event => {
-    void loadLocalUnits(event.target.files);
-  });
 }
 
 async function initializeCatalog() {
@@ -130,10 +120,10 @@ async function initializeCatalog() {
     unitCatalog = [];
     unitCache = new Map();
     populateUnitSelect();
-    renderPoolMessage('Choose local JSON files to begin.');
+    renderPoolMessage('Host the site to load unit data.');
     renderGridMessage('No hosted unit data available');
     showError(
-      'Could not load hosted unit files. If you opened this page directly, choose <code>Local Files</code> or run a simple local server like <code>py -m http.server</code>.'
+      'Could not load hosted unit files. Run a simple local server like <code>py -m http.server</code>, or test from GitHub Pages after pushing.'
     );
   }
 }
@@ -188,48 +178,17 @@ function applyUnitCatalog(units, selectedValue = ALL_UNITS_OPTION) {
   populateUnitSelect(selectedValue);
 }
 
-async function loadLocalUnits(fileList) {
-  const files = [...fileList]
-    .filter(file => /\.json$/i.test(file.name))
-    .filter(file => slugify(file.name) !== 'manifest')
-    .sort((left, right) => left.name.localeCompare(right.name));
-
-  elements.localFilesInput.value = '';
-
-  if (!files.length) {
-    showError('Choose one or more unit <code>.json</code> files from the <code>data</code> folder.');
-    return;
-  }
-
-  const localUnits = files.map(file => ({
-    id: `local:${slugify(file.name)}`,
-    name: unitNameFromFile(file.name),
-    file,
-    source: 'local',
-  }));
-
-  clearError();
-  applyUnitCatalog(localUnits, ALL_UNITS_OPTION);
-  await initGame();
-}
-
 async function loadUnitCategories(unit) {
   if (unitCache.has(unit.id)) {
     return unitCache.get(unit.id);
   }
 
-  let rawData;
-
-  if (unit.source === 'remote') {
-    const response = await fetch(`./data/${unit.fileName}`, { cache: 'no-store' });
-    if (!response.ok) {
-      throw new Error(`Could not load ${unit.fileName} (${response.status}).`);
-    }
-    rawData = await response.json();
-  } else {
-    rawData = JSON.parse(await unit.file.text());
+  const response = await fetch(`./data/${unit.fileName}`, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`Could not load ${unit.fileName} (${response.status}).`);
   }
 
+  const rawData = await response.json();
   const normalized = normalizeUnitData(rawData, unit.name);
   unitCache.set(unit.id, normalized);
   return normalized;
@@ -430,13 +389,10 @@ async function categoriesForCurrentSelection() {
 
   if (elements.unitSelect.value === ALL_UNITS_OPTION) {
     const bundles = await Promise.all(unitCatalog.map(unit => loadUnitCategories(unit)));
-    const showUnitPrefix = unitCatalog.length > 1;
-
-    return bundles.flat().map(category => (
-      showUnitPrefix
-        ? { ...category, label: `${category.unitName} | ${category.label}` }
-        : category
-    ));
+    return bundles.flat().map(category => ({
+      ...category,
+      label: categoryLabelForAllUnits(category),
+    }));
   }
 
   const selectedUnit = unitCatalog.find(unit => unit.id === elements.unitSelect.value);
@@ -445,6 +401,23 @@ async function categoriesForCurrentSelection() {
   }
 
   return loadUnitCategories(selectedUnit);
+}
+
+function categoryLabelForAllUnits(category) {
+  if (hasRedundantNameRow(category)) {
+    return category.unitName;
+  }
+
+  return `${category.unitName} | ${category.label}`;
+}
+
+function hasRedundantNameRow(category) {
+  const nameEntries = Array.isArray(category.Name) ? category.Name : null;
+  if (!nameEntries || nameEntries.length !== 1) {
+    return false;
+  }
+
+  return slugify(nameEntries[0]) === slugify(category.label);
 }
 
 function parseData(categories) {

@@ -74,8 +74,7 @@ h1 {
   text-transform: uppercase;
 }
 
-.picker-control select,
-#local-load-btn {
+.picker-control select {
   background: rgba(6, 24, 39, 0.9);
   color: #ecfbff;
   border: 1px solid #4b97ba;
@@ -90,30 +89,40 @@ h1 {
 .picker-control select {
   min-width: 220px;
   height: 34px;
-  padding: 0 10px;
+  padding: 0 34px 0 10px;
   appearance: none;
   cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #7fdbff 50%),
+    linear-gradient(135deg, #7fdbff 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 14px,
+    calc(100% - 10px) 14px;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  color-scheme: dark;
 }
 
 .picker-control select:focus,
-#local-load-btn:focus,
 #reset-btn:focus {
   outline: none;
   border-color: #7fdbff;
   box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
 }
 
-.picker-control select:hover,
-#local-load-btn:hover {
+.picker-control select:hover {
   background: rgba(127, 219, 255, 0.12);
   border-color: #7fdbff;
 }
 
-#local-load-btn {
-  height: 34px;
-  padding: 0 14px;
-  cursor: pointer;
-  font-size: 0.6rem;
+.picker-control select option {
+  background: #061827;
+  color: #ecfbff;
+}
+
+.picker-control select:disabled {
+  opacity: 0.7;
+  cursor: default;
 }
 
 #error-banner {
