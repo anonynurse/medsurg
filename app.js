@@ -1,6 +1,6 @@
 const DATA_MANIFEST_PATH = './data/manifest.json';
 const ALL_UNITS_OPTION = 'all-units';
-const META_KEYS = new Set(['id', 'label', 'unitName']);
+const META_KEYS = new Set(['id', 'label', 'unitName', 'prefilledSections']);
 
 const POOL_GROUPS = [
   {
@@ -389,10 +389,7 @@ async function categoriesForCurrentSelection() {
 
   if (elements.unitSelect.value === ALL_UNITS_OPTION) {
     const bundles = await Promise.all(unitCatalog.map(unit => loadUnitCategories(unit)));
-    return bundles.flat().map(category => ({
-      ...category,
-      label: categoryLabelForAllUnits(category),
-    }));
+    return bundles.flat().map(prepareCategoryForAllUnits);
   }
 
   const selectedUnit = unitCatalog.find(unit => unit.id === elements.unitSelect.value);
@@ -400,24 +397,63 @@ async function categoriesForCurrentSelection() {
     return [];
   }
 
-  return loadUnitCategories(selectedUnit);
+  const categories = await loadUnitCategories(selectedUnit);
+  return categories.map(prepareCategoryForSingleUnit);
 }
 
-function categoryLabelForAllUnits(category) {
-  if (hasRedundantNameRow(category)) {
-    return category.unitName;
-  }
-
-  return `${category.unitName} | ${category.label}`;
-}
-
-function hasRedundantNameRow(category) {
+function redundantNameRowValue(category) {
   const nameEntries = Array.isArray(category.Name) ? category.Name : null;
   if (!nameEntries || nameEntries.length !== 1) {
-    return false;
+    return null;
   }
 
-  return slugify(nameEntries[0]) === slugify(category.label);
+  const nameValue = String(nameEntries[0]).trim();
+  if (!nameValue) {
+    return null;
+  }
+
+  return slugify(nameValue) === slugify(category.label)
+    ? nameValue
+    : null;
+}
+
+function prepareCategoryForAllUnits(category) {
+  const nameValue = redundantNameRowValue(category);
+  if (!nameValue) {
+    return {
+      ...category,
+      label: `${category.unitName} | ${category.label}`,
+    };
+  }
+
+  return {
+    ...category,
+    label: category.unitName,
+    prefilledSections: {
+      Name: [nameValue],
+    },
+  };
+}
+
+function prepareCategoryForSingleUnit(category) {
+  const nameValue = redundantNameRowValue(category);
+  if (!nameValue) {
+    return { ...category };
+  }
+
+  const preparedCategory = {
+    ...category,
+    label: nameValue,
+  };
+
+  delete preparedCategory.Name;
+  delete preparedCategory.prefilledSections;
+
+  return preparedCategory;
+}
+
+function isPrefilledSection(category, key) {
+  return Boolean(category.prefilledSections && category.prefilledSections[key]);
 }
 
 function parseData(categories) {
@@ -447,6 +483,10 @@ function parseData(categories) {
 
   categories.forEach(category => {
     subsectionsFor(category).forEach(subsection => {
+      if (isPrefilledSection(category, subsection.key)) {
+        return;
+      }
+
       const entries = category[subsection.key] || [];
 
       entries.forEach(rawEntry => {
@@ -533,9 +573,35 @@ function buildGrid(categories) {
 
     box.innerHTML = `<div class="cat-title">${category.label}</div>${subsectionsHtml}`;
     elements.grid.appendChild(box);
+    applyPrefilledSections(category);
   });
 
   attachDropZoneListeners();
+}
+
+function applyPrefilledSections(category) {
+  if (!category.prefilledSections) {
+    return;
+  }
+
+  Object.entries(category.prefilledSections).forEach(([key, entries]) => {
+    const zone = document.getElementById(`pills-${category.id}-${keyToId(key)}`);
+    if (!zone) {
+      return;
+    }
+
+    zone.dataset.prefilled = 'true';
+    zone.innerHTML = '';
+
+    entries.forEach(entry => {
+      const placed = document.createElement('span');
+      placed.className = 'placed-pill';
+      placed.textContent = entry;
+      zone.appendChild(placed);
+    });
+
+    zone.classList.add('complete');
+  });
 }
 
 function expectedCountForZone(categoryId, subsectionId, parentItemId = null) {
@@ -552,6 +618,11 @@ function countPlacedInZone(zone) {
 
 function updateZoneCompletionState(zone) {
   if (!zone) {
+    return;
+  }
+
+  if (zone.dataset.prefilled === 'true') {
+    zone.classList.add('complete');
     return;
   }
 
