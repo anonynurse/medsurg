@@ -6,12 +6,20 @@
       "rows": {
         "Name": "Trigeminal Neuralgia",
         "Description": "Cranial nerve disorder",
-        "Etiology": "Degeneration or pressure on the trigeminal nerve (from inflammation, infection, trauma, tumor)",
-        "Clinical Manifestations": "Abrupt stabbing pain along nerve branches lasting several seconds to minutes, unpredictable recurring",
-        "Clusters": [
-          "1 - Around eyes, over forehead",
-          "2 - Upper lip, nose, cheek",
-          "3 - Side of tongue, lower lip, jaw"
+        "Etiology": [
+          "Degeneration or pressure on the trigeminal nerve (from inflammation, infection, trauma, tumor)",
+          "Rare under 40 years old"
+        ],
+        "Diagnostics": [
+          "MRI to rule out lesions, vascular abnormalities, MS",
+          "EMG can distinguish between symptomatic and classical TN"
+        ],
+        "Clinical Manifestations": [
+          "Abrupt stabbing pain along nerve branches lasting several seconds to minutes, unpredictable recurring",
+          "Branch 1- Around eyes, over forehead",
+          "Branch 2 - Upper lip, nose, cheek",
+          "Branch 3 - Side of tongue, lower lip, jaw",
+          "Triggers can include chewing, brushing teeth, cold air, face washing, yawning"
         ],
         "Management": [
           "Pain management",
@@ -25,7 +33,7 @@
           "Baclofen - reduces muscle spasticity",
           "Gabapentin and Pregabalin - treat neuropathic pain",
           "Nerve block - lasts 6 - 18 months",
-          "Percutaneous radiofrequency rhizotomy (nerve ablation) - post of care, assessment of: pain, corneal reflex, ocular muscles, hearing, sensation, facial nerver"
+          "Percutaneous radiofrequency rhizotomy (nerve ablation) - post of care, assessment of: pain, corneal reflex, ocular muscles, hearing, sensation, facial nerve"
         ]
       }
     },
@@ -57,8 +65,129 @@
           "Hot wet compresses can reduce discomfort aid circulation",
           "Artificial tears and sunglasses for affected eye",
           "Chew on unaffected side",
-          "Therapeutic communication for change in appearance"
+          "Therapeutic communication for change in appearance",
+          "Risk for aspiration"
         ]
+      }
+    },
+    {
+      "table_name": "Seizure Disorders",
+      "rows": {
+        "Name": "Seizure Disorders",
+        "Description": "Group of neurological diseases marked by recurring seizures",
+        "Etiology": "Often a symptom of an underlying condition",
+        "Risk Factors": [
+          "Trauma",
+          "Brain tumor",
+          "Cerebrovascular disease",
+          "Metabolic disturbance",
+          "Heart/liver/kidney failure",
+          "Lupus"
+        ],
+        "Pathophysiology": [
+          "Hyperexcitation of neurons leading to abnormal electrical activity",
+          "Gliosis often found in area of the brain where the activity arises"
+        ],
+        "Diagnostics": [
+          "Health history (trauma, tumors, metabolic, alcoholism, toxins, organ failure)",
+          "Serum chemistry (CBC, LFT, Kidney)",
+          "MRI, CT, EEG (difficult to catch in progress)"
+        ],
+        "Clinical Manifestations (General onset)": "",
+        "Clinical Manifestations (Focal onset)": "",
+        "Clinical Manifestations (Tonic Colonic)": "",
+        "Clinical Manifestations (Status Epilepticus)": "",
+        "Management (Acute)": "",
+        "Management (Postictal)": "",
+        "Treatment": "",
+        "Teaching": ""
+      }
+    },
+    {
+      "table_name": "Multiple Sclerosis",
+      "rows": {
+        "Name": "Multiple Sclerosis",
+        "Description": [
+          "Chronic Progressive Degenerative Autoimmune disorder of the CNS",
+          "Characterized by disseminated demyelination of nerve fibers of the brain, spinal cord, and optical nerves"
+        ],
+        "Etiology": [
+          "Cause unknown, thought to be genetic predisposition with environmental triggers",
+          "Might be related to vit D deficiency (more common in northern countries)"
+        ],
+        "Risk Factors": [
+          "Female",
+          "Smoking",
+          "Infection",
+          "Injury",
+          "Emotional stress",
+          "Excessive fatigue",
+          "Pregnancy"
+        ],
+        "Pathophysiology (Phase 1)": "Chronic inflammation - unknown trigger activates T-cells to attack neurons in the brain barrier. CNS activates inflammatory response",
+        "Pathophysiology (Phase 2)": "Demyelination - neurons in brain and spinal cord are attacked by immune system. Myelin sheath is damaged. Nerve axon becomes exposed and disrupted. Loss of oligodendrocytes and proliferation of astrocytes also occurs.",
+        "Pathophysiology (Phase 3)": "Gliosis - damaged myelin is replaced by glial scar tissue which forms into hard plaques. Nerve conduction is disrupted.",
+        "Diagnostics": [
+          "Need to have 2 demyelinating lesions in 2 different locations in the brain",
+          "Lumbar puncture (sample CSF for proteins, oligoclonal IgG, oligoclonal banding means inflammation in spinal cord)"
+        ],
+        "Clinical Manifestations": [
+          "Usually diagnosed age 20 - 50",
+          "Weight loss, dysphagia, dysarthria",
+          "Paresis, paralysis, ataxia, foot dragging",
+          "Tremors or hyper active reflexes"
+        ],
+        "Management": [
+          "Symptom relief (palliative approach)",
+          "Corticosteroids to reduce inflammation (prednisone)",
+          "Immunomodulators to reduce exacerbations and slow progression (Interferon 1b and 1A, glatiramer acetate)",
+          "Anticholinergics to prevent cramps and spasms",
+          "Muscle relaxants (baclofen)",
+          "Other medications for symptoms (vertigo, depression, pain)",
+          "Physical therapy",
+          "Nutrition (well balanced diet, reduced sodium)",
+          "Stem cell therapy (research is examining this to reduce brain inflammation)"
+        ],
+        "Treatment": "No cure",
+        "Teaching": [
+          "Take medications as prescribed",
+          "Balance exercise and rest",
+          "Minimize caffeine and sodium intake",
+          "Teach self catheterization if necessary",
+          "Home safety (hand rails, no loose rugs, minimize stairs)"
+        ]
+      }
+    },
+    {
+      "table_name": "Parkinson\u2019s Disease",
+      "rows": {
+        "Name": "Parkinson\u2019s Disease",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Guillain-Barre Syndrome",
+      "rows": {
+        "Name": "Guillain-Barre Syndrome",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": "",
+        "Notes": ""
       }
     }
   ]
