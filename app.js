@@ -113,13 +113,23 @@ function renderGridMessage(message) {
   elements.grid.innerHTML = `<div class="category"><div class="cat-title">${message}</div></div>`;
 }
 
+function ensureCompletedDivider() {
+  let divider = elements.grid.querySelector('.completed-divider');
+  if (!divider) {
+    divider = document.createElement('div');
+    divider.className = 'completed-divider';
+    elements.grid.appendChild(divider);
+  }
+
+  return divider;
+}
+
 function resetState() {
   allItems = [];
   placedLog = {};
   draggingId = null;
   selectedPill = null;
   elements.resetBtn.style.display = 'none';
-  document.querySelectorAll('.category').forEach(category => category.classList.remove('win-flicker'));
 }
 
 function bindUi() {
@@ -688,6 +698,7 @@ function buildGrid(categories) {
     applyPrefilledSections(category);
   });
 
+  ensureCompletedDivider();
   attachDropZoneListeners();
   updateCompletedCardLayout();
 }
@@ -767,8 +778,12 @@ function updateCardCompletionState(card) {
 
   const zones = [...card.querySelectorAll('.sub-pills')];
   const isComplete = zones.length > 0 && zones.every(zone => zone.classList.contains('complete'));
+  const wasComplete = card.classList.contains('card-complete');
   card.classList.toggle('card-complete', isComplete);
-  updateCompletedCardLayout();
+
+  if (wasComplete !== isComplete) {
+    updateCompletedCardLayout();
+  }
 }
 
 function updateCompletedCardLayout() {
@@ -778,23 +793,25 @@ function updateCompletedCardLayout() {
   }
 
   const cards = [...grid.querySelectorAll('.category')];
+  const divider = ensureCompletedDivider();
   if (!cards.length) {
+    divider.style.display = 'none';
     return;
   }
 
-  const divider = grid.querySelector('.completed-divider') || document.createElement('div');
-  divider.className = 'completed-divider';
-
-  const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
+  const totalCards = cards.length;
   const completedCards = cards.filter(card => card.classList.contains('card-complete'));
 
-  grid.innerHTML = '';
-  incompleteCards.forEach(card => grid.appendChild(card));
+  cards.forEach(card => {
+    const initialIndex = Number(card.dataset.initialIndex) || 0;
+    const order = card.classList.contains('card-complete')
+      ? totalCards + 1 + initialIndex
+      : initialIndex;
+    card.style.order = String(order);
+  });
 
-  if (completedCards.length) {
-    grid.appendChild(divider);
-    completedCards.forEach(card => grid.appendChild(card));
-  }
+  divider.style.display = completedCards.length ? 'block' : 'none';
+  divider.style.order = String(totalCards);
 }
 
 function attachDropZoneListeners() {
@@ -1184,15 +1201,6 @@ function checkComplete() {
 
   elements.pool.innerHTML = '<div class="success-msg">All correct</div>';
   elements.resetBtn.style.display = 'block';
-  startWinAnimation();
-}
-
-function startWinAnimation() {
-  document.querySelectorAll('.category').forEach(category => {
-    category.style.animationDelay = `${(Math.random() * 1.5).toFixed(2)}s`;
-    category.style.animationDuration = `${(2.5 + Math.random() * 1.5).toFixed(2)}s`;
-    category.classList.add('win-flicker');
-  });
 }
 
 async function initGame() {

@@ -328,7 +328,6 @@ h1 {
   border: 1px solid #2d6f8e;
   box-shadow: 0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45);
   position: relative;
-  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s, transform 0.18s;
 }
 
 .category::before,
@@ -371,6 +370,8 @@ h1 {
   height: 0;
   margin: 0;
   padding: 0;
+  display: none;
+  pointer-events: none;
 }
 
 .cat-title {
@@ -412,7 +413,6 @@ h1 {
   border: 1px dashed #2a6580;
   border-radius: 2px;
   padding: 2px 3px;
-  transition: border-color 0.15s, background 0.15s;
 }
 
 .sub-pills.drag-over {
@@ -468,30 +468,11 @@ h1 {
   font-size: 0.48rem;
   font-family: 'Share Tech Mono', monospace;
   letter-spacing: 0.02em;
-  animation: popIn 0.3s ease;
 }
 
 .placed-pill .hint {
   color: #82d8ee;
   font-size: 0.44rem;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes borderFlicker {
-  0% { border-color: #4b96b8; box-shadow: 0 0 5px rgba(127, 219, 255, 0.26); }
-  50% { border-color: #98e7ff; box-shadow: 0 0 10px rgba(127, 219, 255, 0.55); }
-  100% { border-color: #4b96b8; box-shadow: 0 0 5px rgba(127, 219, 255, 0.26); }
-}
-
-.category.win-flicker {
-  animation-name: borderFlicker;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-  animation-direction: normal;
 }
 
 @media (max-width: 1200px) {

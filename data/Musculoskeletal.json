@@ -46,7 +46,7 @@
           "2nd degree / secondary - result of medications or other conditions that affect bone metabolism (eg. hyperparathyroidism)"
         ],
         "Risk Factors": [
-          "Smoking, alcohol, caffiene",
+          "Smoking, alcohol, caffeine",
           "Female or low testosterone",
           "Corticosteroids and anticonvulsants",
           "Medical conditions that reduce calcium absorption",
@@ -134,8 +134,12 @@
       "table_name": "Rheumatoid Arthritis",
       "rows": {
         "Name": "Rheumatoid Arthritis",
-        "Description": "Chronic systemic autoimmune disorder, inflammation of connective tissue in synovial joints. Periods of inflammation and remission. Flare ups can affect other areas.",
-        "Etiology": "Unknown, likely combo of environmental and genetic factors",
+        "Description": "Chronic systemic autoimmune disorder, inflammation of connective tissue in synovial joints.",
+        "Etiology": [
+          "Unknown, likely combo of environmental and genetic factors",
+          "Periods of inflammation and remission",
+          "Flare ups can affect other areas"
+        ],
         "Risk Factors": [
           "High BMI",
           "Autoimmunity",
@@ -158,12 +162,12 @@
         "Clinical Manifestations": [
           "Insidious onset",
           "Fatigue, malaise",
-          "anorexia, weightloss",
+          "anorexia, weight loss",
           "Generalized stiffness",
           "Symmetrical joining affectation",
           "Leads to deformity and disability: Ulnar drift (fingers towards pinky), Boutonniere deformity (middle finger joint stays flexed), Hallux valgus (bunion), Swan neck (middle finger joint hyper extended, outer joint flexed)",
           "Rheumatoid Nodules (20% prevalence)",
-          "Sjorgen Syndrome - severe dry eyes and mouth (immune system destroys moisture glands)",
+          "Sjogren Syndrome - severe dry eyes and mouth (immune system destroys moisture glands)",
           "Felty Syndrome - splenomegaly and low WBC"
         ],
         "Treatment": [
@@ -184,9 +188,9 @@
       "table_name": "Soft Tissue Injury",
       "rows": {
         "Name": "Soft Tissue Injury",
-        "Description (strain)": "Iinjury of *muscle or *tendon (muscle to bone)",
+        "Description (strain)": "Injury of *muscle or *tendon (muscle to bone)",
         "Description (sprain)": "Injury of *ligament (bone to bone)",
-        "Diagnostics": "XRay sometimes",
+        "Diagnostics": "Xray sometimes",
         "Clinical Manifestations": [
           "Pain, swelling, warmth",
           "Decreased function / ROM",
@@ -228,8 +232,8 @@
           "1. Hematoma forms",
           "2. Granulation tissue forms (lasts 3-14 days)",
           "3. Callus forms (contains: calcium, phosphorus, magnesium) - ossification begins",
-          "4. Ossification occurs 3 weeks to 6 months post fracture, visible on xray, mobility still limited",
-          "5. Consolidation -callus continues to develope",
+          "4. Ossification occurs 3 weeks to 6 months post fracture, visible on Xray, mobility still limited",
+          "5. Consolidation -callus continues to develop",
           "6. Remodelling - can take up to year for the bone to heal completely"
         ]
       }
@@ -238,7 +242,7 @@
       "table_name": "Traction",
       "rows": {
         "Name": "Traction",
-        "Description": "Application of a pulling force to an injured bodypart, while counter traction pulls in opposite direction",
+        "Description": "Application of a pulling force to an injured body part, while counter traction pulls in opposite direction",
         "Types": [
           "Skin traction",
           "Skeletal traction"
@@ -307,9 +311,9 @@
           "Leave uncovered until dry (delays drying, can cause overheating or burns)",
           "Elevate on pillow to reduce swelling",
           "Encourage moving distal joints frequently",
-          "If it gets wet, use blowdryer on COOL setting",
+          "If it gets wet, use blow dryer on COOL setting",
           "Do not insert anything into the cast",
-          "Dont write or draw on fiberglass",
+          "Don\u2019t write or draw on fiberglass",
           "Circle areas of drainage to assess progression",
           "Encourage ROM and movement within limits of injury"
         ]
@@ -327,7 +331,7 @@
           "Numbness",
           "Pallor"
         ],
-        "Assessement": "6 Ps Neurovascular assessment",
+        "Assessment": "6 Ps Neurovascular assessment",
         "Treatment": "fasciotomy"
       }
     },
@@ -341,7 +345,7 @@
           "Osteoporosis"
         ],
         "Clinical Manifestations": [
-          "Inability to get up from fall, walk, or weightbear",
+          "Inability to get up from fall, walk, or weight bear",
           "Severe pain in hip or groin",
           "Injured side leg is shorter, or abducted",
           "Bruising and swelling around hip"
