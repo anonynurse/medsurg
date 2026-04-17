@@ -4,7 +4,7 @@ body {
   min-height: 100vh;
   background: #031019;
   font-family: 'Share Tech Mono', monospace;
-  padding: 20px;
+  padding: 1 0px;
   overflow-x: hidden;
 }
 
@@ -142,7 +142,7 @@ h1 {
 
 .layout {
   display: flex;
-  gap: 14px;
+  gap: 10px;
   align-items: flex-start;
   width: 100%;
   max-width: 1500px;
@@ -164,7 +164,7 @@ h1 {
   outline: 1px solid #2d6f8e;
   box-shadow: 0 0 14px rgba(127, 219, 255, 0.12);
   border-radius: 4px;
-  padding: 12px 14px;
+  padding: 8px 8px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -381,7 +381,6 @@ h1 {
   color: #7bc5de;
   padding-bottom: 3px;
   margin-bottom: 3px;
-  border-bottom: 1px solid #29617e;
   line-height: 1.3;
 }
 

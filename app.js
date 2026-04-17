@@ -552,15 +552,14 @@ function prepareCategoryForSingleUnit(category) {
     return { ...category };
   }
 
-  const preparedCategory = {
+  return {
     ...category,
-    label: nameValue,
+    label: '',
+    prefilledSections: {
+      ...(category.prefilledSections || {}),
+      Name: [nameValue],
+    },
   };
-
-  delete preparedCategory.Name;
-  delete preparedCategory.prefilledSections;
-
-  return preparedCategory;
 }
 
 function isPrefilledSection(category, key) {
@@ -696,7 +695,8 @@ function buildGrid(categories) {
       })
       .join('');
 
-    box.innerHTML = `<div class="cat-title">${category.label}</div>${subsectionsHtml}`;
+    const titleHtml = category.label ? `<div class="cat-title">${category.label}</div>` : '';
+    box.innerHTML = `${titleHtml}${subsectionsHtml}`;
     elements.grid.appendChild(box);
     applyPrefilledSections(category);
   });
