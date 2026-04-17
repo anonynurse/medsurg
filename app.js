@@ -10,9 +10,17 @@ const POOL_GROUPS = [
 ];
 
 const POOL_SECTION_ORDER = [
-  'Drugs', 'Mechanism', 'Targets', 'Onset', 'Side Effects',
-  'Risks', 'Signs Of Toxicity', 'Signs', 'Notes',
+  'Description',
+  'Etiology',
+  'Risk Factors',
+  'Pathophysiology',
+  'Diagnostics',
+  'Clinical Manifestations',
+  'Treatment',
+  'Nursing',
 ];
+
+const LAST_POOL_SECTION_LABEL = 'Notes';
 
 const elements = {
   errorBanner: document.getElementById('error-banner'),
@@ -66,6 +74,15 @@ function poolLabelFor(key) {
   const baseKey = poolGroupingKeyFor(key);
   const group = POOL_GROUPS.find(entry => entry.keys.includes(key) || entry.keys.includes(baseKey));
   return group ? group.poolLabel : keyToLabel(baseKey);
+}
+
+function poolSectionRank(label) {
+  if (label === LAST_POOL_SECTION_LABEL) {
+    return POOL_SECTION_ORDER.length + 1;
+  }
+
+  const index = POOL_SECTION_ORDER.indexOf(label);
+  return index === -1 ? POOL_SECTION_ORDER.length : index;
 }
 
 function subsectionsFor(category) {
@@ -652,6 +669,7 @@ function buildGrid(categories) {
     const box = document.createElement('div');
     box.className = 'category';
     box.id = `cat-${category.id}`;
+    box.dataset.initialIndex = String(elements.grid.children.length);
 
     const subsectionsHtml = subsectionsFor(category)
       .map(subsection => `
@@ -671,6 +689,7 @@ function buildGrid(categories) {
   });
 
   attachDropZoneListeners();
+  updateCompletedCardLayout();
 }
 
 function applyPrefilledSections(category) {
@@ -727,6 +746,7 @@ function updateZoneCompletionState(zone) {
 
   if (zone.dataset.prefilled === 'true') {
     zone.classList.add('complete');
+    updateCardCompletionState(zone.closest('.category'));
     return;
   }
 
@@ -737,6 +757,44 @@ function updateZoneCompletionState(zone) {
   const placed = countPlacedInZone(zone);
 
   zone.classList.toggle('complete', expected > 0 && placed >= expected);
+  updateCardCompletionState(zone.closest('.category'));
+}
+
+function updateCardCompletionState(card) {
+  if (!card) {
+    return;
+  }
+
+  const zones = [...card.querySelectorAll('.sub-pills')];
+  const isComplete = zones.length > 0 && zones.every(zone => zone.classList.contains('complete'));
+  card.classList.toggle('card-complete', isComplete);
+  updateCompletedCardLayout();
+}
+
+function updateCompletedCardLayout() {
+  const grid = elements.grid;
+  if (!grid) {
+    return;
+  }
+
+  const cards = [...grid.querySelectorAll('.category')];
+  if (!cards.length) {
+    return;
+  }
+
+  const divider = grid.querySelector('.completed-divider') || document.createElement('div');
+  divider.className = 'completed-divider';
+
+  const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
+  const completedCards = cards.filter(card => card.classList.contains('card-complete'));
+
+  grid.innerHTML = '';
+  incompleteCards.forEach(card => grid.appendChild(card));
+
+  if (completedCards.length) {
+    grid.appendChild(divider);
+    completedCards.forEach(card => grid.appendChild(card));
+  }
 }
 
 function attachDropZoneListeners() {
@@ -800,10 +858,14 @@ function buildPool() {
   });
 
   const sections = [...sectionMap.entries()].sort(([leftLabel], [rightLabel]) => {
-    const leftIndex = POOL_SECTION_ORDER.indexOf(leftLabel);
-    const rightIndex = POOL_SECTION_ORDER.indexOf(rightLabel);
-    return (leftIndex === -1 ? Number.POSITIVE_INFINITY : leftIndex)
-      - (rightIndex === -1 ? Number.POSITIVE_INFINITY : rightIndex);
+    const leftRank = poolSectionRank(leftLabel);
+    const rightRank = poolSectionRank(rightLabel);
+
+    if (leftRank !== rightRank) {
+      return leftRank - rightRank;
+    }
+
+    return leftLabel.localeCompare(rightLabel);
   });
 
   if (!sections.length) {
@@ -909,6 +971,7 @@ function revealChildren(parentItem, categoryId) {
 
   placedElement.insertAdjacentElement('afterend', wrapper);
   attachDropZoneListeners();
+  updateCardCompletionState(placedElement.closest('.category'));
 }
 
 function handleDrop(categoryId, subsectionId, parentItemId) {
