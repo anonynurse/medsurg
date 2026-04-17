@@ -188,8 +188,8 @@
       "table_name": "Soft Tissue Injury",
       "rows": {
         "Name": "Soft Tissue Injury",
-        "Description (strain)": "Injury of *muscle or *tendon (muscle to bone)",
-        "Description (sprain)": "Injury of *ligament (bone to bone)",
+        "Description (STRAIN)": "Injury of *muscle or *tendon",
+        "Description (SPRAIN)": "Injury of *ligament",
         "Diagnostics": "Xray sometimes",
         "Clinical Manifestations": [
           "Pain, swelling, warmth",
@@ -210,7 +210,7 @@
       "table_name": "Fractures",
       "rows": {
         "Name": "Fractures",
-        "Description": "Bone is broken, typically by trauma",
+        "Description": "Bone is broken",
         "Neurovascular Assessment": "Neurovascular assessment - extremities (color, temp, pulse, edema, sensation, strength)",
         "Clinical Manifestations": [
           "Immediate localized pain",
@@ -260,14 +260,14 @@
           "Too much weight can impair healing (delay or prevent)"
         ],
         "Nursing": [
-          "Temperature assessment of extremity (T)",
-          "Ropes hang freely, weights off the ground (R)",
-          "Alignment is correct (A)",
-          "Circulation (C, 6P\u2019s)",
-          "Type and location of fracture (T)",
-          "Increase fluid intake (I)",
-          "Overhead grips for pt to reposition (O)",
-          "No weights resting on anything (N)"
+          "1. Temperature assessment of extremity (T)",
+          "2. Ropes hang freely, weights off the ground (R)",
+          "3. Alignment is correct (A)",
+          "4. Circulation (C, 6P\u2019s)",
+          "5. Type and location of fracture (T)",
+          "6. Increase fluid intake (I)",
+          "7. Overhead grips for pt to reposition (O)",
+          "8. No weights resting on anything (N)"
         ]
       }
     },

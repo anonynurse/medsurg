@@ -682,15 +682,18 @@ function buildGrid(categories) {
     box.dataset.initialIndex = String(elements.grid.children.length);
 
     const subsectionsHtml = subsectionsFor(category)
-      .map(subsection => `
-        <div class="subsection" data-key="${subsection.key}">
-          <div class="sub-label">${subsection.label}</div>
+      .map(subsection => {
+        const isNameHeader = isPrefilledSection(category, subsection.key) && subsection.key === 'Name';
+        return `
+        <div class="subsection${isNameHeader ? ' prefilled-name-section' : ''}" data-key="${subsection.key}">
+          ${isNameHeader ? '' : `<div class="sub-label">${subsection.label}</div>`}
           <div class="sub-pills"
                id="pills-${category.id}-${subsection.id}"
                data-cat="${category.id}"
                data-sub="${subsection.id}"></div>
         </div>
-      `)
+      `;
+      })
       .join('');
 
     box.innerHTML = `<div class="cat-title">${category.label}</div>${subsectionsHtml}`;
@@ -890,9 +893,10 @@ function buildPool() {
     return;
   }
 
-  sections.forEach(([label, items]) => {
+  sections.forEach(([label, items], index) => {
     const section = document.createElement('div');
     section.className = 'pool-section';
+    section.dataset.baseOrder = String(index);
     section.innerHTML = `<div class="pool-section-label">${label}</div>`;
 
     const row = document.createElement('div');
@@ -901,6 +905,20 @@ function buildPool() {
 
     section.appendChild(row);
     elements.pool.appendChild(section);
+  });
+
+  updatePoolSectionLayout();
+}
+
+function updatePoolSectionLayout() {
+  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  const offset = sections.length + 1;
+
+  sections.forEach((section, index) => {
+    const baseOrder = Number(section.dataset.baseOrder) || index;
+    const hasPills = Boolean(section.querySelector('.drug-pill'));
+    section.classList.toggle('pool-section-empty', !hasPills);
+    section.style.order = String(hasPills ? baseOrder : offset + baseOrder);
   });
 }
 
@@ -1067,6 +1085,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     }
   }
 
+  updatePoolSectionLayout();
   checkComplete();
 }
 
