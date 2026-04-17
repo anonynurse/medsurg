@@ -648,7 +648,7 @@ function buildGrid(categories) {
 
     const subsectionsHtml = subsectionsFor(category)
       .map(subsection => `
-        <div class="subsection">
+        <div class="subsection" data-key="${subsection.key}">
           <div class="sub-label">${subsection.label}</div>
           <div class="sub-pills"
                id="pills-${category.id}-${subsection.id}"
@@ -664,6 +664,7 @@ function buildGrid(categories) {
   });
 
   attachDropZoneListeners();
+  attachCategoryListeners();
 }
 
 function applyPrefilledSections(category) {
@@ -679,6 +680,12 @@ function applyPrefilledSections(category) {
 
     zone.dataset.prefilled = 'true';
     zone.innerHTML = '';
+    zone.closest('.subsection')?.classList.add('prefilled-section');
+
+    if (key === 'Name') {
+      zone.classList.add('prefilled-name');
+      zone.closest('.subsection')?.classList.add('prefilled-name-section');
+    }
 
     sortEntriesForDisplay(entries).forEach(entry => {
       const placed = document.createElement('span');
@@ -737,17 +744,26 @@ function attachDropZoneListeners() {
     zone.addEventListener('dragover', event => {
       event.preventDefault();
       event.stopPropagation();
+      clearCardDropHints();
+      zone.closest('.category')?.classList.add('card-drop-target');
       zone.classList.add('drag-over');
     });
 
-    zone.addEventListener('dragleave', () => {
+    zone.addEventListener('dragleave', event => {
+      if (zone.contains(event.relatedTarget)) {
+        return;
+      }
+
       zone.classList.remove('drag-over');
+      if (!zone.closest('.category')?.contains(event.relatedTarget)) {
+        zone.closest('.category')?.classList.remove('card-drop-target');
+      }
     });
 
     zone.addEventListener('drop', event => {
       event.preventDefault();
       event.stopPropagation();
-      zone.classList.remove('drag-over');
+      clearCardDropHints();
       handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
     });
 
@@ -758,9 +774,72 @@ function attachDropZoneListeners() {
         return;
       }
 
-      document.querySelectorAll('.sub-pills').forEach(dropZone => dropZone.classList.remove('tap-target'));
+      clearTapTargets();
       selectedPill.classList.remove('tap-selected');
       handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
+      selectedPill = null;
+    });
+  });
+}
+
+function attachCategoryListeners() {
+  document.querySelectorAll('.category').forEach(card => {
+    if (card.dataset.cardListenersAttached) {
+      return;
+    }
+
+    card.dataset.cardListenersAttached = 'true';
+
+    card.addEventListener('dragover', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const targetZone = highlightCardDropTarget(card);
+      if (!targetZone) {
+        card.classList.remove('card-drop-target');
+      }
+    });
+
+    card.addEventListener('dragleave', event => {
+      if (card.contains(event.relatedTarget)) {
+        return;
+      }
+
+      clearCardDropHints(card);
+    });
+
+    card.addEventListener('drop', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const targetZone = resolveDropZoneForCard(card);
+      clearCardDropHints(card);
+
+      if (targetZone) {
+        handleDrop(
+          targetZone.dataset.cat,
+          targetZone.dataset.sub,
+          targetZone.dataset.parentItemId || null
+        );
+      }
+    });
+
+    card.addEventListener('click', event => {
+      if (!isMobile() || !selectedPill) {
+        return;
+      }
+
+      const targetZone = resolveDropZoneForCard(card);
+      if (!targetZone) {
+        return;
+      }
+
+      event.stopPropagation();
+      clearTapTargets();
+      selectedPill.classList.remove('tap-selected');
+      handleDrop(
+        targetZone.dataset.cat,
+        targetZone.dataset.sub,
+        targetZone.dataset.parentItemId || null
+      );
       selectedPill = null;
     });
   });
@@ -819,10 +898,13 @@ function makePill(item) {
   }
 
   pill.addEventListener('dragstart', () => {
+    clearCardDropHints();
     draggingId = item.id;
   });
 
   pill.addEventListener('dragend', () => {
+    clearCardDropHints();
+    clearTapTargets();
     draggingId = null;
   });
 
@@ -844,7 +926,15 @@ function makePill(item) {
     selectedPill = pill;
     draggingId = item.id;
     pill.classList.add('tap-selected');
-    document.querySelectorAll('.sub-pills').forEach(zone => zone.classList.add('tap-target'));
+    document.querySelectorAll('.category').forEach(card => {
+      const targetZone = resolveDropZoneForCard(card);
+      if (!targetZone) {
+        return;
+      }
+
+      card.classList.add('card-tap-target');
+      targetZone.classList.add('tap-target');
+    });
   });
 
   return pill;
@@ -958,6 +1048,55 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   }
 
   checkComplete();
+}
+
+function clearTapTargets() {
+  document.querySelectorAll('.sub-pills').forEach(zone => zone.classList.remove('tap-target'));
+  document.querySelectorAll('.category').forEach(card => card.classList.remove('card-tap-target'));
+}
+
+function clearCardDropHints(scope = document) {
+  scope.querySelectorAll?.('.sub-pills').forEach(zone => zone.classList.remove('drag-over'));
+  scope.querySelectorAll?.('.category').forEach(card => card.classList.remove('card-drop-target'));
+  if (scope.classList?.contains('sub-pills')) {
+    scope.classList.remove('drag-over');
+  }
+  if (scope.classList?.contains('category')) {
+    scope.classList.remove('card-drop-target');
+  }
+}
+
+function currentDraggingItem() {
+  return draggingId ? allItems.find(entry => entry.id === draggingId) || null : null;
+}
+
+function resolveDropZoneForCard(card) {
+  const item = currentDraggingItem();
+  if (!item) {
+    return null;
+  }
+
+  const candidateZones = [...card.querySelectorAll('.sub-pills')]
+    .filter(zone => zone.dataset.prefilled !== 'true')
+    .filter(zone => zone.dataset.cat && zone.dataset.sub);
+
+  return candidateZones.find(zone =>
+    item.correctCats.has(zone.dataset.cat) &&
+    item.type === zone.dataset.sub &&
+    ((item.parentId || null) === (zone.dataset.parentItemId || null))
+  ) || null;
+}
+
+function highlightCardDropTarget(card) {
+  clearCardDropHints();
+  const targetZone = resolveDropZoneForCard(card);
+  if (!targetZone) {
+    return null;
+  }
+
+  card.classList.add('card-drop-target');
+  targetZone.classList.add('drag-over');
+  return targetZone;
 }
 
 function parseOrderedEntry(text) {
