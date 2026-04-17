@@ -27,13 +27,15 @@ body::after {
   max-width: 1500px;
   margin: 0 auto 16px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
 
 .title-block {
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 h1 {
@@ -42,7 +44,8 @@ h1 {
   letter-spacing: 0.25em;
   text-transform: uppercase;
   text-shadow: 0 0 18px #7fdbff, 0 0 40px #7fdbff88;
-  margin-bottom: 3px;
+  margin: 0;
+  line-height: 1;
 }
 
 .subtitle {
@@ -54,7 +57,7 @@ h1 {
 
 .header-controls {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -62,16 +65,8 @@ h1 {
 
 .picker-control {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
   min-width: 220px;
-}
-
-.picker-control span {
-  color: #7bc5de;
-  font-size: 0.52rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
 }
 
 .picker-control select {
@@ -488,6 +483,10 @@ h1 {
   .app-header,
   .layout {
     flex-direction: column;
+  }
+
+  .app-header {
+    align-items: stretch;
   }
 
   .header-controls {
