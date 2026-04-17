@@ -6,32 +6,28 @@
       "rows": {
         "Name": "Osteomyelitis",
         "Description": "Severe infection of the bone, marrow, and surrounding tissue",
-        "Etiology": "Most commonly staphylococcus aureus through direct or indirect infection (indirect more common in pediatrics)",
+        "Etiology": "Most commonly staphylococcus aureus through direct or indirect infection (indirect more common in peds)",
         "Risk Factors": [
-          "Age (< 20 or > 50)",
-          "Open wounds, recent surgery, pressure injuries",
+          "Age ( < 20 or > 50)",
+          "Open wounds, Recent surgery, Pressure injuries",
           "Immunocompromised",
           "Diabetes"
         ],
         "Pathophysiology": [
-          "1. Bacterial colonization/growth",
-          "2. Areas of ischemia",
-          "3. Devascularization and necrosis",
-          "4. Dead bone separates and becomes sequestra (island surrounded by purulent drainage)"
+          "1. bacterial colonization/ growth",
+          "2. areas of ischemia",
+          "3. devascularization and necrosis",
+          "4. dead bone separates and becomes sequestra (island surrounded by purulent drainage)"
         ],
         "Diagnostics": [
           "Labs: CRP, ESR, WBC",
-          "Imaging: X-ray, CT, MRI (informs debridement)",
-          "Bone biopsy (informs antibiotic choice)",
-          "Physical exam (probe-to-bone test)"
+          "Imaging: Xray, CT, MRI (informs debridement)",
+          "Bone Biopsy (informs abx choice)",
+          "Physical exam (probe to bone test)"
         ],
-        "Clinical Manifestations": [
-          "Pain (worse with activity)",
-          "Tenderness",
-          "Warmth"
-        ],
+        "Clinical Manifestations": "Pain (worse with activity), Tenderness, Warmth",
         "Treatment": [
-          "IV antibiotics based on cultures, 4 - 6 weeks (sometimes up to 3 to 6 months)",
+          "IV antibiotics based on cultures, 4 \u2013 6 weeks (sometimes up to 3 to 6 months)",
           "Surgical debridement if needed"
         ],
         "Nursing": [
@@ -47,10 +43,10 @@
         "Description": "Chronic progressive metabolic bone disease",
         "Etiology": [
           "1st degree / primary - occurs in women after menopause and men later in life, result of failure to develop optimal peak bone mass earlier in life",
-          "2nd degree / secondary - result of medications or other conditions that affect bone metabolism (e.g. hyperparathyroidism)"
+          "2nd degree / secondary - result of medications or other conditions that affect bone metabolism (eg. hyperparathyroidism)"
         ],
         "Risk Factors": [
-          "Smoking, alcohol, caffeine",
+          "Smoking, alcohol, caffiene",
           "Female or low testosterone",
           "Corticosteroids and anticonvulsants",
           "Medical conditions that reduce calcium absorption",
@@ -60,11 +56,11 @@
           "Calcium or vitamin D deficiency"
         ],
         "Pathophysiology": [
-          "Osteoblasts (bone creation) can't keep up with osteoclasts (bone destruction)",
+          "Osteoblasts (bone creation) cant keep up with osteoclasts (bone destruction)",
           "Bones become porous and brittle"
         ],
         "Diagnostics": [
-          "DEXA (Dual Energy X-ray Absorptiometry) bone density scan",
+          "DEXA (Dual Energy Xray Absorptiometry) bone density scan",
           "CT, MRI",
           "Bone turnover markers",
           "Quantitative ultrasound (measures density in heel, kneecap, or shin)",
@@ -74,19 +70,19 @@
           "Loss of height (spinal compression and kyphosis)",
           "Bone fractures from minimal injury",
           "Back pain",
-          "\"Silent disease\" - often without symptoms"
+          "\u201cSilent disease\u201d - often without symptoms"
         ],
         "Management": [
           "Calcium and Vitamin D supplementation",
-          "Weight-bearing exercise (injury prevention)",
+          "Weight bearing exercise (injury prevention)",
           "Minimize steroid use",
           "Cigarette and alcohol cessation",
           "Pain relief (positioning / posture)"
         ],
         "Treatment": [
-          "Hormone replacement therapy - must be weighed against risks",
+          "Hormone replacement therapy - must be weighted against risks",
           "Calcitonin IM or intranasal - inhibits osteoclasts (give with calcium supplement to prevent secondary hyperparathyroidism)",
-          "Bisphosphonates - bind to bone and poison osteoclasts (take with water, remain upright for 30 min)"
+          "Bisphosphonates - binds to bones and poisons osteoclasts (take with water, remain upright for 30 min)"
         ]
       }
     },
@@ -94,10 +90,10 @@
       "table_name": "Osteoarthritis",
       "rows": {
         "Name": "Osteoarthritis",
-        "Description": "\"Wear and tear\". Cartilage wears down over time until bone-on-bone contact.",
+        "Description": "\u201cwear and tear\u201d. Cartilage wears down over time until bone on bone contact",
         "Etiology": [
-          "Degenerative origin, not inflammatory",
-          "Cartilage destruction with inadequate repair"
+          "* degenerative origin, not inflammatory",
+          "Cartilage destruction with inadequate repair."
         ],
         "Risk Factors": [
           "Age > 50",
@@ -110,10 +106,10 @@
           "Affected cartilage becomes less elastic"
         ],
         "Diagnostics": [
-          "Bone scan, CT, MRI, X-ray",
+          "Bone scan, CT, MRI, Xray",
           "Joint fluid analysis",
           "Physical exam",
-          "CBC, renal function, LFTs to rule out other causes"
+          "CBC, renal, LFT to rule out other causes"
         ],
         "Clinical Manifestations": [
           "Crepitation",
@@ -138,8 +134,8 @@
       "table_name": "Rheumatoid Arthritis",
       "rows": {
         "Name": "Rheumatoid Arthritis",
-        "Description": "Chronic systemic autoimmune disorder, inflammation of connective tissue in synovial joints. Periods of inflammation and remission. Flare-ups can affect other areas.",
-        "Etiology": "Unknown, likely combination of environmental and genetic factors",
+        "Description": "Chronic systemic autoimmune disorder, inflammation of connective tissue in synovial joints. Periods of inflammation and remission. Flare ups can affect other areas.",
+        "Etiology": "Unknown, likely combo of environmental and genetic factors",
         "Risk Factors": [
           "High BMI",
           "Autoimmunity",
@@ -162,18 +158,18 @@
         "Clinical Manifestations": [
           "Insidious onset",
           "Fatigue, malaise",
-          "Anorexia, weight loss",
+          "anorexia, weightloss",
           "Generalized stiffness",
-          "Symmetrical joint affectation",
-          "Leads to deformity and disability: Ulnar drift (fingers towards pinky), Boutonniere deformity (middle finger joint stays flexed), Hallux valgus (bunion), Swan neck (middle finger joint hyperextended, outer joint flexed)",
-          "Rheumatoid nodules (20% prevalence)",
-          "Sjogren syndrome - severe dry eyes and mouth (immune system destroys moisture glands)",
-          "Felty syndrome - splenomegaly and low WBC"
+          "Symmetrical joining affectation",
+          "Leads to deformity and disability: Ulnar drift (fingers towards pinky), Boutonniere deformity (middle finger joint stays flexed), Hallux valgus (bunion), Swan neck (middle finger joint hyper extended, outer joint flexed)",
+          "Rheumatoid Nodules (20% prevalence)",
+          "Sjorgen Syndrome - severe dry eyes and mouth (immune system destroys moisture glands)",
+          "Felty Syndrome - splenomegaly and low WBC"
         ],
         "Treatment": [
-          "DMARDs (methotrexate [marrow suppression, hepatotoxicity], sulfasalazine, hydroxychloroquine, leflunomide)",
+          "DMARDS (methotrexate [marrow suppression, hepatotoxicity], sulfasalazine, hydroxychloroquine, leflunomide)",
           "JAK inhibitor (tofacitinib)",
-          "TNF drugs (also a DMARD, block TNF-α protein to reduce inflammation) - adalimumab, etanercept"
+          "TNF drugs (also a DMARD, block TNF-\u03b1 protein to reduce inflammation) - adalimumab, etanercept"
         ],
         "Management": [
           "Pain management",
@@ -188,13 +184,9 @@
       "table_name": "Soft Tissue Injury",
       "rows": {
         "Name": "Soft Tissue Injury",
-        "Description": [
-          "Strain - overstretching of muscle or tendon (muscle to bone)",
-          "Sprain - injury of ligament (bone to bone)"
-        ],
-        "Diagnostics": [
-          "X-ray sometimes"
-        ],
+        "Description (strain)": "Iinjury of *muscle or *tendon (muscle to bone)",
+        "Description (sprain)": "Injury of *ligament (bone to bone)",
+        "Diagnostics": "XRay sometimes",
         "Clinical Manifestations": [
           "Pain, swelling, warmth",
           "Decreased function / ROM",
@@ -203,15 +195,11 @@
         "Management": [
           "RICE",
           "Limit movement, but prolonged rest is not necessary",
-          "Heat after 24-48 hours",
-          "NSAIDs, acetaminophen"
+          "Heat after 24-48 hrs",
+          "NSAIDS, acetaminophen"
         ],
-        "Treatment": [
-          "Sprains usually heal in 3 - 4 weeks"
-        ],
-        "Notes": [
-          "Sprains may result in an avulsion fracture where ligament pulls away a piece of bone"
-        ]
+        "Treatment": "Sprains usually heal 3 - 4 weeks",
+        "Notes": "Sprains may result in an evulsion fracture where ligament pulls away piece of bone"
       }
     },
     {
@@ -219,17 +207,7 @@
       "rows": {
         "Name": "Fractures",
         "Description": "Bone is broken, typically by trauma",
-        "6 Ps Assessment": [
-          "Pain",
-          "Poikilothermia - coolness or inability to regulate temperature",
-          "Paresthesia - numbness, tingling",
-          "Paralysis",
-          "Pulse",
-          "Pallor"
-        ],
-        "Neurovascular Assessment": [
-          "Extremities: color, temperature, pulse, edema, sensation, strength"
-        ],
+        "Neurovascular Assessment": "Neurovascular assessment - extremities (color, temp, pulse, edema, sensation, strength)",
         "Clinical Manifestations": [
           "Immediate localized pain",
           "Decreased function",
@@ -239,83 +217,145 @@
         ],
         "Management": [
           "Immobilize if fracture is suspected",
-          "Avoid unnecessary movement"
+          "Avoid unnecessary movement",
+          "Prophylactic antibiotics (open fracture)",
+          "TDaP immunization (open fractures)",
+          "Closed reduction (manual realignment of bone)",
+          "Open reduction (surgical realignment of bone)"
         ],
+        "Complications": "Venous thrombo-embolism",
         "Healing Process": [
           "1. Hematoma forms",
           "2. Granulation tissue forms (lasts 3-14 days)",
-          "3. Callus forms (contains calcium, phosphorus, magnesium) - ossification begins",
-          "4. Ossification occurs 3 weeks to 6 months post fracture, visible on X-ray, mobility still limited",
-          "5. Consolidation - callus continues to develop",
-          "6. Remodeling - can take up to a year for the bone to heal completely"
-        ],
-        "Treatment": "",
-        "Nursing": "",
-        "Notes": ""
+          "3. Callus forms (contains: calcium, phosphorus, magnesium) - ossification begins",
+          "4. Ossification occurs 3 weeks to 6 months post fracture, visible on xray, mobility still limited",
+          "5. Consolidation -callus continues to develope",
+          "6. Remodelling - can take up to year for the bone to heal completely"
+        ]
       }
     },
     {
       "table_name": "Traction",
       "rows": {
         "Name": "Traction",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": "",
-        "Notes": ""
+        "Description": "Application of a pulling force to an injured bodypart, while counter traction pulls in opposite direction",
+        "Types": [
+          "Skin traction",
+          "Skeletal traction"
+        ],
+        "Traction notes (skin)": [
+          "Used for short term treatment or until skeletal traction surgery is possible",
+          "Tape, boots, splints used to maintain alignment",
+          "Use weights 2.3 to 4.5kg"
+        ],
+        "Traction notes (skeletal)": [
+          "In place for longer periods",
+          "Can be used to treat contractures or hip dysplasia",
+          "Pin or wire inserted into bone",
+          "Use weights 2 - 20kg",
+          "Too much weight can impair healing (delay or prevent)"
+        ],
+        "Nursing": [
+          "Temperature assessment of extremity (T)",
+          "Ropes hang freely, weights off the ground (R)",
+          "Alignment is correct (A)",
+          "Circulation (C, 6P\u2019s)",
+          "Type and location of fracture (T)",
+          "Increase fluid intake (I)",
+          "Overhead grips for pt to reposition (O)",
+          "No weights resting on anything (N)"
+        ]
       }
     },
     {
       "table_name": "Cast Care",
       "rows": {
         "Name": "Cast Care",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": "",
-        "Notes": ""
+        "Cast Advantages (plaster)": [
+          "Inexpensive",
+          "Easy to apply",
+          "Low incidence of allergic reaction"
+        ],
+        "Cast Disadvantages (plaster)": [
+          "Takes 24 - 48 hrs to dry (large may take up to 72 hrs)",
+          "Weight bearing must be delayed until dry",
+          "Prone to cracking or crumbling (especially at edges)",
+          "Softens when wet"
+        ],
+        "Cast Advantages (fiberglass)": [
+          "Lightweight",
+          "Porous",
+          "Dries in 5 - 15 min",
+          "Allows immediate weightbearing",
+          "Durable",
+          "Unaffected by water"
+        ],
+        "Cast Disadvantages (fiberglass)": [
+          "Expensive",
+          "Not recommended for severe injuries or if excessive swelling",
+          "Macerates skin if padding becomes wet",
+          "Edges can be sharp and cause abrasion"
+        ],
+        "Assessment": [
+          "6 Ps Neurovascular assessment (compartment syndrome, surgical fasciotomy)",
+          "Infection (odors)",
+          "Skin integrity (petal the cast)",
+          "Moisture"
+        ],
+        "Management": [
+          "Moisture - keep dry and avoid moisture inside (mold / infection risk)",
+          "Leave uncovered until dry (delays drying, can cause overheating or burns)",
+          "Elevate on pillow to reduce swelling",
+          "Encourage moving distal joints frequently",
+          "If it gets wet, use blowdryer on COOL setting",
+          "Do not insert anything into the cast",
+          "Dont write or draw on fiberglass",
+          "Circle areas of drainage to assess progression",
+          "Encourage ROM and movement within limits of injury"
+        ]
       }
     },
     {
       "table_name": "Compartment Syndrome",
       "rows": {
         "Name": "Compartment Syndrome",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": "",
-        "Notes": ""
+        "Description": "Circulation cut off by edema in confined space, like a cast",
+        "Etiology": "Blood and swelling fills muscles that compress vessels and prevent circulation",
+        "Clinical Manifestations": [
+          "Severe pain (worse with use or stretching)",
+          "Paresthesia",
+          "Numbness",
+          "Pallor"
+        ],
+        "Assessement": "6 Ps Neurovascular assessment",
+        "Treatment": "fasciotomy"
       }
     },
     {
       "table_name": "Hip Fractures",
       "rows": {
         "Name": "Hip Fractures",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": "",
-        "Notes": ""
+        "Description": "Usually a fracture of the acetabulum (socket)",
+        "Risk Factors": [
+          "Female",
+          "Osteoporosis"
+        ],
+        "Clinical Manifestations": [
+          "Inability to get up from fall, walk, or weightbear",
+          "Severe pain in hip or groin",
+          "Injured side leg is shorter, or abducted",
+          "Bruising and swelling around hip"
+        ],
+        "Management": [
+          "Total hip replacement",
+          "Healing takes 6 - 12 weeks, no baths or driving for 4 - 6 weeks",
+          "Risk for dislocation after (avoid crossing legs, bending over for shoes, sitting on low seats or toilets, sitting or standing bent more than 90 deg)"
+        ],
+        "Notes": [
+          "One of longest average hospital stays",
+          "One in four will die from complications within one year",
+          "Half of survivors will require long term care"
+        ]
       }
     }
   ]
