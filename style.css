@@ -328,7 +328,6 @@ h1 {
   border: 1px solid #2d6f8e;
   box-shadow: 0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45);
   position: relative;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 .category::before,
@@ -364,13 +363,6 @@ h1 {
   margin-bottom: 4px;
   border-bottom: 1px solid #3b86aa;
   line-height: 1.3;
-}
-
-.category.card-drop-target,
-.category.card-tap-target {
-  border-color: #7fdbff;
-  background: rgba(10, 34, 52, 0.95);
-  box-shadow: 0 0 20px rgba(127, 219, 255, 0.26), inset 0 0 24px rgba(127, 219, 255, 0.08);
 }
 
 .subsection {
@@ -439,8 +431,8 @@ h1 {
   background: transparent;
   box-shadow: none;
   padding: 0;
-  font-size: 0.76rem;
-  line-height: 1.25;
+  font-size: 0.94rem;
+  line-height: 1.3;
   text-align: center;
   letter-spacing: 0.06em;
 }

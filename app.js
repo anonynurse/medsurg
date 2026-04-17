@@ -52,13 +52,20 @@ function keyToLabel(key) {
     .replace(/[-_]/g, ' ')
     .split(' ')
     .filter(Boolean)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map(word => word.replace(/[a-z]/i, match => match.toUpperCase()))
     .join(' ');
 }
 
+function poolGroupingKeyFor(key) {
+  return String(key)
+    .replace(/\s*(\[[^\]]+\]|\([^)]+\))\s*$/, '')
+    .trim();
+}
+
 function poolLabelFor(key) {
-  const group = POOL_GROUPS.find(entry => entry.keys.includes(key));
-  return group ? group.poolLabel : keyToLabel(key);
+  const baseKey = poolGroupingKeyFor(key);
+  const group = POOL_GROUPS.find(entry => entry.keys.includes(key) || entry.keys.includes(baseKey));
+  return group ? group.poolLabel : keyToLabel(baseKey);
 }
 
 function subsectionsFor(category) {
@@ -664,7 +671,6 @@ function buildGrid(categories) {
   });
 
   attachDropZoneListeners();
-  attachCategoryListeners();
 }
 
 function applyPrefilledSections(category) {
@@ -741,11 +747,13 @@ function attachDropZoneListeners() {
 
     zone.dataset.listenersAttached = 'true';
 
+    if (zone.dataset.prefilled === 'true') {
+      return;
+    }
+
     zone.addEventListener('dragover', event => {
       event.preventDefault();
       event.stopPropagation();
-      clearCardDropHints();
-      zone.closest('.category')?.classList.add('card-drop-target');
       zone.classList.add('drag-over');
     });
 
@@ -755,15 +763,12 @@ function attachDropZoneListeners() {
       }
 
       zone.classList.remove('drag-over');
-      if (!zone.closest('.category')?.contains(event.relatedTarget)) {
-        zone.closest('.category')?.classList.remove('card-drop-target');
-      }
     });
 
     zone.addEventListener('drop', event => {
       event.preventDefault();
       event.stopPropagation();
-      clearCardDropHints();
+      clearDropZoneHints();
       handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
     });
 
@@ -777,69 +782,6 @@ function attachDropZoneListeners() {
       clearTapTargets();
       selectedPill.classList.remove('tap-selected');
       handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
-      selectedPill = null;
-    });
-  });
-}
-
-function attachCategoryListeners() {
-  document.querySelectorAll('.category').forEach(card => {
-    if (card.dataset.cardListenersAttached) {
-      return;
-    }
-
-    card.dataset.cardListenersAttached = 'true';
-
-    card.addEventListener('dragover', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const targetZone = highlightCardDropTarget(card);
-      if (!targetZone) {
-        card.classList.remove('card-drop-target');
-      }
-    });
-
-    card.addEventListener('dragleave', event => {
-      if (card.contains(event.relatedTarget)) {
-        return;
-      }
-
-      clearCardDropHints(card);
-    });
-
-    card.addEventListener('drop', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      const targetZone = resolveDropZoneForCard(card);
-      clearCardDropHints(card);
-
-      if (targetZone) {
-        handleDrop(
-          targetZone.dataset.cat,
-          targetZone.dataset.sub,
-          targetZone.dataset.parentItemId || null
-        );
-      }
-    });
-
-    card.addEventListener('click', event => {
-      if (!isMobile() || !selectedPill) {
-        return;
-      }
-
-      const targetZone = resolveDropZoneForCard(card);
-      if (!targetZone) {
-        return;
-      }
-
-      event.stopPropagation();
-      clearTapTargets();
-      selectedPill.classList.remove('tap-selected');
-      handleDrop(
-        targetZone.dataset.cat,
-        targetZone.dataset.sub,
-        targetZone.dataset.parentItemId || null
-      );
       selectedPill = null;
     });
   });
@@ -898,12 +840,12 @@ function makePill(item) {
   }
 
   pill.addEventListener('dragstart', () => {
-    clearCardDropHints();
+    clearDropZoneHints();
     draggingId = item.id;
   });
 
   pill.addEventListener('dragend', () => {
-    clearCardDropHints();
+    clearDropZoneHints();
     clearTapTargets();
     draggingId = null;
   });
@@ -926,14 +868,12 @@ function makePill(item) {
     selectedPill = pill;
     draggingId = item.id;
     pill.classList.add('tap-selected');
-    document.querySelectorAll('.category').forEach(card => {
-      const targetZone = resolveDropZoneForCard(card);
-      if (!targetZone) {
+    document.querySelectorAll('.sub-pills').forEach(zone => {
+      if (zone.dataset.prefilled === 'true') {
         return;
       }
 
-      card.classList.add('card-tap-target');
-      targetZone.classList.add('tap-target');
+      zone.classList.add('tap-target');
     });
   });
 
@@ -1052,51 +992,10 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
 
 function clearTapTargets() {
   document.querySelectorAll('.sub-pills').forEach(zone => zone.classList.remove('tap-target'));
-  document.querySelectorAll('.category').forEach(card => card.classList.remove('card-tap-target'));
 }
 
-function clearCardDropHints(scope = document) {
-  scope.querySelectorAll?.('.sub-pills').forEach(zone => zone.classList.remove('drag-over'));
-  scope.querySelectorAll?.('.category').forEach(card => card.classList.remove('card-drop-target'));
-  if (scope.classList?.contains('sub-pills')) {
-    scope.classList.remove('drag-over');
-  }
-  if (scope.classList?.contains('category')) {
-    scope.classList.remove('card-drop-target');
-  }
-}
-
-function currentDraggingItem() {
-  return draggingId ? allItems.find(entry => entry.id === draggingId) || null : null;
-}
-
-function resolveDropZoneForCard(card) {
-  const item = currentDraggingItem();
-  if (!item) {
-    return null;
-  }
-
-  const candidateZones = [...card.querySelectorAll('.sub-pills')]
-    .filter(zone => zone.dataset.prefilled !== 'true')
-    .filter(zone => zone.dataset.cat && zone.dataset.sub);
-
-  return candidateZones.find(zone =>
-    item.correctCats.has(zone.dataset.cat) &&
-    item.type === zone.dataset.sub &&
-    ((item.parentId || null) === (zone.dataset.parentItemId || null))
-  ) || null;
-}
-
-function highlightCardDropTarget(card) {
-  clearCardDropHints();
-  const targetZone = resolveDropZoneForCard(card);
-  if (!targetZone) {
-    return null;
-  }
-
-  card.classList.add('card-drop-target');
-  targetZone.classList.add('drag-over');
-  return targetZone;
+function clearDropZoneHints() {
+  document.querySelectorAll('.sub-pills').forEach(zone => zone.classList.remove('drag-over'));
 }
 
 function parseOrderedEntry(text) {
