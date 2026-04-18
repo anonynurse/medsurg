@@ -91,6 +91,9 @@
           <option>Loading units...</option>
         </select>
       </div>
+      <button id="settings-btn" class="settings-btn" type="button" aria-haspopup="dialog" aria-controls="settings-modal">
+        Settings
+      </button>
     </div>
   </header>
 
@@ -104,6 +107,12 @@
 
     <div class="grid-wrapper">
       <div class="grid" id="grid"></div>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="settings-modal-overlay" role="dialog" aria-modal="true" aria-label="Settings" hidden>
+    <div class="settings-modal">
+      <button id="settings-close" class="settings-close" type="button" aria-label="Close settings">X</button>
     </div>
   </div>
 

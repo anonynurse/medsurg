@@ -24,8 +24,9 @@ body::after {
 }
 
 .app-header {
+  width: 100%;
   max-width: 1500px;
-  margin: 6px;
+  margin: 6px auto;
   margin-bottom: 10px;  
   display: flex;
   align-items: center;
@@ -62,6 +63,7 @@ h1 {
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;
+  margin-left: auto;
 }
 
 .picker-control {
@@ -119,6 +121,33 @@ h1 {
 .picker-control select:disabled {
   opacity: 0.7;
   cursor: default;
+}
+
+.settings-btn {
+  height: 34px;
+  padding: 0 12px;
+  background: rgba(6, 24, 39, 0.9);
+  color: #ecfbff;
+  border: 1px solid #4b97ba;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(127, 219, 255, 0.16);
+  transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.settings-btn:hover {
+  background: rgba(127, 219, 255, 0.12);
+  border-color: #7fdbff;
+}
+
+.settings-btn:focus {
+  outline: none;
+  border-color: #7fdbff;
+  box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
 }
 
 #error-banner {
@@ -381,7 +410,9 @@ h1 {
 }
 
 .completed-divider {
-  display: none;
+  display: block;
+  height: 20px;
+  flex: 0 0 auto;
 }
 
 .cat-title {
@@ -519,6 +550,60 @@ h1 {
   display: flex;
 }
 
+.settings-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 13, 20, 0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 300;
+}
+
+.settings-modal-overlay.open {
+  display: flex;
+}
+
+.settings-modal {
+  position: relative;
+  width: min(720px, calc(100vw - 48px));
+  min-height: 360px;
+  background: rgba(6, 24, 39, 0.96);
+  border: 1px solid #4b97ba;
+  border-radius: 4px;
+  box-shadow: 0 0 26px rgba(127, 219, 255, 0.22), inset 0 0 26px rgba(0, 0, 0, 0.44);
+}
+
+.settings-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  color: #a7ebff;
+  border: 1px solid #4b97ba;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(127, 219, 255, 0.12);
+}
+
+.settings-close:hover {
+  background: rgba(127, 219, 255, 0.12);
+  border-color: #7fdbff;
+}
+
+.settings-close:focus {
+  outline: none;
+  border-color: #7fdbff;
+  box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
+}
+
 .card-body .subsection:first-child {
   border-top: none;
   padding-top: 2px;
@@ -530,22 +615,19 @@ h1 {
   }
 
   .app-header {
-    flex-direction: column;
-  }
-
-  .app-header {
-    align-items: stretch;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   .header-controls {
-    width: 100%;
-    justify-content: flex-start;
+    width: auto;
+    justify-content: flex-end;
   }
 
   .picker-control,
   .picker-control select {
-    min-width: min(100%, 320px);
-    width: 100%;
+    min-width: 0;
+    width: auto;
   }
 
   .layout {
@@ -612,6 +694,26 @@ h1 {
 @media (max-width: 560px) {
   body {
     padding: 10px;
+  }
+
+  .app-header {
+    gap: 10px;
+  }
+
+  .header-controls {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+  }
+
+  .picker-control {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .picker-control select {
+    width: 100%;
+    min-width: 0;
   }
 
   .layout {

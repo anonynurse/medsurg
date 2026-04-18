@@ -25,11 +25,17 @@ const LAST_POOL_SECTION_LABEL = 'Notes';
 const elements = {
   errorBanner: document.getElementById('error-banner'),
   grid: document.getElementById('grid'),
+  gridWrapper: document.querySelector('.grid-wrapper'),
   pool: document.getElementById('pool'),
   poolWrapper: document.querySelector('.pool-wrapper'),
   resetBtn: document.getElementById('reset-btn'),
+  settingsBtn: document.getElementById('settings-btn'),
+  settingsClose: document.getElementById('settings-close'),
+  settingsModal: document.getElementById('settings-modal'),
   unitSelect: document.getElementById('unit-select'),
 };
+
+const TRANSIENT_CARD_OPEN_CLASSES = ['card-hover-open', 'card-drag-hover', 'card-post-drop-open'];
 
 let allItems = [];
 let placedLog = {};
@@ -114,23 +120,30 @@ function renderGridMessage(message) {
   elements.grid.innerHTML = `<div class="category"><div class="cat-title">${message}</div></div>`;
 }
 
-function ensureCompletedDivider() {
-  let divider = elements.grid.querySelector('.completed-divider');
-  if (!divider) {
-    divider = document.createElement('div');
-    divider.className = 'completed-divider';
-    elements.grid.appendChild(divider);
-  }
-
-  return divider;
-}
-
 function resetState() {
   allItems = [];
   placedLog = {};
   draggingId = null;
   selectedPill = null;
   elements.resetBtn.style.display = 'none';
+}
+
+function closeSettingsModal() {
+  if (!elements.settingsModal) {
+    return;
+  }
+
+  elements.settingsModal.classList.remove('open');
+  elements.settingsModal.hidden = true;
+}
+
+function openSettingsModal() {
+  if (!elements.settingsModal) {
+    return;
+  }
+
+  elements.settingsModal.hidden = false;
+  elements.settingsModal.classList.add('open');
 }
 
 function bindUi() {
@@ -152,8 +165,28 @@ function bindUi() {
     clearPostDropOpenCards();
   });
 
+  elements.settingsBtn?.addEventListener('click', () => {
+    openSettingsModal();
+  });
+
+  elements.settingsClose?.addEventListener('click', () => {
+    closeSettingsModal();
+  });
+
+  elements.settingsModal?.addEventListener('click', event => {
+    if (event.target === elements.settingsModal) {
+      closeSettingsModal();
+    }
+  });
+
   document.addEventListener('mousemove', event => {
     syncHoverOpenCards(event.target);
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      closeSettingsModal();
+    }
   });
 
   window.addEventListener('blur', () => {
@@ -827,27 +860,29 @@ function updateCardCompletionState(card) {
   card.classList.toggle('card-complete', isComplete);
 
   if (wasComplete !== isComplete) {
+    if (isComplete) {
+      stripCardOpenState(card, { includeLock: true, suppressHover: false });
+    }
+
     updateCompletedCardLayout();
   }
 }
 
 function gridColumnCount() {
-  if (window.matchMedia('(max-width: 560px)').matches) {
-    return 1;
+  const availableWidth = elements.gridWrapper?.clientWidth || window.innerWidth;
+
+  if (availableWidth >= 1180) {
+    return 5;
   }
 
-  if (window.matchMedia('(max-width: 900px)').matches) {
-    return 2;
+  if (availableWidth >= 860) {
+    return 4;
   }
 
-  if (window.matchMedia('(max-width: 1200px)').matches) {
-    return 3;
-  }
-
-  return 4;
+  return 3;
 }
 
-function buildGridBand(cards, bandClassName, columnCount) {
+function buildGridBand(cards, bandClassName, columnCount, preserveEmptyColumns = false) {
   if (!cards.length) {
     return null;
   }
@@ -872,10 +907,115 @@ function buildGridBand(cards, bandClassName, columnCount) {
   });
 
   columns
-    .filter(column => column.children.length > 0)
+    .filter(column => preserveEmptyColumns || column.children.length > 0)
     .forEach(column => band.appendChild(column));
 
   return band;
+}
+
+function stripCardOpenState(card, { includeLock = false, suppressHover = null } = {}) {
+  if (!card) {
+    return false;
+  }
+
+  let changed = false;
+
+  TRANSIENT_CARD_OPEN_CLASSES.forEach(className => {
+    if (card.classList.contains(className)) {
+      card.classList.remove(className);
+      changed = true;
+    }
+  });
+
+  if (includeLock && card.classList.contains('card-locked')) {
+    card.classList.remove('card-locked');
+    changed = true;
+  }
+
+  if (suppressHover === true && !card.classList.contains('card-hover-suppressed')) {
+    card.classList.add('card-hover-suppressed');
+    changed = true;
+  }
+
+  if (suppressHover === false && card.classList.contains('card-hover-suppressed')) {
+    card.classList.remove('card-hover-suppressed');
+    changed = true;
+  }
+
+  return changed;
+}
+
+function closeOtherCards(exceptCard = null) {
+  let changed = false;
+
+  document.querySelectorAll('.category').forEach(card => {
+    if (card === exceptCard || card.classList.contains('card-locked')) {
+      return;
+    }
+
+    if (stripCardOpenState(card)) {
+      changed = true;
+    }
+  });
+
+  return changed;
+}
+
+function setTransientCardOpenState(card, className) {
+  if (!card || card.classList.contains('card-locked')) {
+    return;
+  }
+
+  let changed = closeOtherCards(card);
+
+  TRANSIENT_CARD_OPEN_CLASSES.forEach(otherClassName => {
+    if (otherClassName !== className && card.classList.contains(otherClassName)) {
+      card.classList.remove(otherClassName);
+      changed = true;
+    }
+  });
+
+  if (!card.classList.contains(className)) {
+    card.classList.add(className);
+    changed = true;
+  }
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
+}
+
+function toggleCardLock(card) {
+  if (!card) {
+    return;
+  }
+
+  const willLock = !card.classList.contains('card-locked');
+  let changed = closeOtherCards(willLock ? card : null);
+
+  if (willLock) {
+    if (!card.classList.contains('card-locked')) {
+      card.classList.add('card-locked');
+      changed = true;
+    }
+
+    if (stripCardOpenState(card, { suppressHover: false })) {
+      changed = true;
+    }
+  } else {
+    if (card.classList.contains('card-locked')) {
+      card.classList.remove('card-locked');
+      changed = true;
+    }
+
+    if (stripCardOpenState(card, { suppressHover: true })) {
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
 }
 
 function isCardOpen(card) {
@@ -901,14 +1041,21 @@ function updateCompletedCardLayout() {
   const columnCount = gridColumnCount();
   const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
   const completedCards = cards.filter(card => card.classList.contains('card-complete'));
+  const preserveColumnSlots = incompleteCards.length > 0 && completedCards.length > 0;
 
-  const incompleteBand = buildGridBand(incompleteCards, 'grid-band-active', columnCount);
-  const completedBand = buildGridBand(completedCards, 'grid-band-completed', columnCount);
+  const incompleteBand = buildGridBand(incompleteCards, 'grid-band-active', columnCount, preserveColumnSlots);
+  const completedBand = buildGridBand(completedCards, 'grid-band-completed', columnCount, preserveColumnSlots);
 
   grid.innerHTML = '';
 
   if (incompleteBand) {
     grid.appendChild(incompleteBand);
+  }
+
+  if (incompleteBand && completedBand) {
+    const divider = document.createElement('div');
+    divider.className = 'completed-divider';
+    grid.appendChild(divider);
   }
 
   if (completedBand) {
@@ -994,27 +1141,11 @@ function clearCardOpenStateForNewPick() {
 }
 
 function markCardOpenAfterPlacement(card) {
-  if (!card || card.classList.contains('card-locked')) {
+  if (!card || card.classList.contains('card-locked') || card.classList.contains('card-complete')) {
     return;
   }
 
-  let changed = false;
-
-  document.querySelectorAll('.category.card-post-drop-open').forEach(otherCard => {
-    if (otherCard !== card && !otherCard.classList.contains('card-locked')) {
-      otherCard.classList.remove('card-post-drop-open');
-      changed = true;
-    }
-  });
-
-  if (!card.classList.contains('card-post-drop-open')) {
-    card.classList.add('card-post-drop-open');
-    changed = true;
-  }
-
-  if (changed) {
-    updateCompletedCardLayout();
-  }
+  setTransientCardOpenState(card, 'card-post-drop-open');
 }
 
 function expandCardForDrag(card) {
@@ -1022,23 +1153,7 @@ function expandCardForDrag(card) {
     return;
   }
 
-  let changed = false;
-
-  document.querySelectorAll('.category.card-drag-hover').forEach(otherCard => {
-    if (otherCard !== card) {
-      otherCard.classList.remove('card-drag-hover');
-      changed = true;
-    }
-  });
-
-  if (!card.classList.contains('card-locked') && !card.classList.contains('card-drag-hover')) {
-    card.classList.add('card-drag-hover');
-    changed = true;
-  }
-
-  if (changed) {
-    updateCompletedCardLayout();
-  }
+  setTransientCardOpenState(card, 'card-drag-hover');
 }
 
 function attachCardInteractionListeners() {
@@ -1072,8 +1187,7 @@ function attachCardInteractionListeners() {
         return;
       }
 
-      card.classList.add('card-hover-open');
-      updateCompletedCardLayout();
+      setTransientCardOpenState(card, 'card-hover-open');
     });
 
     card.addEventListener('mouseleave', () => {
@@ -1091,43 +1205,22 @@ function attachCardInteractionListeners() {
     summary.addEventListener('click', event => {
       event.stopPropagation();
 
-      if (selectedPill) {
-        if (!card.classList.contains('card-locked') && !card.classList.contains('card-hover-open')) {
-          card.classList.add('card-hover-open');
-          updateCompletedCardLayout();
-        }
-        return;
-      }
-
       if (card.classList.contains('card-post-drop-open') && !card.classList.contains('card-locked')) {
-        card.classList.remove('card-post-drop-open');
-        card.classList.remove('card-hover-open');
-        card.classList.remove('card-drag-hover');
-        card.classList.add('card-hover-suppressed');
+        stripCardOpenState(card, { suppressHover: true });
         updateCompletedCardLayout();
         return;
       }
 
-      if (draggingId && !isMobile()) {
+      if (selectedPill) {
+        if (card.classList.contains('card-locked') || isCardOpen(card)) {
+          toggleCardLock(card);
+        } else {
+          setTransientCardOpenState(card, 'card-hover-open');
+        }
         return;
       }
 
-      const willLock = !card.classList.contains('card-locked');
-      card.classList.toggle('card-locked', willLock);
-
-      if (willLock) {
-        card.classList.remove('card-hover-open');
-        card.classList.remove('card-drag-hover');
-        card.classList.remove('card-post-drop-open');
-        card.classList.remove('card-hover-suppressed');
-      } else {
-        card.classList.remove('card-hover-open');
-        card.classList.remove('card-drag-hover');
-        card.classList.remove('card-post-drop-open');
-        card.classList.add('card-hover-suppressed');
-      }
-
-      updateCompletedCardLayout();
+      toggleCardLock(card);
     });
   });
 }
@@ -1361,7 +1454,11 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
 
   const correctCategoryAndType = item.correctCats.has(categoryId) && item.type === subsectionId;
   const correctParent = !item.parentId || parentItemId === item.parentId;
-  const isCorrect = correctCategoryAndType && correctParent;
+  const expectedOrder = item.sortOrder === null
+    ? null
+    : nextExpectedOrderForZone(categoryId, subsectionId, parentItemId);
+  const correctOrder = item.sortOrder === null || expectedOrder === null || item.sortOrder === expectedOrder;
+  const isCorrect = correctCategoryAndType && correctParent && correctOrder;
   const targetCard = document.getElementById(`cat-${categoryId}`);
 
   if (!isCorrect) {
@@ -1376,7 +1473,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     return;
   }
 
-  const slotKey = `${categoryId}|${subsectionId}` + (parentItemId ? `|${parentItemId}` : '');
+  const slotKey = slotKeyFor(categoryId, subsectionId, parentItemId);
   if (placedLog[item.id] && placedLog[item.id].has(slotKey)) {
     return;
   }
@@ -1437,6 +1534,26 @@ function clearDropZoneHints() {
   clearDragHoverCards();
 }
 
+function slotKeyFor(categoryId, subsectionId, parentItemId = null) {
+  return `${categoryId}|${subsectionId}` + (parentItemId ? `|${parentItemId}` : '');
+}
+
+function nextExpectedOrderForZone(categoryId, subsectionId, parentItemId = null) {
+  const slotKey = slotKeyFor(categoryId, subsectionId, parentItemId);
+
+  const orderedItems = allItems
+    .filter(item =>
+      item.correctCats.has(categoryId) &&
+      item.type === subsectionId &&
+      (item.parentId || null) === parentItemId &&
+      item.sortOrder !== null
+    )
+    .sort((left, right) => left.sortOrder - right.sortOrder);
+
+  const nextItem = orderedItems.find(item => !(placedLog[item.id] && placedLog[item.id].has(slotKey)));
+  return nextItem ? nextItem.sortOrder : null;
+}
+
 function placeSelectedPillInZone(zone) {
   if (!selectedPill || !zone) {
     return;
@@ -1469,10 +1586,13 @@ function parseDisplayEntry(rawEntry) {
   }
 
   if (rawEntry && typeof rawEntry === 'object' && typeof rawEntry.text === 'string') {
+    const parsedTextEntry = parseDisplayText(rawEntry.text);
     return {
-      label: rawEntry.text.trim(),
-      hint: typeof rawEntry.hint === 'string' && rawEntry.hint.trim() ? rawEntry.hint.trim() : null,
-      order: Number.isFinite(rawEntry.order) ? Number(rawEntry.order) : null,
+      label: parsedTextEntry.label,
+      hint: typeof rawEntry.hint === 'string' && rawEntry.hint.trim()
+        ? rawEntry.hint.trim()
+        : parsedTextEntry.hint,
+      order: Number.isFinite(rawEntry.order) ? Number(rawEntry.order) : parsedTextEntry.order,
     };
   }
 
@@ -1489,10 +1609,10 @@ function parseDisplayText(rawText) {
     order = ordered.order;
   }
 
-  const hintMatch = text.match(/^(.+?)\s*\(([^)]+)\)\s*$/);
+  const hintMatch = text.match(/^(.+?)\s*(?:\(([^)]+)\)|\[([^\]]+)\])\s*$/);
   return {
     label: hintMatch ? hintMatch[1].trim() : text.trim(),
-    hint: hintMatch ? hintMatch[2].trim() : null,
+    hint: hintMatch ? (hintMatch[2] || hintMatch[3]).trim() : null,
     order,
   };
 }
