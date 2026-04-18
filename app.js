@@ -1061,6 +1061,31 @@ function updateCompletedCardLayout() {
   if (completedBand) {
     grid.appendChild(completedBand);
   }
+
+  normalizeCardSummaryHeights();
+}
+
+function normalizeCardSummaryHeights() {
+  const summaries = [...elements.grid.querySelectorAll('.category .card-summary')];
+  if (!summaries.length) {
+    return;
+  }
+
+  summaries.forEach(summary => {
+    summary.style.minHeight = '';
+  });
+
+  const tallestSummary = summaries.reduce((maxHeight, summary) => {
+    return Math.max(maxHeight, Math.ceil(summary.getBoundingClientRect().height));
+  }, 0);
+
+  if (!tallestSummary) {
+    return;
+  }
+
+  summaries.forEach(summary => {
+    summary.style.minHeight = `${tallestSummary}px`;
+  });
 }
 
 function clearDragHoverCards() {

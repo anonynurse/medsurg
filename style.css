@@ -555,9 +555,10 @@ h1 {
   inset: 0;
   background: rgba(2, 13, 20, 0.82);
   display: none;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 24px;
+  overflow-y: auto;
   z-index: 300;
 }
 
@@ -568,11 +569,14 @@ h1 {
 .settings-modal {
   position: relative;
   width: min(720px, calc(100vw - 48px));
-  min-height: 360px;
+  height: min(360px, calc(100vh - 48px));
+  min-height: 0;
+  max-height: calc(100vh - 48px);
   background: rgba(6, 24, 39, 0.96);
   border: 1px solid #4b97ba;
   border-radius: 4px;
   box-shadow: 0 0 26px rgba(127, 219, 255, 0.22), inset 0 0 26px rgba(0, 0, 0, 0.44);
+  margin: auto 0;
 }
 
 .settings-close {
@@ -591,6 +595,7 @@ h1 {
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 0 12px rgba(127, 219, 255, 0.12);
+  z-index: 1;
 }
 
 .settings-close:hover {
@@ -694,6 +699,16 @@ h1 {
 @media (max-width: 560px) {
   body {
     padding: 10px;
+  }
+
+  .settings-modal-overlay {
+    padding: 10px;
+  }
+
+  .settings-modal {
+    width: calc(100vw - 20px);
+    height: min(320px, calc(100vh - 20px));
+    max-height: calc(100vh - 20px);
   }
 
   .app-header {
