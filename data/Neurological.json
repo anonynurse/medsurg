@@ -117,10 +117,10 @@
           "Can result in metabolic and cardiopulmonary complications (acidosis, hypoxemia, hyperthermia, dysrhythmias, ventilatory insufficiency)",
           "Benzodiazepines are first line (midazolam, lorazepam, diazepam)"
         ],
-        "Phases (Prodomal)": "Signs or activities that provoke a seizure (flashing lights)",
-        "Phases (Aural)": "Sensory warning of impending seizure (headache, visuals)",
-        "Phases (Ictal)": "Seizure activity",
-        "Phases (Postictal)": "Recovery (drowsiness and decreased LOC)",
+        "Phase (Prodomal)": "Signs or activities that provoke a seizure (flashing lights)",
+        "Phase (Aural)": "Sensory warning of impending seizure (headache, visuals)",
+        "Phase (Ictal)": "Seizure activity",
+        "Phase (Postictal)": "Recovery (drowsiness and decreased LOC)",
         "Management (Acute)": [
           "Maintain patent airway, support head, turn to side, loosen restrictive clothing",
           "Ease to floor, remove bed rails if not padded",
@@ -187,9 +187,9 @@
           "Excessive fatigue",
           "Pregnancy"
         ],
-        "Pathophysiology (Phase 1)": "Chronic inflammation - unknown trigger activates T-cells to attack neurons in the brain barrier. CNS activates inflammatory response",
-        "Pathophysiology (Phase 2)": "Demyelination - neurons in brain and spinal cord are attacked by immune system. Myelin sheath is damaged. Nerve axon becomes exposed and disrupted. Loss of oligodendrocytes and proliferation of astrocytes also occurs.",
-        "Pathophysiology (Phase 3)": "Gliosis - damaged myelin is replaced by glial scar tissue which forms into hard plaques. Nerve conduction is disrupted.",
+        "Phase (1)": "Chronic inflammation - unknown trigger activates T-cells to attack neurons in the brain barrier. CNS activates inflammatory response",
+        "Phase (2)": "Demyelination - neurons in brain and spinal cord are attacked by immune system. Myelin sheath is damaged. Nerve axon becomes exposed and disrupted. Loss of oligodendrocytes and proliferation of astrocytes also occurs.",
+        "Phase (3)": "Gliosis - damaged myelin is replaced by glial scar tissue which forms into hard plaques. Nerve conduction is disrupted.",
         "Diagnostics": [
           "Need to have 2 demyelinating lesions in 2 different locations in the brain",
           "Lumbar puncture (sample CSF for proteins, oligoclonal IgG, oligoclonal banding means inflammation in spinal cord)"

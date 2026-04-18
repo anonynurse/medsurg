@@ -316,20 +316,38 @@ h1 {
 }
 
 .category {
+  --card-surface: rgba(6, 24, 39, 0.9);
+  --card-border: #2d6f8e;
+  --card-glow: rgba(127, 219, 255, 0.12);
+  --card-label-color: #7bc5de;
   border-radius: 3px;
   padding: 6px 7px;
   display: flex;
   flex-direction: column;
-  background: rgba(6, 24, 39, 0.9);
-  border: 1px solid #2d6f8e;
-  box-shadow: 0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45);
+  background: var(--card-surface);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 14px var(--card-glow), inset 0 0 20px rgba(0, 0, 0, 0.45);
   position: relative;
 }
 
+.card-summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
 .category.card-complete {
-  border-color: #7fdbff;
-  background: rgba(10, 34, 52, 0.95);
-  box-shadow: 0 0 22px rgba(127, 219, 255, 0.28), inset 0 0 24px rgba(127, 219, 255, 0.07);
+  --card-surface: rgba(18, 21, 24, 0.96);
+  --card-border: #666e74;
+  --card-glow: rgba(130, 136, 142, 0.12);
+  --card-label-color: #a2a9ae;
+  background: var(--card-surface);
+  border-color: var(--card-border);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.34), inset 0 0 22px rgba(0, 0, 0, 0.42);
 }
 
 .completed-divider {
@@ -346,7 +364,7 @@ h1 {
   font-size: 0.36rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7bc5de;
+  color: var(--card-label-color);
   padding-bottom: 3px;
   margin-bottom: 3px;
   line-height: 1.3;
@@ -366,8 +384,12 @@ h1 {
   font-size: 0.36rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #7bc5de;
+  color: var(--card-label-color);
   margin-bottom: 2px;
+}
+
+.subsection-complete .sub-label {
+  color: #9ea5aa;
 }
 
 .sub-pills {
@@ -386,10 +408,22 @@ h1 {
   background: rgba(127, 219, 255, 0.11);
 }
 
-.sub-pills.complete {
+.sub-pills.complete:not(.prefilled-name) {
   border-style: solid;
-  border-color: #3d89ad;
-  background: rgba(127, 219, 255, 0.05);
+  border-color: #5f676d;
+  background: rgba(96, 103, 109, 0.14);
+}
+
+.sub-pills.complete:not(.prefilled-name) .placed-pill {
+  border-color: #7a8186;
+  color: #d1d5d8;
+  text-shadow: none;
+  box-shadow: none;
+  background: rgba(122, 129, 134, 0.08);
+}
+
+.sub-pills.complete:not(.prefilled-name) .placed-pill .hint {
+  color: #b0b5b9;
 }
 
 .prefilled-section .sub-pills {
@@ -399,9 +433,10 @@ h1 {
 .prefilled-name-section {
   border-top: none;
   padding-top: 0;
+  padding-bottom: 1px;
 }
 
-.prefilled-name-section + .subsection {
+.card-summary .prefilled-name-section + .subsection {
   margin-top: 2px;
 }
 
@@ -424,6 +459,11 @@ h1 {
   letter-spacing: 0.06em;
 }
 
+.category.card-complete .sub-pills.prefilled-name .placed-pill {
+  color: #e2e5e7;
+  text-shadow: none;
+}
+
 .placed-pill {
   background: transparent;
   border: 1px solid #98e7ff;
@@ -440,6 +480,60 @@ h1 {
 .placed-pill .hint {
   color: #82d8ee;
   font-size: 0.44rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .category {
+    overflow: visible;
+  }
+
+  .card-summary {
+    min-height: 100%;
+  }
+
+  .card-body {
+    display: none;
+  }
+
+  .category:hover,
+  .category.card-expanded,
+  .category:focus-within {
+    z-index: 30;
+  }
+
+  .category:hover .card-body,
+  .category.card-expanded .card-body,
+  .category:focus-within .card-body {
+    display: flex;
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: calc(100% - 1px);
+    padding: 0 7px 6px;
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    box-shadow: 0 14px 22px rgba(0, 0, 0, 0.32), inset 0 0 18px rgba(0, 0, 0, 0.32);
+  }
+
+  .category:hover,
+  .category.card-expanded,
+  .category:focus-within {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .category:hover .card-summary,
+  .category.card-expanded .card-summary,
+  .category:focus-within .card-summary {
+    margin-bottom: 1px;
+  }
+
+  .card-body .subsection:first-child {
+    border-top: none;
+    padding-top: 2px;
+  }
 }
 
 @media (max-width: 1200px) {

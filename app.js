@@ -680,28 +680,47 @@ function buildGrid(categories) {
     box.id = `cat-${category.id}`;
     box.dataset.initialIndex = String(elements.grid.children.length);
 
-    const subsectionsHtml = subsectionsFor(category)
-      .map(subsection => {
-        const isNameHeader = isPrefilledSection(category, subsection.key) && subsection.key === 'Name';
-        return `
-        <div class="subsection${isNameHeader ? ' prefilled-name-section' : ''}" data-key="${subsection.key}">
-          ${isNameHeader ? '' : `<div class="sub-label">${subsection.label}</div>`}
+    const subsections = subsectionsFor(category);
+    const nameHeader = subsections.find(subsection => isPrefilledSection(category, subsection.key) && subsection.key === 'Name');
+    const bodySubsections = subsections.filter(subsection => subsection !== nameHeader);
+
+    const titleHtml = category.label ? `<div class="cat-title">${category.label}</div>` : '';
+    const nameHeaderHtml = nameHeader
+      ? `
+        <div class="subsection prefilled-name-section" data-key="${nameHeader.key}">
+          <div class="sub-pills prefilled-name"
+               id="pills-${category.id}-${nameHeader.id}"
+               data-cat="${category.id}"
+               data-sub="${nameHeader.id}"></div>
+        </div>
+      `
+      : '';
+
+    const bodyHtml = bodySubsections
+      .map(subsection => `
+        <div class="subsection" data-key="${subsection.key}">
+          <div class="sub-label">${subsection.label}</div>
           <div class="sub-pills"
                id="pills-${category.id}-${subsection.id}"
                data-cat="${category.id}"
                data-sub="${subsection.id}"></div>
         </div>
-      `;
-      })
+      `)
       .join('');
 
-    const titleHtml = category.label ? `<div class="cat-title">${category.label}</div>` : '';
-    box.innerHTML = `${titleHtml}${subsectionsHtml}`;
+    box.innerHTML = `
+      <div class="card-summary">
+        ${titleHtml}
+        ${nameHeaderHtml}
+      </div>
+      <div class="card-body">${bodyHtml}</div>
+    `;
     elements.grid.appendChild(box);
     applyPrefilledSections(category);
   });
 
   ensureCompletedDivider();
+  attachCardInteractionListeners();
   attachDropZoneListeners();
   updateCompletedCardLayout();
 }
@@ -758,8 +777,11 @@ function updateZoneCompletionState(zone) {
     return;
   }
 
+  const subsection = zone.closest('.subsection');
+
   if (zone.dataset.prefilled === 'true') {
     zone.classList.add('complete');
+    subsection?.classList.add('subsection-complete');
     updateCardCompletionState(zone.closest('.category'));
     return;
   }
@@ -770,7 +792,9 @@ function updateZoneCompletionState(zone) {
   const expected = expectedCountForZone(categoryId, subsectionId, parentItemId);
   const placed = countPlacedInZone(zone);
 
-  zone.classList.toggle('complete', expected > 0 && placed >= expected);
+  const isComplete = expected > 0 && placed >= expected;
+  zone.classList.toggle('complete', isComplete);
+  subsection?.classList.toggle('subsection-complete', isComplete);
   updateCardCompletionState(zone.closest('.category'));
 }
 
@@ -815,6 +839,47 @@ function updateCompletedCardLayout() {
 
   divider.style.display = completedCards.length ? 'block' : 'none';
   divider.style.order = String(totalCards);
+}
+
+function clearExpandedCards() {
+  document.querySelectorAll('.category.card-expanded').forEach(card => card.classList.remove('card-expanded'));
+}
+
+function expandCardForDrag(card) {
+  if (!card || !draggingId || isMobile()) {
+    return;
+  }
+
+  document.querySelectorAll('.category.card-expanded').forEach(otherCard => {
+    if (otherCard !== card) {
+      otherCard.classList.remove('card-expanded');
+    }
+  });
+
+  card.classList.add('card-expanded');
+}
+
+function attachCardInteractionListeners() {
+  document.querySelectorAll('.category').forEach(card => {
+    if (card.dataset.cardListenersAttached) {
+      return;
+    }
+
+    card.dataset.cardListenersAttached = 'true';
+
+    const summary = card.querySelector('.card-summary');
+    if (!summary) {
+      return;
+    }
+
+    summary.addEventListener('dragenter', () => {
+      expandCardForDrag(card);
+    });
+
+    summary.addEventListener('dragover', () => {
+      expandCardForDrag(card);
+    });
+  });
 }
 
 function attachDropZoneListeners() {
@@ -938,11 +1003,13 @@ function makePill(item) {
 
   pill.addEventListener('dragstart', () => {
     clearDropZoneHints();
+    clearExpandedCards();
     draggingId = item.id;
   });
 
   pill.addEventListener('dragend', () => {
     clearDropZoneHints();
+    clearExpandedCards();
     clearTapTargets();
     draggingId = null;
   });
