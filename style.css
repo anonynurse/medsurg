@@ -386,6 +386,7 @@ h1 {
 .card-summary {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   cursor: pointer;
 }
 
