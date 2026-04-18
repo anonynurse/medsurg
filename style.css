@@ -366,7 +366,7 @@ h1 {
 }
 
 .card-body {
-  display: flex;
+  display: none;
   flex-direction: column;
 }
 
@@ -511,23 +511,17 @@ h1 {
   font-size: 0.44rem;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .card-body {
-    display: none;
-  }
+.category.card-hover-open .card-body,
+.category.card-drag-hover .card-body,
+.category.card-post-drop-open .card-body,
+.category.card-locked .card-body,
+.category:focus-within .card-body {
+  display: flex;
+}
 
-  .category.card-hover-open .card-body,
-  .category.card-drag-hover .card-body,
-  .category.card-post-drop-open .card-body,
-  .category.card-locked .card-body,
-  .category:focus-within .card-body {
-    display: flex;
-  }
-
-  .card-body .subsection:first-child {
-    border-top: none;
-    padding-top: 2px;
-  }
+.card-body .subsection:first-child {
+  border-top: none;
+  padding-top: 2px;
 }
 
 @media (max-width: 900px) {
@@ -567,5 +561,33 @@ h1 {
 
   .grid-band {
     flex-direction: row;
+  }
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 10px;
+  }
+
+  .layout {
+    gap: 10px;
+  }
+
+  .pool-wrapper {
+    gap: 6px;
+  }
+
+  .pool {
+    min-height: 120px;
+    max-height: min(24vh, 180px);
+    padding: 10px 11px;
+  }
+
+  .pool-section-label {
+    font-size: 0.48rem;
+  }
+
+  .drug-pill {
+    font-size: 0.48rem;
   }
 }

@@ -979,6 +979,10 @@ function clearCardOpenStateForNewPick() {
   clearPostDropOpenCards();
 
   let changed = false;
+  document.querySelectorAll('.category.card-hover-suppressed').forEach(card => {
+    card.classList.remove('card-hover-suppressed');
+  });
+
   document.querySelectorAll('.category.card-drag-hover').forEach(card => {
     card.classList.remove('card-drag-hover');
     changed = true;
@@ -989,7 +993,7 @@ function clearCardOpenStateForNewPick() {
   }
 }
 
-function markCardOpenAfterSuccess(card) {
+function markCardOpenAfterPlacement(card) {
   if (!card || card.classList.contains('card-locked')) {
     return;
   }
@@ -1059,7 +1063,12 @@ function attachCardInteractionListeners() {
     });
 
     summary.addEventListener('mouseenter', () => {
-      if (isMobile() || card.classList.contains('card-locked') || card.classList.contains('card-hover-open')) {
+      if (
+        isMobile() ||
+        card.classList.contains('card-locked') ||
+        card.classList.contains('card-hover-open') ||
+        card.classList.contains('card-hover-suppressed')
+      ) {
         return;
       }
 
@@ -1068,11 +1077,14 @@ function attachCardInteractionListeners() {
     });
 
     card.addEventListener('mouseleave', () => {
-      if (!card.classList.contains('card-hover-open')) {
+      const hadHoverOpen = card.classList.contains('card-hover-open');
+      const hadHoverSuppressed = card.classList.contains('card-hover-suppressed');
+      if (!hadHoverOpen && !hadHoverSuppressed) {
         return;
       }
 
       card.classList.remove('card-hover-open');
+      card.classList.remove('card-hover-suppressed');
       updateCompletedCardLayout();
     });
 
@@ -1091,6 +1103,7 @@ function attachCardInteractionListeners() {
         card.classList.remove('card-post-drop-open');
         card.classList.remove('card-hover-open');
         card.classList.remove('card-drag-hover');
+        card.classList.add('card-hover-suppressed');
         updateCompletedCardLayout();
         return;
       }
@@ -1345,6 +1358,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   const targetCard = document.getElementById(`cat-${categoryId}`);
 
   if (!isCorrect) {
+    markCardOpenAfterPlacement(targetCard);
     shake(pill);
 
     if (!isMobile()) {
@@ -1387,7 +1401,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     updateZoneCompletionState(zone);
   }
 
-  markCardOpenAfterSuccess(targetCard);
+  markCardOpenAfterPlacement(targetCard);
 
   if (item.children.length) {
     revealChildren(item, categoryId);
