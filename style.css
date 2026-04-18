@@ -246,6 +246,13 @@ h1 {
   transform: translateY(-1px);
 }
 
+.drug-pill.tap-selected {
+  background: rgba(127, 219, 255, 0.3) !important;
+  border-color: #7fdbff !important;
+  box-shadow: 0 0 16px rgba(127, 219, 255, 0.6) !important;
+  transform: scale(1.08);
+}
+
 .drug-pill:active {
   cursor: grabbing;
 }
@@ -423,6 +430,11 @@ h1 {
 .sub-pills.drag-over {
   border-color: #7fdbffcc;
   background: rgba(127, 219, 255, 0.11);
+}
+
+.sub-pills.tap-target {
+  border-color: #7fdbff88 !important;
+  background: rgba(127, 219, 255, 0.06) !important;
 }
 
 .sub-pills.complete:not(.prefilled-name) {

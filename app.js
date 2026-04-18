@@ -1087,6 +1087,14 @@ function attachCardInteractionListeners() {
         return;
       }
 
+      if (card.classList.contains('card-post-drop-open') && !card.classList.contains('card-locked')) {
+        card.classList.remove('card-post-drop-open');
+        card.classList.remove('card-hover-open');
+        card.classList.remove('card-drag-hover');
+        updateCompletedCardLayout();
+        return;
+      }
+
       if (draggingId && !isMobile()) {
         return;
       }
@@ -1144,12 +1152,30 @@ function attachDropZoneListeners() {
         return;
       }
 
-      clearTapTargets();
-      selectedPill.classList.remove('tap-selected');
-      handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
-      selectedPill = null;
-      draggingId = null;
+      placeSelectedPillInZone(zone);
     });
+
+    const subsection = zone.closest('.subsection');
+    if (subsection && !subsection.dataset.clickPlacementAttached) {
+      subsection.dataset.clickPlacementAttached = 'true';
+      subsection.addEventListener('click', event => {
+        if (!selectedPill) {
+          return;
+        }
+
+        if (event.target.closest('.sub-pills')) {
+          return;
+        }
+
+        event.stopPropagation();
+        const subsectionZone = subsection.querySelector('.sub-pills');
+        if (!subsectionZone || subsectionZone.dataset.prefilled === 'true') {
+          return;
+        }
+
+        placeSelectedPillInZone(subsectionZone);
+      });
+    }
   });
 }
 
@@ -1388,6 +1414,18 @@ function clearTapTargets() {
 function clearDropZoneHints() {
   document.querySelectorAll('.sub-pills').forEach(zone => zone.classList.remove('drag-over'));
   clearDragHoverCards();
+}
+
+function placeSelectedPillInZone(zone) {
+  if (!selectedPill || !zone) {
+    return;
+  }
+
+  clearTapTargets();
+  selectedPill.classList.remove('tap-selected');
+  handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
+  selectedPill = null;
+  draggingId = null;
 }
 
 function parseOrderedEntry(text) {
