@@ -529,8 +529,7 @@ h1 {
     padding: 14px;
   }
 
-  .app-header,
-  .layout {
+  .app-header {
     flex-direction: column;
   }
 
@@ -549,18 +548,30 @@ h1 {
     width: 100%;
   }
 
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
   .pool-wrapper {
-    position: static;
-    width: 100%;
-    max-height: none;
+    position: sticky;
+    top: 14px;
+    flex: 0 0 clamp(118px, 28vw, 180px);
+    width: clamp(118px, 28vw, 180px);
+    max-width: clamp(118px, 28vw, 180px);
+    max-height: calc(100vh - 28px);
   }
 
   .pool {
-    max-height: 35vh;
+    min-height: 0;
+    max-height: calc(100vh - 96px);
+    padding: 10px 10px;
   }
 
-  .grid-band {
-    flex-direction: row;
+  .grid-wrapper {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
@@ -578,9 +589,9 @@ h1 {
   .pool-wrapper {
     position: sticky;
     top: 10px;
-    flex: 0 0 min(34vw, 132px);
-    width: min(34vw, 132px);
-    max-width: min(34vw, 132px);
+    flex: 0 0 min(34vw, 128px);
+    width: min(34vw, 128px);
+    max-width: min(34vw, 128px);
     max-height: calc(100vh - 20px);
     gap: 6px;
   }
