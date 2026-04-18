@@ -386,7 +386,6 @@ h1 {
 .card-summary {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   cursor: pointer;
 }
 
@@ -495,6 +494,8 @@ h1 {
   border-top: none;
   padding-top: 0;
   padding-bottom: 1px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .card-summary .prefilled-name-section + .subsection {
