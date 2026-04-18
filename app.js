@@ -1118,6 +1118,13 @@ function attachCardInteractionListeners() {
       if (willLock) {
         card.classList.remove('card-hover-open');
         card.classList.remove('card-drag-hover');
+        card.classList.remove('card-post-drop-open');
+        card.classList.remove('card-hover-suppressed');
+      } else {
+        card.classList.remove('card-hover-open');
+        card.classList.remove('card-drag-hover');
+        card.classList.remove('card-post-drop-open');
+        card.classList.add('card-hover-suppressed');
       }
 
       updateCompletedCardLayout();

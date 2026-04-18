@@ -570,17 +570,30 @@ h1 {
   }
 
   .layout {
+    flex-direction: row;
+    align-items: flex-start;
     gap: 10px;
   }
 
   .pool-wrapper {
+    position: sticky;
+    top: 10px;
+    flex: 0 0 min(34vw, 132px);
+    width: min(34vw, 132px);
+    max-width: min(34vw, 132px);
+    max-height: calc(100vh - 20px);
     gap: 6px;
   }
 
+  .grid-wrapper {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .pool {
-    min-height: 120px;
-    max-height: min(24vh, 180px);
-    padding: 10px 11px;
+    min-height: 0;
+    max-height: calc(100vh - 92px);
+    padding: 9px 9px;
   }
 
   .pool-section-label {
