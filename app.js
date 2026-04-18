@@ -140,6 +140,12 @@ function bindUi() {
   elements.unitSelect.addEventListener('change', () => {
     void initGame();
   });
+
+  window.addEventListener('resize', () => {
+    if (elements.grid.querySelector('.category')) {
+      updateCompletedCardLayout();
+    }
+  });
 }
 
 async function initializeCatalog() {
@@ -719,7 +725,6 @@ function buildGrid(categories) {
     applyPrefilledSections(category);
   });
 
-  ensureCompletedDivider();
   attachCardInteractionListeners();
   attachDropZoneListeners();
   updateCompletedCardLayout();
@@ -813,6 +818,85 @@ function updateCardCompletionState(card) {
   }
 }
 
+function gridColumnCount() {
+  if (window.matchMedia('(max-width: 560px)').matches) {
+    return 1;
+  }
+
+  if (window.matchMedia('(max-width: 900px)').matches) {
+    return 2;
+  }
+
+  if (window.matchMedia('(max-width: 1200px)').matches) {
+    return 3;
+  }
+
+  return 4;
+}
+
+function isCardOpen(card) {
+  return (
+    card.classList.contains('card-hover-open') ||
+    card.classList.contains('card-drag-hover') ||
+    card.classList.contains('card-locked')
+  );
+}
+
+function buildGridBand(cards, bandClassName, columnCount) {
+  if (!cards.length) {
+    return null;
+  }
+
+  const band = document.createElement('div');
+  band.className = `grid-band ${bandClassName}`;
+
+  const columns = Array.from({ length: columnCount }, () => {
+    const column = document.createElement('div');
+    column.className = 'grid-column';
+    return column;
+  });
+
+  const reservedColumns = new Set();
+  const sortedCards = [...cards].sort(
+    (leftCard, rightCard) =>
+      (Number(leftCard.dataset.initialIndex) || 0) - (Number(rightCard.dataset.initialIndex) || 0)
+  );
+
+  const openCards = sortedCards.filter(isCardOpen);
+  const collapsedCards = sortedCards.filter(card => !isCardOpen(card));
+
+  openCards.forEach(card => {
+    const preferredColumn = (Number(card.dataset.initialIndex) || 0) % columnCount;
+    let columnIndex = preferredColumn;
+
+    if (reservedColumns.has(columnIndex)) {
+      const fallbackColumn = [...Array(columnCount).keys()].find(index => !reservedColumns.has(index));
+      if (fallbackColumn !== undefined) {
+        columnIndex = fallbackColumn;
+      }
+    }
+
+    reservedColumns.add(columnIndex);
+    columns[columnIndex].appendChild(card);
+  });
+
+  const availableColumnIndexes = [...Array(columnCount).keys()].filter(index => !reservedColumns.has(index));
+  const collapsedTargets = availableColumnIndexes.length
+    ? availableColumnIndexes
+    : [...Array(columnCount).keys()];
+
+  collapsedCards.forEach((card, index) => {
+    const columnIndex = collapsedTargets[index % collapsedTargets.length];
+    columns[columnIndex].appendChild(card);
+  });
+
+  columns
+    .filter(column => column.children.length > 0)
+    .forEach(column => band.appendChild(column));
+
+  return band;
+}
+
 function updateCompletedCardLayout() {
   const grid = elements.grid;
   if (!grid) {
@@ -820,59 +904,63 @@ function updateCompletedCardLayout() {
   }
 
   const cards = [...grid.querySelectorAll('.category')];
-  const divider = ensureCompletedDivider();
   if (!cards.length) {
-    divider.style.display = 'none';
     return;
   }
 
-  const totalCards = cards.length;
+  const columnCount = gridColumnCount();
+  const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
   const completedCards = cards.filter(card => card.classList.contains('card-complete'));
 
-  cards.forEach(card => {
-    const initialIndex = Number(card.dataset.initialIndex) || 0;
-    const order = card.classList.contains('card-complete')
-      ? totalCards + 1 + initialIndex
-      : initialIndex;
-    card.style.order = String(order);
-  });
+  const incompleteBand = buildGridBand(incompleteCards, 'grid-band-active', columnCount);
+  const completedBand = buildGridBand(completedCards, 'grid-band-completed', columnCount);
 
-  divider.style.display = completedCards.length ? 'block' : 'none';
-  divider.style.order = String(totalCards);
+  grid.innerHTML = '';
+
+  if (incompleteBand) {
+    grid.appendChild(incompleteBand);
+  }
+
+  if (completedBand) {
+    grid.appendChild(completedBand);
+  }
 }
 
 function clearDragHoverCards() {
-  document.querySelectorAll('.category.card-drag-hover').forEach(card => card.classList.remove('card-drag-hover'));
+  let changed = false;
+  document.querySelectorAll('.category.card-drag-hover').forEach(card => {
+    card.classList.remove('card-drag-hover');
+    changed = true;
+  });
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
 }
 
-function clearTransientExpandedCards() {
-  document.querySelectorAll('.category.card-expanded').forEach(card => {
-    if (!card.classList.contains('card-locked')) {
-      card.classList.remove('card-expanded');
-    }
+function clearHoverOpenCards() {
+  let changed = false;
+  document.querySelectorAll('.category.card-hover-open').forEach(card => {
+    card.classList.remove('card-hover-open');
+    changed = true;
   });
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
 }
 
 function clearCardOpenStateForNewPick() {
-  clearDragHoverCards();
-  clearTransientExpandedCards();
-}
+  clearHoverOpenCards();
 
-function persistCardOpen(card) {
-  if (!card) {
-    return;
-  }
+  let changed = false;
+  document.querySelectorAll('.category.card-drag-hover').forEach(card => {
+    card.classList.remove('card-drag-hover');
+    changed = true;
+  });
 
-  clearDragHoverCards();
-
-  if (!card.classList.contains('card-locked')) {
-    document.querySelectorAll('.category.card-expanded').forEach(otherCard => {
-      if (otherCard !== card && !otherCard.classList.contains('card-locked')) {
-        otherCard.classList.remove('card-expanded');
-      }
-    });
-
-    card.classList.add('card-expanded');
+  if (changed) {
+    updateCompletedCardLayout();
   }
 }
 
@@ -881,14 +969,22 @@ function expandCardForDrag(card) {
     return;
   }
 
+  let changed = false;
+
   document.querySelectorAll('.category.card-drag-hover').forEach(otherCard => {
     if (otherCard !== card) {
       otherCard.classList.remove('card-drag-hover');
+      changed = true;
     }
   });
 
-  if (!card.classList.contains('card-locked')) {
+  if (!card.classList.contains('card-locked') && !card.classList.contains('card-drag-hover')) {
     card.classList.add('card-drag-hover');
+    changed = true;
+  }
+
+  if (changed) {
+    updateCompletedCardLayout();
   }
 }
 
@@ -913,6 +1009,24 @@ function attachCardInteractionListeners() {
       expandCardForDrag(card);
     });
 
+    summary.addEventListener('mouseenter', () => {
+      if (isMobile() || card.classList.contains('card-locked') || card.classList.contains('card-hover-open')) {
+        return;
+      }
+
+      card.classList.add('card-hover-open');
+      updateCompletedCardLayout();
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (!card.classList.contains('card-hover-open')) {
+        return;
+      }
+
+      card.classList.remove('card-hover-open');
+      updateCompletedCardLayout();
+    });
+
     summary.addEventListener('click', event => {
       event.stopPropagation();
 
@@ -924,11 +1038,11 @@ function attachCardInteractionListeners() {
       card.classList.toggle('card-locked', willLock);
 
       if (willLock) {
-        card.classList.remove('card-expanded');
+        card.classList.remove('card-hover-open');
         card.classList.remove('card-drag-hover');
-      } else {
-        card.classList.remove('card-expanded');
       }
+
+      updateCompletedCardLayout();
     });
   });
 }
@@ -1146,10 +1260,8 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   const correctCategoryAndType = item.correctCats.has(categoryId) && item.type === subsectionId;
   const correctParent = !item.parentId || parentItemId === item.parentId;
   const isCorrect = correctCategoryAndType && correctParent;
-  const targetCard = document.getElementById(`cat-${categoryId}`);
 
   if (!isCorrect) {
-    persistCardOpen(targetCard);
     shake(pill);
 
     if (!isMobile()) {
@@ -1191,8 +1303,6 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     insertPlacedPill(zone, placed, item.sortOrder);
     updateZoneCompletionState(zone);
   }
-
-  persistCardOpen(targetCard);
 
   if (item.children.length) {
     revealChildren(item, categoryId);
