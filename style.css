@@ -506,6 +506,7 @@ h1 {
 
   .category.card-hover-open .card-body,
   .category.card-drag-hover .card-body,
+  .category.card-post-drop-open .card-body,
   .category.card-locked .card-body,
   .category:focus-within .card-body {
     display: flex;

@@ -26,6 +26,7 @@ const elements = {
   errorBanner: document.getElementById('error-banner'),
   grid: document.getElementById('grid'),
   pool: document.getElementById('pool'),
+  poolWrapper: document.querySelector('.pool-wrapper'),
   resetBtn: document.getElementById('reset-btn'),
   unitSelect: document.getElementById('unit-select'),
 };
@@ -145,6 +146,18 @@ function bindUi() {
     if (elements.grid.querySelector('.category')) {
       updateCompletedCardLayout();
     }
+  });
+
+  elements.poolWrapper?.addEventListener('mouseenter', () => {
+    clearPostDropOpenCards();
+  });
+
+  document.addEventListener('mousemove', event => {
+    syncHoverOpenCards(event.target);
+  });
+
+  window.addEventListener('blur', () => {
+    clearHoverOpenCards();
   });
 }
 
@@ -865,6 +878,15 @@ function buildGridBand(cards, bandClassName, columnCount) {
   return band;
 }
 
+function isCardOpen(card) {
+  return (
+    card.classList.contains('card-hover-open') ||
+    card.classList.contains('card-drag-hover') ||
+    card.classList.contains('card-post-drop-open') ||
+    card.classList.contains('card-locked')
+  );
+}
+
 function updateCompletedCardLayout() {
   const grid = elements.grid;
   if (!grid) {
@@ -906,6 +928,20 @@ function clearDragHoverCards() {
   }
 }
 
+function clearPostDropOpenCards() {
+  let changed = false;
+  document.querySelectorAll('.category.card-post-drop-open').forEach(card => {
+    if (!card.classList.contains('card-locked')) {
+      card.classList.remove('card-post-drop-open');
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
+}
+
 function clearHoverOpenCards() {
   let changed = false;
   document.querySelectorAll('.category.card-hover-open').forEach(card => {
@@ -918,14 +954,59 @@ function clearHoverOpenCards() {
   }
 }
 
+function syncHoverOpenCards(target) {
+  if (isMobile() || draggingId || selectedPill) {
+    return;
+  }
+
+  const hoveredCard = target instanceof Element ? target.closest('.category') : null;
+  let changed = false;
+
+  document.querySelectorAll('.category.card-hover-open').forEach(card => {
+    if (card !== hoveredCard) {
+      card.classList.remove('card-hover-open');
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
+}
+
 function clearCardOpenStateForNewPick() {
   clearHoverOpenCards();
+  clearPostDropOpenCards();
 
   let changed = false;
   document.querySelectorAll('.category.card-drag-hover').forEach(card => {
     card.classList.remove('card-drag-hover');
     changed = true;
   });
+
+  if (changed) {
+    updateCompletedCardLayout();
+  }
+}
+
+function markCardOpenAfterSuccess(card) {
+  if (!card || card.classList.contains('card-locked')) {
+    return;
+  }
+
+  let changed = false;
+
+  document.querySelectorAll('.category.card-post-drop-open').forEach(otherCard => {
+    if (otherCard !== card && !otherCard.classList.contains('card-locked')) {
+      otherCard.classList.remove('card-post-drop-open');
+      changed = true;
+    }
+  });
+
+  if (!card.classList.contains('card-post-drop-open')) {
+    card.classList.add('card-post-drop-open');
+    changed = true;
+  }
 
   if (changed) {
     updateCompletedCardLayout();
@@ -998,6 +1079,14 @@ function attachCardInteractionListeners() {
     summary.addEventListener('click', event => {
       event.stopPropagation();
 
+      if (selectedPill) {
+        if (!card.classList.contains('card-locked') && !card.classList.contains('card-hover-open')) {
+          card.classList.add('card-hover-open');
+          updateCompletedCardLayout();
+        }
+        return;
+      }
+
       if (draggingId && !isMobile()) {
         return;
       }
@@ -1051,7 +1140,7 @@ function attachDropZoneListeners() {
     zone.addEventListener('click', event => {
       event.stopPropagation();
 
-      if (!isMobile() || !selectedPill) {
+      if (!selectedPill) {
         return;
       }
 
@@ -1059,6 +1148,7 @@ function attachDropZoneListeners() {
       selectedPill.classList.remove('tap-selected');
       handleDrop(zone.dataset.cat, zone.dataset.sub, zone.dataset.parentItemId || null);
       selectedPill = null;
+      draggingId = null;
     });
   });
 }
@@ -1148,13 +1238,11 @@ function makePill(item) {
   });
 
   pill.addEventListener('click', () => {
-    if (!isMobile()) {
-      return;
-    }
-
     if (selectedPill === pill) {
       pill.classList.remove('tap-selected');
       selectedPill = null;
+      draggingId = null;
+      clearTapTargets();
       return;
     }
 
@@ -1228,6 +1316,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
   const correctCategoryAndType = item.correctCats.has(categoryId) && item.type === subsectionId;
   const correctParent = !item.parentId || parentItemId === item.parentId;
   const isCorrect = correctCategoryAndType && correctParent;
+  const targetCard = document.getElementById(`cat-${categoryId}`);
 
   if (!isCorrect) {
     shake(pill);
@@ -1271,6 +1360,8 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     insertPlacedPill(zone, placed, item.sortOrder);
     updateZoneCompletionState(zone);
   }
+
+  markCardOpenAfterSuccess(targetCard);
 
   if (item.children.length) {
     revealChildren(item, categoryId);
