@@ -327,6 +327,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 7px;
+  align-items: stretch;
 }
 
 .category {
@@ -342,7 +343,8 @@ h1 {
   border: 1px solid var(--card-border);
   box-shadow: 0 0 14px var(--card-glow), inset 0 0 20px rgba(0, 0, 0, 0.45);
   position: relative;
-  align-self: start;
+  align-self: stretch;
+  width: 100%;
 }
 
 .card-summary {

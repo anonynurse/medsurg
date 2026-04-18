@@ -834,14 +834,6 @@ function gridColumnCount() {
   return 4;
 }
 
-function isCardOpen(card) {
-  return (
-    card.classList.contains('card-hover-open') ||
-    card.classList.contains('card-drag-hover') ||
-    card.classList.contains('card-locked')
-  );
-}
-
 function buildGridBand(cards, bandClassName, columnCount) {
   if (!cards.length) {
     return null;
@@ -856,37 +848,13 @@ function buildGridBand(cards, bandClassName, columnCount) {
     return column;
   });
 
-  const reservedColumns = new Set();
   const sortedCards = [...cards].sort(
     (leftCard, rightCard) =>
       (Number(leftCard.dataset.initialIndex) || 0) - (Number(rightCard.dataset.initialIndex) || 0)
   );
 
-  const openCards = sortedCards.filter(isCardOpen);
-  const collapsedCards = sortedCards.filter(card => !isCardOpen(card));
-
-  openCards.forEach(card => {
-    const preferredColumn = (Number(card.dataset.initialIndex) || 0) % columnCount;
-    let columnIndex = preferredColumn;
-
-    if (reservedColumns.has(columnIndex)) {
-      const fallbackColumn = [...Array(columnCount).keys()].find(index => !reservedColumns.has(index));
-      if (fallbackColumn !== undefined) {
-        columnIndex = fallbackColumn;
-      }
-    }
-
-    reservedColumns.add(columnIndex);
-    columns[columnIndex].appendChild(card);
-  });
-
-  const availableColumnIndexes = [...Array(columnCount).keys()].filter(index => !reservedColumns.has(index));
-  const collapsedTargets = availableColumnIndexes.length
-    ? availableColumnIndexes
-    : [...Array(columnCount).keys()];
-
-  collapsedCards.forEach((card, index) => {
-    const columnIndex = collapsedTargets[index % collapsedTargets.length];
+  sortedCards.forEach(card => {
+    const columnIndex = (Number(card.dataset.initialIndex) || 0) % columnCount;
     columns[columnIndex].appendChild(card);
   });
 
