@@ -161,26 +161,23 @@ function deriveSectionOptions(categories) {
 
   categories.forEach(category => {
     playableSubsectionsFor(category).forEach(subsection => {
-      if (!sectionMap.has(subsection.key)) {
-        sectionMap.set(subsection.key, {
-          key: subsection.key,
-          label: subsection.label,
-          poolLabel: poolLabelFor(subsection.key),
+      const poolLabel = poolLabelFor(subsection.key);
+
+      if (!sectionMap.has(poolLabel)) {
+        sectionMap.set(poolLabel, {
+          key: poolLabel,
+          label: poolLabel,
         });
       }
     });
   });
 
   return [...sectionMap.values()].sort((left, right) => {
-    const leftRank = poolSectionRank(left.poolLabel);
-    const rightRank = poolSectionRank(right.poolLabel);
+    const leftRank = poolSectionRank(left.label);
+    const rightRank = poolSectionRank(right.label);
 
     if (leftRank !== rightRank) {
       return leftRank - rightRank;
-    }
-
-    if (left.poolLabel !== right.poolLabel) {
-      return left.poolLabel.localeCompare(right.poolLabel);
     }
 
     return left.label.localeCompare(right.label);
@@ -237,7 +234,7 @@ function filteredCategoriesFromSettings() {
           return;
         }
 
-        if (!enabledSectionKeys.has(key)) {
+        if (!enabledSectionKeys.has(poolLabelFor(key))) {
           return;
         }
 
