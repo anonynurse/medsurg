@@ -74,9 +74,9 @@
       }
     },
     {
-      "table_name": "Hyperthyroidism",
+      "table_name": "Hyperparathyroidism",
       "rows": {
-        "Name": "Hyperthyroidism",
+        "Name": "Hyperparathyroidism",
         "Description": "",
         "Etiology": "",
         "Risk Factors": "",
@@ -88,9 +88,9 @@
       }
     },
     {
-      "table_name": "Hypothyroidism",
+      "table_name": "Hypoparathyroidism",
       "rows": {
-        "Name": "Hypothyroidism",
+        "Name": "Hypoparathyroidism",
         "Description": "",
         "Etiology": "",
         "Risk Factors": "",
