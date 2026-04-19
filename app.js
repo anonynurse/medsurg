@@ -161,10 +161,6 @@ function bindUi() {
     }
   });
 
-  elements.poolWrapper?.addEventListener('mouseenter', () => {
-    clearPostDropOpenCards();
-  });
-
   elements.settingsBtn?.addEventListener('click', () => {
     openSettingsModal();
   });
@@ -1132,11 +1128,24 @@ function syncHoverOpenCards(target) {
   }
 
   const hoveredCard = target instanceof Element ? target.closest('.category') : null;
+  const hoveredColumn = target instanceof Element ? target.closest('.grid-column') : null;
   let changed = false;
 
   document.querySelectorAll('.category.card-hover-open').forEach(card => {
     if (card !== hoveredCard) {
       card.classList.remove('card-hover-open');
+      changed = true;
+    }
+  });
+
+  document.querySelectorAll('.category.card-post-drop-open').forEach(card => {
+    if (card.classList.contains('card-locked')) {
+      return;
+    }
+
+    const cardColumn = card.closest('.grid-column');
+    if (cardColumn !== hoveredColumn) {
+      card.classList.remove('card-post-drop-open');
       changed = true;
     }
   });
