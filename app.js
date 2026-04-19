@@ -29,8 +29,11 @@ const elements = {
   pool: document.getElementById('pool'),
   poolWrapper: document.querySelector('.pool-wrapper'),
   resetBtn: document.getElementById('reset-btn'),
+  settingsActionRestart: document.getElementById('settings-restart'),
+  settingsActionSolve: document.getElementById('settings-solve'),
   settingsBtn: document.getElementById('settings-btn'),
   settingsClose: document.getElementById('settings-close'),
+  settingsSectionList: document.getElementById('settings-section-list'),
   settingsModal: document.getElementById('settings-modal'),
   unitSelect: document.getElementById('unit-select'),
 };
@@ -38,7 +41,10 @@ const elements = {
 const TRANSIENT_CARD_OPEN_CLASSES = ['card-hover-open', 'card-drag-hover', 'card-post-drop-open'];
 
 let allItems = [];
+let baseCategories = [];
+let enabledSectionKeys = new Set();
 let placedLog = {};
+let sectionOptions = [];
 let draggingId = null;
 let selectedPill = null;
 let unitCatalog = [];
@@ -146,9 +152,222 @@ function openSettingsModal() {
   elements.settingsModal.classList.add('open');
 }
 
+function playableSubsectionsFor(category) {
+  return subsectionsFor(category).filter(subsection => subsection.key !== 'Name');
+}
+
+function deriveSectionOptions(categories) {
+  const sectionMap = new Map();
+
+  categories.forEach(category => {
+    playableSubsectionsFor(category).forEach(subsection => {
+      if (!sectionMap.has(subsection.key)) {
+        sectionMap.set(subsection.key, {
+          key: subsection.key,
+          label: subsection.label,
+          poolLabel: poolLabelFor(subsection.key),
+        });
+      }
+    });
+  });
+
+  return [...sectionMap.values()].sort((left, right) => {
+    const leftRank = poolSectionRank(left.poolLabel);
+    const rightRank = poolSectionRank(right.poolLabel);
+
+    if (leftRank !== rightRank) {
+      return leftRank - rightRank;
+    }
+
+    if (left.poolLabel !== right.poolLabel) {
+      return left.poolLabel.localeCompare(right.poolLabel);
+    }
+
+    return left.label.localeCompare(right.label);
+  });
+}
+
+function syncSectionFilters(options, preserveFilters = false) {
+  const previousEnabledKeys = new Set(enabledSectionKeys);
+  const previousOptionKeys = new Set(sectionOptions.map(option => option.key));
+
+  enabledSectionKeys = new Set();
+
+  options.forEach(option => {
+    if (
+      !preserveFilters ||
+      previousEnabledKeys.size === 0 ||
+      previousEnabledKeys.has(option.key) ||
+      !previousOptionKeys.has(option.key)
+    ) {
+      enabledSectionKeys.add(option.key);
+    }
+  });
+}
+
+function filteredCategoriesFromSettings() {
+  return baseCategories
+    .map(category => {
+      const filteredCategory = {};
+      let hasPlayableSection = false;
+
+      META_KEYS.forEach(key => {
+        if (key === 'prefilledSections') {
+          return;
+        }
+
+        if (key in category) {
+          filteredCategory[key] = category[key];
+        }
+      });
+
+      if (category.prefilledSections) {
+        filteredCategory.prefilledSections = {};
+      }
+
+      Object.keys(category).forEach(key => {
+        if (META_KEYS.has(key)) {
+          return;
+        }
+
+        if (key === 'Name' && isPrefilledSection(category, key)) {
+          filteredCategory[key] = category[key];
+          filteredCategory.prefilledSections = filteredCategory.prefilledSections || {};
+          filteredCategory.prefilledSections[key] = category.prefilledSections[key];
+          return;
+        }
+
+        if (!enabledSectionKeys.has(key)) {
+          return;
+        }
+
+        filteredCategory[key] = category[key];
+
+        if (isPrefilledSection(category, key)) {
+          filteredCategory.prefilledSections = filteredCategory.prefilledSections || {};
+          filteredCategory.prefilledSections[key] = category.prefilledSections[key];
+        } else {
+          hasPlayableSection = true;
+        }
+      });
+
+      if (filteredCategory.prefilledSections && !Object.keys(filteredCategory.prefilledSections).length) {
+        delete filteredCategory.prefilledSections;
+      }
+
+      return hasPlayableSection ? filteredCategory : null;
+    })
+    .filter(Boolean);
+}
+
+function renderSettingsPanel() {
+  if (!elements.settingsSectionList) {
+    return;
+  }
+
+  const hasRemainingPills = Boolean(elements.pool.querySelector('.drug-pill'));
+  elements.settingsActionRestart.disabled = baseCategories.length === 0;
+  elements.settingsActionSolve.disabled = !hasRemainingPills;
+
+  if (!sectionOptions.length) {
+    elements.settingsSectionList.innerHTML = '<div class="settings-empty-state">No configurable sections.</div>';
+    return;
+  }
+
+  elements.settingsSectionList.innerHTML = sectionOptions
+    .map(option => `
+      <label class="settings-section-option">
+        <input
+          type="checkbox"
+          data-section-key="${option.key}"
+          ${enabledSectionKeys.has(option.key) ? 'checked' : ''}
+        >
+        <span>${option.label}</span>
+      </label>
+    `)
+    .join('');
+}
+
+function renderCurrentGameFromState() {
+  resetState();
+  clearError();
+
+  const categories = filteredCategoriesFromSettings();
+  if (!enabledSectionKeys.size) {
+    renderGridMessage('No sections selected.');
+    renderPoolMessage('No sections selected.');
+    renderSettingsPanel();
+    return;
+  }
+
+  if (!categories.length) {
+    renderGridMessage('No active study cards in the selected sections.');
+    renderPoolMessage('No study items in the selected sections.');
+    renderSettingsPanel();
+    return;
+  }
+
+  buildGrid(categories);
+  allItems = parseData(categories);
+  buildPool();
+  document.querySelectorAll('.sub-pills').forEach(updateZoneCompletionState);
+  renderSettingsPanel();
+}
+
+function solveCurrentGame() {
+  if (!allItems.length) {
+    return;
+  }
+
+  if (selectedPill) {
+    selectedPill.classList.remove('tap-selected');
+    selectedPill = null;
+  }
+
+  clearTapTargets();
+  clearDropZoneHints();
+
+  const placements = allItems
+    .flatMap(item => [...item.correctCats].map(categoryId => ({ item, categoryId })))
+    .sort((left, right) => {
+      const leftParentRank = left.item.parentId ? 1 : 0;
+      const rightParentRank = right.item.parentId ? 1 : 0;
+      if (leftParentRank !== rightParentRank) {
+        return leftParentRank - rightParentRank;
+      }
+
+      const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+      }
+
+      if (left.categoryId !== right.categoryId) {
+        return left.categoryId.localeCompare(right.categoryId);
+      }
+
+      if (left.item.type !== right.item.type) {
+        return left.item.type.localeCompare(right.item.type);
+      }
+
+      return left.item.label.localeCompare(right.item.label);
+    });
+
+  placements.forEach(({ item, categoryId }) => {
+    draggingId = item.id;
+    handleDrop(categoryId, item.type, item.parentId || null);
+  });
+
+  draggingId = null;
+  document.querySelectorAll('.category').forEach(card => {
+    stripCardOpenState(card, { includeLock: true, suppressHover: false });
+  });
+  updateCompletedCardLayout();
+}
+
 function bindUi() {
   elements.resetBtn.addEventListener('click', () => {
-    void initGame();
+    void initGame({ preserveFilters: true, reusePreparedCategories: true });
   });
 
   elements.unitSelect.addEventListener('change', () => {
@@ -165,8 +384,32 @@ function bindUi() {
     openSettingsModal();
   });
 
+  elements.settingsActionSolve?.addEventListener('click', () => {
+    solveCurrentGame();
+    renderSettingsPanel();
+  });
+
+  elements.settingsActionRestart?.addEventListener('click', () => {
+    void initGame({ preserveFilters: true, reusePreparedCategories: true });
+  });
+
   elements.settingsClose?.addEventListener('click', () => {
     closeSettingsModal();
+  });
+
+  elements.settingsSectionList?.addEventListener('change', event => {
+    const input = event.target instanceof HTMLInputElement ? event.target : null;
+    if (!input || input.type !== 'checkbox' || !input.dataset.sectionKey) {
+      return;
+    }
+
+    if (input.checked) {
+      enabledSectionKeys.add(input.dataset.sectionKey);
+    } else {
+      enabledSectionKeys.delete(input.dataset.sectionKey);
+    }
+
+    renderCurrentGameFromState();
   });
 
   elements.settingsModal?.addEventListener('click', event => {
@@ -1728,19 +1971,26 @@ function checkComplete() {
   elements.resetBtn.style.display = 'block';
 }
 
-async function initGame() {
-  resetState();
+async function initGame({ preserveFilters = false, reusePreparedCategories = false } = {}) {
   clearError();
 
   try {
-    const categories = await categoriesForCurrentSelection();
-    buildGrid(categories);
-    allItems = parseData(categories);
-    buildPool();
-    document.querySelectorAll('.sub-pills').forEach(updateZoneCompletionState);
+    if (!reusePreparedCategories || !baseCategories.length) {
+      baseCategories = await categoriesForCurrentSelection();
+    }
+
+    const nextSectionOptions = deriveSectionOptions(baseCategories);
+    syncSectionFilters(nextSectionOptions, preserveFilters);
+    sectionOptions = nextSectionOptions;
+    renderCurrentGameFromState();
   } catch (error) {
+    resetState();
+    baseCategories = [];
+    sectionOptions = [];
+    enabledSectionKeys = new Set();
     buildGrid([]);
     renderPoolMessage('Unable to load the selected unit.');
+    renderSettingsPanel();
     showError(`Could not load the selected unit data. ${error.message}`);
   }
 }

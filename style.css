@@ -574,6 +574,8 @@ h1 {
   height: min(360px, calc(100vh - 48px));
   min-height: 0;
   max-height: calc(100vh - 48px);
+  display: flex;
+  flex-direction: column;
   background: rgba(6, 24, 39, 0.96);
   border: 1px solid #4b97ba;
   border-radius: 4px;
@@ -609,6 +611,97 @@ h1 {
   outline: none;
   border-color: #7fdbff;
   box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
+}
+
+.settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  padding: 52px 16px 16px;
+  flex: 1 1 auto;
+}
+
+.settings-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.settings-action-btn {
+  min-width: 108px;
+  height: 34px;
+  padding: 0 12px;
+  background: rgba(127, 219, 255, 0.08);
+  color: #ecfbff;
+  border: 1px solid #4b97ba;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(127, 219, 255, 0.14);
+}
+
+.settings-action-btn:hover:not(:disabled) {
+  background: rgba(127, 219, 255, 0.14);
+  border-color: #7fdbff;
+}
+
+.settings-action-btn:focus {
+  outline: none;
+  border-color: #7fdbff;
+  box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
+}
+
+.settings-action-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+.settings-section-heading {
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7bc5de;
+  border-bottom: 1px solid #29617e;
+  padding-bottom: 5px;
+}
+
+.settings-section-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 14px;
+  align-content: start;
+  padding-right: 4px;
+}
+
+.settings-section-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #ecfbff;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+}
+
+.settings-section-option input {
+  margin-top: 2px;
+  accent-color: #7fdbff;
+}
+
+.settings-empty-state {
+  color: #7bc5de;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 4px;
 }
 
 .card-body .subsection:first-child {
@@ -711,6 +804,25 @@ h1 {
     width: calc(100vw - 20px);
     height: min(320px, calc(100vh - 20px));
     max-height: calc(100vh - 20px);
+  }
+
+  .settings-content {
+    padding: 48px 12px 12px;
+    gap: 10px;
+  }
+
+  .settings-actions {
+    gap: 8px;
+  }
+
+  .settings-action-btn {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .settings-section-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .app-header {
