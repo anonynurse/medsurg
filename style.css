@@ -409,10 +409,39 @@ h1 {
   box-shadow: 0 0 22px rgba(127, 219, 255, 0.28), inset 0 0 24px rgba(127, 219, 255, 0.07);
 }
 
-.completed-divider {
-  display: block;
-  height: 20px;
+.grid-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: #7bc5de;
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 4px 0 2px;
+}
+
+.grid-divider::before,
+.grid-divider::after {
+  content: '';
+  height: 1px;
+  flex: 1 1 0;
+  background: linear-gradient(90deg, rgba(75, 151, 186, 0.2), rgba(127, 219, 255, 0.85), rgba(75, 151, 186, 0.2));
+}
+
+.grid-divider span {
   flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.unit-divider {
+  color: #8cd9ef;
+}
+
+.completed-divider {
+  color: #a7ebff;
+  margin-top: 6px;
 }
 
 .cat-title {

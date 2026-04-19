@@ -975,6 +975,7 @@ function buildGrid(categories) {
     box.className = 'category';
     box.id = `cat-${category.id}`;
     box.dataset.initialIndex = String(elements.grid.children.length);
+    box.dataset.unitName = category.unitName || '';
 
     const subsections = subsectionsFor(category);
     const nameHeader = subsections.find(subsection => isPrefilledSection(category, subsection.key) && subsection.key === 'Name');
@@ -1160,6 +1161,39 @@ function buildGridBand(cards, bandClassName, columnCount, preserveEmptyColumns =
   return band;
 }
 
+function createGridDivider(label, className = '') {
+  const divider = document.createElement('div');
+  divider.className = `grid-divider ${className}`.trim();
+  divider.innerHTML = `<span>${label}</span>`;
+  return divider;
+}
+
+function cardsSortedByInitialIndex(cards) {
+  return [...cards].sort(
+    (leftCard, rightCard) =>
+      (Number(leftCard.dataset.initialIndex) || 0) - (Number(rightCard.dataset.initialIndex) || 0)
+  );
+}
+
+function groupedCardsByUnit(cards) {
+  const groups = [];
+  const groupMap = new Map();
+
+  cardsSortedByInitialIndex(cards).forEach(card => {
+    const unitName = card.dataset.unitName || 'Unit';
+
+    if (!groupMap.has(unitName)) {
+      const group = { unitName, cards: [] };
+      groupMap.set(unitName, group);
+      groups.push(group);
+    }
+
+    groupMap.get(unitName).cards.push(card);
+  });
+
+  return groups;
+}
+
 function stripCardOpenState(card, { includeLock = false, suppressHover = null } = {}) {
   if (!card) {
     return false;
@@ -1288,24 +1322,29 @@ function updateCompletedCardLayout() {
   const columnCount = gridColumnCount();
   const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
   const completedCards = cards.filter(card => card.classList.contains('card-complete'));
-  const preserveColumnSlots = incompleteCards.length > 0 && completedCards.length > 0;
-
-  const incompleteBand = buildGridBand(incompleteCards, 'grid-band-active', columnCount, preserveColumnSlots);
-  const completedBand = buildGridBand(completedCards, 'grid-band-completed', columnCount, preserveColumnSlots);
+  const isAllUnitsMode = elements.unitSelect.value === ALL_UNITS_OPTION;
+  const preserveColumnSlots = isAllUnitsMode || (incompleteCards.length > 0 && completedCards.length > 0);
 
   grid.innerHTML = '';
 
-  if (incompleteBand) {
-    grid.appendChild(incompleteBand);
+  if (isAllUnitsMode && incompleteCards.length) {
+    groupedCardsByUnit(incompleteCards).forEach(group => {
+      grid.appendChild(createGridDivider(group.unitName, 'unit-divider'));
+      const unitBand = buildGridBand(group.cards, 'grid-band-active', columnCount, true);
+      if (unitBand) {
+        grid.appendChild(unitBand);
+      }
+    });
+  } else {
+    const incompleteBand = buildGridBand(incompleteCards, 'grid-band-active', columnCount, preserveColumnSlots);
+    if (incompleteBand) {
+      grid.appendChild(incompleteBand);
+    }
   }
 
-  if (incompleteBand && completedBand) {
-    const divider = document.createElement('div');
-    divider.className = 'completed-divider';
-    grid.appendChild(divider);
-  }
-
-  if (completedBand) {
+  if (completedCards.length) {
+    const completedBand = buildGridBand(completedCards, 'grid-band-completed', columnCount, preserveColumnSlots);
+    grid.appendChild(createGridDivider('Completed', 'completed-divider'));
     grid.appendChild(completedBand);
   }
 
