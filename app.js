@@ -207,6 +207,7 @@ function filteredCategoriesFromSettings() {
     .map(category => {
       const filteredCategory = {};
       let hasPlayableSection = false;
+      const hadPlayableSectionsOriginally = playableSubsectionsFor(category).length > 0;
 
       META_KEYS.forEach(key => {
         if (key === 'prefilledSections') {
@@ -252,7 +253,14 @@ function filteredCategoriesFromSettings() {
         delete filteredCategory.prefilledSections;
       }
 
-      return hasPlayableSection ? filteredCategory : null;
+      const stillHasAnySections = subsectionsFor(filteredCategory).length > 0;
+      if (!stillHasAnySections) {
+        return null;
+      }
+
+      return hasPlayableSection || !hadPlayableSectionsOriginally
+        ? filteredCategory
+        : null;
     })
     .filter(Boolean);
 }
@@ -290,7 +298,7 @@ function renderCurrentGameFromState() {
   clearError();
 
   const categories = filteredCategoriesFromSettings();
-  if (!enabledSectionKeys.size) {
+  if (sectionOptions.length > 0 && !enabledSectionKeys.size) {
     renderGridMessage('No sections selected.');
     renderPoolMessage('No sections selected.');
     renderSettingsPanel();
@@ -1091,7 +1099,10 @@ function updateCardCompletionState(card) {
   }
 
   const zones = [...card.querySelectorAll('.sub-pills')];
-  const isComplete = zones.length > 0 && zones.every(zone => zone.classList.contains('complete'));
+  const actionableZones = zones.filter(zone => zone.dataset.prefilled !== 'true');
+  const isComplete =
+    actionableZones.length > 0 &&
+    actionableZones.every(zone => zone.classList.contains('complete'));
   const wasComplete = card.classList.contains('card-complete');
   card.classList.toggle('card-complete', isComplete);
 
