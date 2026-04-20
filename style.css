@@ -751,9 +751,10 @@ h1 {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 14px;
+  align-content: start;
   padding-right: 4px;
 }
 
@@ -771,14 +772,19 @@ h1 {
   margin-top: 8px;
 }
 
+.settings-section-option-master {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
 .settings-section-option input {
   margin-top: 2px;
   accent-color: #7fdbff;
 }
 
 .settings-section-spacer {
-  height: 12px;
-  flex: 0 0 auto;
+  height: 22px;
+  grid-column: 1 / -1;
 }
 
 .settings-empty-state {
@@ -906,7 +912,8 @@ h1 {
   }
 
   .settings-section-list {
-    gap: 0;
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
   .app-header {
