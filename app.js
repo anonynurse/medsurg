@@ -1,5 +1,6 @@
 const DATA_MANIFEST_PATH = './data/manifest.json';
 const ALL_UNITS_OPTION = 'all-units';
+const ALL_SECTIONS_OPTION = 'all-sections';
 const META_KEYS = new Set(['id', 'label', 'unitName', 'prefilledSections', 'gameType', 'tableName']);
 
 const POOL_GROUPS = [
@@ -35,7 +36,9 @@ const elements = {
   settingsClose: document.getElementById('settings-close'),
   settingsSectionList: document.getElementById('settings-section-list'),
   settingsModal: document.getElementById('settings-modal'),
-  unitSelect: document.getElementById('unit-select'),
+  unitPickerButton: document.getElementById('unit-picker-button'),
+  unitPickerList: document.getElementById('unit-picker-list'),
+  unitPickerMenu: document.getElementById('unit-picker-menu'),
 };
 
 const TRANSIENT_CARD_OPEN_CLASSES = ['card-hover-open', 'card-drag-hover', 'card-post-drop-open'];
@@ -43,6 +46,7 @@ const TRANSIENT_CARD_OPEN_CLASSES = ['card-hover-open', 'card-drag-hover', 'card
 let allItems = [];
 let baseCategories = [];
 let enabledSectionKeys = new Set();
+let enabledUnitIds = new Set();
 let placedLog = {};
 let sectionOptions = [];
 let draggingId = null;
@@ -150,6 +154,112 @@ function openSettingsModal() {
 
   elements.settingsModal.hidden = false;
   elements.settingsModal.classList.add('open');
+}
+
+function closeUnitPickerMenu() {
+  if (!elements.unitPickerMenu || !elements.unitPickerButton) {
+    return;
+  }
+
+  elements.unitPickerMenu.hidden = true;
+  elements.unitPickerButton.setAttribute('aria-expanded', 'false');
+  elements.unitPickerButton.parentElement?.classList.remove('open');
+}
+
+function openUnitPickerMenu() {
+  if (!elements.unitPickerMenu || !elements.unitPickerButton || elements.unitPickerButton.disabled) {
+    return;
+  }
+
+  elements.unitPickerMenu.hidden = false;
+  elements.unitPickerButton.setAttribute('aria-expanded', 'true');
+  elements.unitPickerButton.parentElement?.classList.add('open');
+}
+
+function selectedUnits() {
+  return unitCatalog.filter(unit => enabledUnitIds.has(unit.id));
+}
+
+function allUnitsSelected() {
+  return unitCatalog.length > 0 && enabledUnitIds.size === unitCatalog.length;
+}
+
+function groupedUnitsMode() {
+  return selectedUnits().length > 1;
+}
+
+function unitPickerLabel() {
+  if (!unitCatalog.length) {
+    return 'No Units Loaded';
+  }
+
+  if (allUnitsSelected()) {
+    return 'All Units';
+  }
+
+  const selected = selectedUnits();
+  if (!selected.length) {
+    return 'No Units';
+  }
+
+  if (selected.length === 1) {
+    return selected[0].name;
+  }
+
+  return `${selected.length} Units`;
+}
+
+function syncUnitFilters(preserveSelection = false) {
+  const previousEnabledIds = new Set(enabledUnitIds);
+  enabledUnitIds = new Set();
+
+  unitCatalog.forEach(unit => {
+    if (!preserveSelection || previousEnabledIds.size === 0 || previousEnabledIds.has(unit.id)) {
+      enabledUnitIds.add(unit.id);
+    }
+  });
+}
+
+function renderUnitPicker() {
+  if (!elements.unitPickerButton || !elements.unitPickerList) {
+    return;
+  }
+
+  if (!unitCatalog.length) {
+    elements.unitPickerButton.textContent = 'No Units Loaded';
+    elements.unitPickerButton.disabled = true;
+    elements.unitPickerList.innerHTML = '<div class="picker-empty-state">No units loaded</div>';
+    closeUnitPickerMenu();
+    return;
+  }
+
+  elements.unitPickerButton.disabled = false;
+  elements.unitPickerButton.textContent = unitPickerLabel();
+
+  const selectedCount = enabledUnitIds.size;
+  const allChecked = allUnitsSelected();
+  const anyChecked = selectedCount > 0;
+
+  elements.unitPickerList.innerHTML = [
+    `
+      <label class="picker-option picker-option-master">
+        <input type="checkbox" data-unit-id="${ALL_UNITS_OPTION}" ${allChecked ? 'checked' : ''}>
+        <span>All Units</span>
+      </label>
+    `,
+    '<div class="picker-spacer" aria-hidden="true"></div>',
+    ...unitCatalog.map(unit => `
+      <label class="picker-option">
+        <input type="checkbox" data-unit-id="${unit.id}" ${enabledUnitIds.has(unit.id) ? 'checked' : ''}>
+        <span>${unit.name}</span>
+      </label>
+    `),
+  ].join('');
+
+  const allUnitsInput = elements.unitPickerList.querySelector(`input[data-unit-id="${ALL_UNITS_OPTION}"]`);
+  if (allUnitsInput) {
+    allUnitsInput.indeterminate = anyChecked && !allChecked;
+  }
 }
 
 function playableSubsectionsFor(category) {
@@ -279,8 +389,22 @@ function renderSettingsPanel() {
     return;
   }
 
-  elements.settingsSectionList.innerHTML = sectionOptions
-    .map(option => `
+  const allSectionsChecked = enabledSectionKeys.size === sectionOptions.length;
+  const anySectionsChecked = enabledSectionKeys.size > 0;
+
+  elements.settingsSectionList.innerHTML = [
+    `
+      <label class="settings-section-option settings-section-option-master">
+        <input
+          type="checkbox"
+          data-section-key="${ALL_SECTIONS_OPTION}"
+          ${allSectionsChecked ? 'checked' : ''}
+        >
+        <span>All Sections</span>
+      </label>
+    `,
+    '<div class="settings-section-spacer" aria-hidden="true"></div>',
+    ...sectionOptions.map(option => `
       <label class="settings-section-option">
         <input
           type="checkbox"
@@ -289,13 +413,27 @@ function renderSettingsPanel() {
         >
         <span>${option.label}</span>
       </label>
-    `)
-    .join('');
+    `),
+  ].join('');
+
+  const allSectionsInput = elements.settingsSectionList.querySelector(
+    `input[data-section-key="${ALL_SECTIONS_OPTION}"]`
+  );
+  if (allSectionsInput) {
+    allSectionsInput.indeterminate = anySectionsChecked && !allSectionsChecked;
+  }
 }
 
 function renderCurrentGameFromState() {
   resetState();
   clearError();
+
+  if (unitCatalog.length > 0 && enabledUnitIds.size === 0) {
+    renderGridMessage('No units selected.');
+    renderPoolMessage('No units selected.');
+    renderSettingsPanel();
+    return;
+  }
 
   const categories = filteredCategoriesFromSettings();
   if (sectionOptions.length > 0 && !enabledSectionKeys.size) {
@@ -375,7 +513,33 @@ function bindUi() {
     void initGame({ preserveFilters: true, reusePreparedCategories: true });
   });
 
-  elements.unitSelect.addEventListener('change', () => {
+  elements.unitPickerButton?.addEventListener('click', event => {
+    event.stopPropagation();
+
+    if (elements.unitPickerMenu?.hidden) {
+      openUnitPickerMenu();
+    } else {
+      closeUnitPickerMenu();
+    }
+  });
+
+  elements.unitPickerList?.addEventListener('change', event => {
+    const input = event.target instanceof HTMLInputElement ? event.target : null;
+    if (!input || input.type !== 'checkbox' || !input.dataset.unitId) {
+      return;
+    }
+
+    if (input.dataset.unitId === ALL_UNITS_OPTION) {
+      enabledUnitIds = input.checked
+        ? new Set(unitCatalog.map(unit => unit.id))
+        : new Set();
+    } else if (input.checked) {
+      enabledUnitIds.add(input.dataset.unitId);
+    } else {
+      enabledUnitIds.delete(input.dataset.unitId);
+    }
+
+    renderUnitPicker();
     void initGame();
   });
 
@@ -386,6 +550,7 @@ function bindUi() {
   });
 
   elements.settingsBtn?.addEventListener('click', () => {
+    closeUnitPickerMenu();
     openSettingsModal();
   });
 
@@ -408,7 +573,11 @@ function bindUi() {
       return;
     }
 
-    if (input.checked) {
+    if (input.dataset.sectionKey === ALL_SECTIONS_OPTION) {
+      enabledSectionKeys = input.checked
+        ? new Set(sectionOptions.map(option => option.key))
+        : new Set();
+    } else if (input.checked) {
       enabledSectionKeys.add(input.dataset.sectionKey);
     } else {
       enabledSectionKeys.delete(input.dataset.sectionKey);
@@ -429,27 +598,44 @@ function bindUi() {
 
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') {
+      closeUnitPickerMenu();
       closeSettingsModal();
     }
   });
 
+  document.addEventListener('click', event => {
+    if (!(event.target instanceof Element)) {
+      closeUnitPickerMenu();
+      return;
+    }
+
+    if (!event.target.closest('.picker-control')) {
+      closeUnitPickerMenu();
+    }
+  });
+
   window.addEventListener('blur', () => {
+    closeUnitPickerMenu();
     clearHoverOpenCards();
   });
 }
 
 async function initializeCatalog() {
-  elements.unitSelect.disabled = true;
+  if (elements.unitPickerButton) {
+    elements.unitPickerButton.disabled = true;
+    elements.unitPickerButton.textContent = 'Loading units...';
+  }
 
   try {
     const remoteUnits = await fetchRemoteCatalog();
-    applyUnitCatalog(remoteUnits, ALL_UNITS_OPTION);
+    applyUnitCatalog(remoteUnits);
     clearError();
     await initGame();
   } catch (error) {
     unitCatalog = [];
     unitCache = new Map();
-    populateUnitSelect();
+    enabledUnitIds = new Set();
+    renderUnitPicker();
     renderPoolMessage('Host the site to load unit data.');
     renderGridMessage('No hosted unit data available');
     showError(
@@ -482,30 +668,11 @@ async function fetchRemoteCatalog() {
     }));
 }
 
-function populateUnitSelect(selectedValue = ALL_UNITS_OPTION) {
-  if (!unitCatalog.length) {
-    elements.unitSelect.innerHTML = '<option>No units loaded</option>';
-    elements.unitSelect.disabled = true;
-    return;
-  }
-
-  const options = [`<option value="${ALL_UNITS_OPTION}">All Units</option>`]
-    .concat(
-      unitCatalog.map(unit => `<option value="${unit.id}">${unit.name}</option>`)
-    )
-    .join('');
-
-  elements.unitSelect.innerHTML = options;
-  elements.unitSelect.disabled = false;
-  elements.unitSelect.value = unitCatalog.some(unit => unit.id === selectedValue)
-    ? selectedValue
-    : ALL_UNITS_OPTION;
-}
-
-function applyUnitCatalog(units, selectedValue = ALL_UNITS_OPTION) {
+function applyUnitCatalog(units, preserveSelection = false) {
   unitCatalog = units;
   unitCache = new Map();
-  populateUnitSelect(selectedValue);
+  syncUnitFilters(preserveSelection);
+  renderUnitPicker();
 }
 
 async function loadUnitCategories(unit) {
@@ -783,18 +950,18 @@ async function categoriesForCurrentSelection() {
     return [];
   }
 
-  if (elements.unitSelect.value === ALL_UNITS_OPTION) {
-    const bundles = await Promise.all(unitCatalog.map(unit => loadUnitCategories(unit)));
-    return bundles.flat().map(prepareCategoryForAllUnits);
-  }
-
-  const selectedUnit = unitCatalog.find(unit => unit.id === elements.unitSelect.value);
-  if (!selectedUnit) {
+  const activeUnits = selectedUnits();
+  if (!activeUnits.length) {
     return [];
   }
 
-  const categories = await loadUnitCategories(selectedUnit);
-  return categories.map(prepareCategoryForSingleUnit);
+  if (activeUnits.length === 1) {
+    const categories = await loadUnitCategories(activeUnits[0]);
+    return categories.map(prepareCategoryForSingleUnit);
+  }
+
+  const bundles = await Promise.all(activeUnits.map(unit => loadUnitCategories(unit)));
+  return bundles.flat().map(prepareCategoryForAllUnits);
 }
 
 function redundantNameRowValue(category) {
@@ -1322,7 +1489,7 @@ function updateCompletedCardLayout() {
   const columnCount = gridColumnCount();
   const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
   const completedCards = cards.filter(card => card.classList.contains('card-complete'));
-  const isAllUnitsMode = elements.unitSelect.value === ALL_UNITS_OPTION;
+  const isAllUnitsMode = groupedUnitsMode();
   const preserveColumnSlots = isAllUnitsMode || (incompleteCards.length > 0 && completedCards.length > 0);
 
   grid.innerHTML = '';

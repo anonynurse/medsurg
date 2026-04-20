@@ -87,9 +87,19 @@
 
     <div class="header-controls">
       <div class="picker-control">
-        <select id="unit-select" aria-label="Choose a unit">
-          <option>Loading units...</option>
-        </select>
+        <button
+          id="unit-picker-button"
+          class="unit-picker-button"
+          type="button"
+          aria-haspopup="menu"
+          aria-expanded="false"
+          aria-controls="unit-picker-menu"
+        >
+          Loading units...
+        </button>
+        <div id="unit-picker-menu" class="unit-picker-menu" hidden>
+          <div id="unit-picker-list" class="unit-picker-list"></div>
+        </div>
       </div>
       <button id="settings-btn" class="settings-btn" type="button" aria-haspopup="dialog" aria-controls="settings-modal">
         Settings

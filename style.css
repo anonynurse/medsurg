@@ -67,12 +67,13 @@ h1 {
 }
 
 .picker-control {
+  position: relative;
   display: flex;
   align-items: center;
   min-width: 220px;
 }
 
-.picker-control select {
+.unit-picker-button {
   background: rgba(6, 24, 39, 0.9);
   color: #ecfbff;
   border: 1px solid #4b97ba;
@@ -84,12 +85,12 @@ h1 {
   transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
 }
 
-.picker-control select {
+.unit-picker-button {
   min-width: 220px;
   height: 34px;
   padding: 0 34px 0 10px;
-  appearance: none;
   cursor: pointer;
+  text-align: left;
   background-image:
     linear-gradient(45deg, transparent 50%, #7fdbff 50%),
     linear-gradient(135deg, #7fdbff 50%, transparent 50%);
@@ -98,29 +99,76 @@ h1 {
     calc(100% - 10px) 14px;
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
-  color-scheme: dark;
 }
 
-.picker-control select:focus,
+.unit-picker-button:focus,
 #reset-btn:focus {
   outline: none;
   border-color: #7fdbff;
   box-shadow: 0 0 18px rgba(127, 219, 255, 0.3);
 }
 
-.picker-control select:hover {
+.unit-picker-button:hover,
+.picker-control.open .unit-picker-button {
   background: rgba(127, 219, 255, 0.12);
   border-color: #7fdbff;
 }
 
-.picker-control select option {
-  background: #061827;
-  color: #ecfbff;
-}
-
-.picker-control select:disabled {
+.unit-picker-button:disabled {
   opacity: 0.7;
   cursor: default;
+}
+
+.unit-picker-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: min(280px, 72vw);
+  background: rgba(6, 24, 39, 0.98);
+  border: 1px solid #4b97ba;
+  border-radius: 3px;
+  box-shadow: 0 0 18px rgba(127, 219, 255, 0.18), inset 0 0 20px rgba(0, 0, 0, 0.38);
+  z-index: 220;
+}
+
+.unit-picker-list {
+  display: flex;
+  flex-direction: column;
+  max-height: min(360px, 60vh);
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.picker-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #ecfbff;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+}
+
+.picker-option + .picker-option {
+  margin-top: 8px;
+}
+
+.picker-option input {
+  margin-top: 2px;
+  accent-color: #7fdbff;
+}
+
+.picker-spacer {
+  height: 10px;
+  flex: 0 0 auto;
+}
+
+.picker-empty-state {
+  color: #7bc5de;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 0;
 }
 
 .settings-btn {
@@ -703,10 +751,9 @@ h1 {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px 14px;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   padding-right: 4px;
 }
 
@@ -720,9 +767,18 @@ h1 {
   line-height: 1.45;
 }
 
+.settings-section-option + .settings-section-option {
+  margin-top: 8px;
+}
+
 .settings-section-option input {
   margin-top: 2px;
   accent-color: #7fdbff;
+}
+
+.settings-section-spacer {
+  height: 12px;
+  flex: 0 0 auto;
 }
 
 .settings-empty-state {
@@ -754,7 +810,7 @@ h1 {
   }
 
   .picker-control,
-  .picker-control select {
+  .unit-picker-button {
     min-width: 0;
     width: auto;
   }
@@ -850,8 +906,7 @@ h1 {
   }
 
   .settings-section-list {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 0;
   }
 
   .app-header {
@@ -869,9 +924,15 @@ h1 {
     min-width: 0;
   }
 
-  .picker-control select {
+  .unit-picker-button {
     width: 100%;
     min-width: 0;
+  }
+
+  .unit-picker-menu {
+    width: 100%;
+    right: auto;
+    left: 0;
   }
 
   .layout {
