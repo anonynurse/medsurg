@@ -1304,6 +1304,7 @@ function updateZoneCompletionState(zone) {
     zone.classList.add('complete');
     subsection?.classList.add('subsection-complete');
     updateCardCompletionState(zone.closest('.category'));
+    updatePoolLockedSectionMarkers();
     return;
   }
 
@@ -1317,6 +1318,7 @@ function updateZoneCompletionState(zone) {
   zone.classList.toggle('complete', isComplete);
   subsection?.classList.toggle('subsection-complete', isComplete);
   updateCardCompletionState(zone.closest('.category'));
+  updatePoolLockedSectionMarkers();
 }
 
 function updateCardCompletionState(card) {
