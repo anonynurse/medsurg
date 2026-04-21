@@ -110,7 +110,11 @@ function lockedPoolLabelsFromCards() {
   document.querySelectorAll('.category.card-locked').forEach(card => {
     card.querySelectorAll('.subsection[data-key]').forEach(subsection => {
       const key = subsection.dataset.key;
-      if (!key || subsection.classList.contains('prefilled-name-section')) {
+      if (
+        !key ||
+        subsection.classList.contains('prefilled-name-section') ||
+        subsection.classList.contains('subsection-complete')
+      ) {
         return;
       }
 

@@ -343,9 +343,14 @@ h1 {
   border-bottom-color: #7fdbff;
 }
 
+.pool-section-has-locked-card .pool-section-label {
+  color: #f1fdff;
+  border-bottom-color: #8fdfff;
+}
+
 .pool-section-has-locked-card .pool-section-label-text {
-  color: #c9f4ff;
-  text-shadow: 0 0 8px rgba(127, 219, 255, 0.22);
+  color: #f1fdff;
+  text-shadow: 0 0 10px rgba(127, 219, 255, 0.38);
 }
 
 .pool-section-collapsed .pool-row {
