@@ -270,12 +270,47 @@ h1 {
 }
 
 .pool-section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
   font-size: 0.53rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #7bc5de;
   border-bottom: 1px solid #29617e;
   padding-bottom: 3px;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pool-section-label::after {
+  content: '−';
+  color: #98e7ff;
+  font-size: 0.62rem;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.pool-section-label[aria-expanded='false']::after {
+  content: '+';
+}
+
+.pool-section-label:hover {
+  color: #a7ebff;
+}
+
+.pool-section-label:focus {
+  outline: none;
+  color: #a7ebff;
+  border-bottom-color: #7fdbff;
+}
+
+.pool-section-collapsed .pool-row {
+  display: none;
 }
 
 .pool-row {

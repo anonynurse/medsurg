@@ -45,6 +45,7 @@ const TRANSIENT_CARD_OPEN_CLASSES = ['card-hover-open', 'card-drag-hover', 'card
 
 let allItems = [];
 let baseCategories = [];
+let collapsedPoolSections = new Set();
 let enabledSectionKeys = new Set();
 let enabledUnitIds = new Set();
 let placedLog = {};
@@ -565,6 +566,16 @@ function bindUi() {
 
   elements.settingsClose?.addEventListener('click', () => {
     closeSettingsModal();
+  });
+
+  elements.pool?.addEventListener('click', event => {
+    const button = event.target instanceof Element ? event.target.closest('.pool-section-label') : null;
+    if (!button) {
+      return;
+    }
+
+    event.stopPropagation();
+    togglePoolSection(button.closest('.pool-section'));
   });
 
   elements.settingsSectionList?.addEventListener('change', event => {
@@ -1433,6 +1444,10 @@ function setTransientCardOpenState(card, className) {
   }
 }
 
+function hasLockedCards() {
+  return Boolean(document.querySelector('.category.card-locked'));
+}
+
 function toggleCardLock(card) {
   if (!card) {
     return;
@@ -1586,10 +1601,11 @@ function syncHoverOpenCards(target) {
 
   const hoveredCard = target instanceof Element ? target.closest('.category') : null;
   const hoveredColumn = target instanceof Element ? target.closest('.grid-column') : null;
+  const hoverOpeningDisabled = hasLockedCards();
   let changed = false;
 
   document.querySelectorAll('.category.card-hover-open').forEach(card => {
-    if (card !== hoveredCard) {
+    if (hoverOpeningDisabled || card !== hoveredCard) {
       card.classList.remove('card-hover-open');
       changed = true;
     }
@@ -1671,6 +1687,7 @@ function attachCardInteractionListeners() {
     summary.addEventListener('mouseenter', () => {
       if (
         isMobile() ||
+        hasLockedCards() ||
         card.classList.contains('card-locked') ||
         card.classList.contains('card-hover-open') ||
         card.classList.contains('card-hover-suppressed')
@@ -1815,7 +1832,13 @@ function buildPool() {
     const section = document.createElement('div');
     section.className = 'pool-section';
     section.dataset.baseOrder = String(index);
-    section.innerHTML = `<div class="pool-section-label">${label}</div>`;
+    section.dataset.poolLabel = label;
+    section.classList.toggle('pool-section-collapsed', collapsedPoolSections.has(label));
+    section.innerHTML = `
+      <button type="button" class="pool-section-label" aria-expanded="${collapsedPoolSections.has(label) ? 'false' : 'true'}">
+        <span class="pool-section-label-text">${label}</span>
+      </button>
+    `;
 
     const row = document.createElement('div');
     row.className = 'pool-row';
@@ -1838,6 +1861,31 @@ function updatePoolSectionLayout() {
     section.classList.toggle('pool-section-empty', !hasPills);
     section.style.order = String(hasPills ? baseOrder : offset + baseOrder);
   });
+}
+
+function togglePoolSection(section) {
+  if (!section) {
+    return;
+  }
+
+  const label = section.dataset.poolLabel;
+  if (!label) {
+    return;
+  }
+
+  const willCollapse = !section.classList.contains('pool-section-collapsed');
+  section.classList.toggle('pool-section-collapsed', willCollapse);
+
+  const labelButton = section.querySelector('.pool-section-label');
+  if (labelButton) {
+    labelButton.setAttribute('aria-expanded', willCollapse ? 'false' : 'true');
+  }
+
+  if (willCollapse) {
+    collapsedPoolSections.add(label);
+  } else {
+    collapsedPoolSections.delete(label);
+  }
 }
 
 function makePill(item) {
