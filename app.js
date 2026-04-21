@@ -29,6 +29,7 @@ const elements = {
   grid: document.getElementById('grid'),
   gridWrapper: document.querySelector('.grid-wrapper'),
   pool: document.getElementById('pool'),
+  poolContent: document.getElementById('pool-content'),
   poolToggleAll: document.getElementById('pool-toggle-all'),
   poolWrapper: document.querySelector('.pool-wrapper'),
   resetBtn: document.getElementById('reset-btn'),
@@ -171,7 +172,9 @@ function showError(message) {
 }
 
 function renderPoolMessage(message) {
-  elements.pool.innerHTML = `<div class="empty-state">${message}</div>`;
+  if (elements.poolContent) {
+    elements.poolContent.innerHTML = `<div class="empty-state">${message}</div>`;
+  }
   updatePoolToggleAllButton();
 }
 
@@ -429,7 +432,7 @@ function renderSettingsPanel() {
     return;
   }
 
-  const hasRemainingPills = Boolean(elements.pool.querySelector('.drug-pill'));
+  const hasRemainingPills = Boolean(elements.poolContent?.querySelector('.drug-pill'));
   elements.settingsActionRestart.disabled = baseCategories.length === 0;
   elements.settingsActionSolve.disabled = !hasRemainingPills;
 
@@ -1240,13 +1243,22 @@ function buildGrid(categories) {
         </div>
       `)
       .join('');
+    const placeholderBodyHtml = !bodySubsections.length
+      ? `
+        <div class="subsection placeholder-subsection subsection-complete">
+          <div class="sub-pills complete placeholder-status" data-prefilled="true">
+            <span class="placed-pill placeholder-pill">Not Finished</span>
+          </div>
+        </div>
+      `
+      : '';
 
     box.innerHTML = `
       <div class="card-summary">
         ${titleHtml}
         ${nameHeaderHtml}
       </div>
-      <div class="card-body">${bodyHtml}</div>
+      <div class="card-body">${bodyHtml || placeholderBodyHtml}</div>
     `;
     elements.grid.appendChild(box);
     applyPrefilledSections(category);
@@ -2110,7 +2122,11 @@ function attachDropZoneListeners() {
 }
 
 function buildPool() {
-  elements.pool.innerHTML = '';
+  if (!elements.poolContent) {
+    return;
+  }
+
+  elements.poolContent.innerHTML = '';
 
   const sectionMap = new Map();
   allItems.forEach(item => {
@@ -2137,6 +2153,8 @@ function buildPool() {
     return;
   }
 
+  collapsedPoolSections = new Set(sections.map(([label]) => label));
+
   sections.forEach(([label, items], index) => {
     const section = document.createElement('div');
     section.className = 'pool-section';
@@ -2154,7 +2172,7 @@ function buildPool() {
     shuffle(items).forEach(item => row.appendChild(makePill(item)));
 
     section.appendChild(row);
-    elements.pool.appendChild(section);
+    elements.poolContent.appendChild(section);
   });
 
   updatePoolSectionLayout();
@@ -2163,7 +2181,7 @@ function buildPool() {
 }
 
 function updatePoolSectionLayout() {
-  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  const sections = [...elements.poolContent.querySelectorAll('.pool-section')];
   const offset = sections.length + 1;
 
   sections.forEach((section, index) => {
@@ -2210,7 +2228,7 @@ function collapsePoolSectionByLabel(label) {
     return;
   }
 
-  const section = [...elements.pool.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
+  const section = [...elements.poolContent.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
   setPoolSectionCollapsed(section, true);
 }
 
@@ -2234,7 +2252,7 @@ function updatePoolToggleAllButton() {
     return;
   }
 
-  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  const sections = [...elements.poolContent.querySelectorAll('.pool-section')];
   if (!sections.length) {
     elements.poolToggleAll.disabled = true;
     elements.poolToggleAll.textContent = 'Collapse All';
@@ -2247,7 +2265,7 @@ function updatePoolToggleAllButton() {
 }
 
 function toggleAllPoolSections() {
-  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  const sections = [...elements.poolContent.querySelectorAll('.pool-section')];
   if (!sections.length) {
     return;
   }
@@ -2615,11 +2633,14 @@ function shake(pill) {
 }
 
 function checkComplete() {
-  if (document.querySelectorAll('#pool .drug-pill').length !== 0) {
+  if (document.querySelectorAll('#pool-content .drug-pill').length !== 0) {
     return;
   }
 
-  elements.pool.innerHTML = '<div class="success-msg">All correct</div>';
+  if (elements.poolContent) {
+    elements.poolContent.innerHTML = '<div class="success-msg">All correct</div>';
+  }
+  updatePoolToggleAllButton();
   elements.resetBtn.style.display = 'block';
 }
 

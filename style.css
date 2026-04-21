@@ -235,17 +235,18 @@ h1 {
 
 .pool-toggle-all {
   width: 100%;
-  height: 28px;
+  height: 24px;
   background: rgba(6, 24, 39, 0.9);
   color: #7bc5de;
   border: 1px solid #29617e;
   border-radius: 2px;
   font-family: 'Share Tech Mono', monospace;
-  font-size: 0.5rem;
+  font-size: 0.46rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: 0 0 10px rgba(127, 219, 255, 0.1);
+  flex: 0 0 auto;
 }
 
 .pool-toggle-all:hover:not(:disabled) {
@@ -275,24 +276,33 @@ h1 {
   padding: 8px 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   position: relative;
-  overflow-y: auto;
   flex: 1;
   min-height: 220px;
+  overflow: hidden;
 }
 
-.pool::-webkit-scrollbar,
+.pool-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.pool-content::-webkit-scrollbar,
 .grid-wrapper::-webkit-scrollbar {
   width: 3px;
 }
 
-.pool::-webkit-scrollbar-track,
+.pool-content::-webkit-scrollbar-track,
 .grid-wrapper::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.pool::-webkit-scrollbar-thumb,
+.pool-content::-webkit-scrollbar-thumb,
 .grid-wrapper::-webkit-scrollbar-thumb {
   background: #2d6f8e;
   border-radius: 2px;
@@ -710,6 +720,20 @@ h1 {
 
 .sub-pills.complete:not(.prefilled-name) .placed-pill .hint {
   color: #82d8ee;
+}
+
+.placeholder-subsection .sub-pills.placeholder-status {
+  border-style: solid;
+  border-color: #28556f;
+  background: rgba(77, 124, 148, 0.1);
+}
+
+.placeholder-subsection .sub-pills.placeholder-status .placed-pill {
+  border-color: #4b7790;
+  color: #91bfd2;
+  text-shadow: none;
+  box-shadow: none;
+  background: rgba(10, 34, 52, 0.22);
 }
 
 .prefilled-section .sub-pills {
