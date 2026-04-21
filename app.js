@@ -142,6 +142,8 @@ function updatePoolLockedSectionMarkers() {
     section.classList.toggle('pool-section-has-locked-card', hasIncomplete);
     section.classList.remove('pool-section-locked-complete');
   });
+
+  return lockedStates;
 }
 
 function subsectionsFor(category) {
@@ -1303,7 +1305,15 @@ function updateZoneCompletionState(zone) {
     zone.classList.add('complete');
     subsection?.classList.add('subsection-complete');
     updateCardCompletionState(zone.closest('.category'));
-    updatePoolLockedSectionMarkers();
+    const lockedStates = updatePoolLockedSectionMarkers();
+    if (subsection?.dataset.key) {
+      const poolLabel = poolLabelFor(subsection.dataset.key);
+      const labelState = lockedStates.get(poolLabel);
+      if (!labelState?.hasIncomplete) {
+        collapsePoolSectionByLabel(poolLabel);
+        updatePoolToggleAllButton();
+      }
+    }
     return;
   }
 
@@ -1317,7 +1327,16 @@ function updateZoneCompletionState(zone) {
   zone.classList.toggle('complete', isComplete);
   subsection?.classList.toggle('subsection-complete', isComplete);
   updateCardCompletionState(zone.closest('.category'));
-  updatePoolLockedSectionMarkers();
+  const lockedStates = updatePoolLockedSectionMarkers();
+
+  if (isComplete && subsection?.dataset.key) {
+    const poolLabel = poolLabelFor(subsection.dataset.key);
+    const labelState = lockedStates.get(poolLabel);
+    if (!labelState?.hasIncomplete) {
+      collapsePoolSectionByLabel(poolLabel);
+      updatePoolToggleAllButton();
+    }
+  }
 }
 
 function updateCardCompletionState(card) {
@@ -1916,6 +1935,44 @@ function updatePoolSectionLayout() {
   updatePoolToggleAllButton();
 }
 
+function setPoolSectionCollapsed(section, shouldCollapse) {
+  if (!section) {
+    return;
+  }
+
+  const isCollapsed = section.classList.contains('pool-section-collapsed');
+  if (isCollapsed === shouldCollapse) {
+    return;
+  }
+
+  section.classList.toggle('pool-section-collapsed', shouldCollapse);
+
+  const labelButton = section.querySelector('.pool-section-label');
+  if (labelButton) {
+    labelButton.setAttribute('aria-expanded', shouldCollapse ? 'false' : 'true');
+  }
+
+  const label = section.dataset.poolLabel;
+  if (!label) {
+    return;
+  }
+
+  if (shouldCollapse) {
+    collapsedPoolSections.add(label);
+  } else {
+    collapsedPoolSections.delete(label);
+  }
+}
+
+function collapsePoolSectionByLabel(label) {
+  if (!label) {
+    return;
+  }
+
+  const section = [...elements.pool.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
+  setPoolSectionCollapsed(section, true);
+}
+
 function togglePoolSection(section) {
   if (!section) {
     return;
@@ -1927,19 +1984,7 @@ function togglePoolSection(section) {
   }
 
   const willCollapse = !section.classList.contains('pool-section-collapsed');
-  section.classList.toggle('pool-section-collapsed', willCollapse);
-
-  const labelButton = section.querySelector('.pool-section-label');
-  if (labelButton) {
-    labelButton.setAttribute('aria-expanded', willCollapse ? 'false' : 'true');
-  }
-
-  if (willCollapse) {
-    collapsedPoolSections.add(label);
-  } else {
-    collapsedPoolSections.delete(label);
-  }
-
+  setPoolSectionCollapsed(section, willCollapse);
   updatePoolToggleAllButton();
 }
 
