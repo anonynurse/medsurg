@@ -232,6 +232,40 @@ h1 {
   gap: 8px;
 }
 
+.pool-toggle-all {
+  width: 100%;
+  height: 28px;
+  background: rgba(6, 24, 39, 0.9);
+  color: #7bc5de;
+  border: 1px solid #29617e;
+  border-radius: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(127, 219, 255, 0.1);
+}
+
+.pool-toggle-all:hover:not(:disabled) {
+  color: #a7ebff;
+  border-color: #4b97ba;
+  background: rgba(127, 219, 255, 0.08);
+}
+
+.pool-toggle-all:focus {
+  outline: none;
+  color: #a7ebff;
+  border-color: #7fdbff;
+  box-shadow: 0 0 16px rgba(127, 219, 255, 0.22);
+}
+
+.pool-toggle-all:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
 .pool {
   background: rgba(6, 24, 39, 0.9);
   outline: 1px solid #2d6f8e;

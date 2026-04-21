@@ -28,6 +28,7 @@ const elements = {
   grid: document.getElementById('grid'),
   gridWrapper: document.querySelector('.grid-wrapper'),
   pool: document.getElementById('pool'),
+  poolToggleAll: document.getElementById('pool-toggle-all'),
   poolWrapper: document.querySelector('.pool-wrapper'),
   resetBtn: document.getElementById('reset-btn'),
   settingsActionRestart: document.getElementById('settings-restart'),
@@ -125,6 +126,7 @@ function showError(message) {
 
 function renderPoolMessage(message) {
   elements.pool.innerHTML = `<div class="empty-state">${message}</div>`;
+  updatePoolToggleAllButton();
 }
 
 function renderGridMessage(message) {
@@ -576,6 +578,10 @@ function bindUi() {
 
     event.stopPropagation();
     togglePoolSection(button.closest('.pool-section'));
+  });
+
+  elements.poolToggleAll?.addEventListener('click', () => {
+    toggleAllPoolSections();
   });
 
   elements.settingsSectionList?.addEventListener('change', event => {
@@ -1849,6 +1855,7 @@ function buildPool() {
   });
 
   updatePoolSectionLayout();
+  updatePoolToggleAllButton();
 }
 
 function updatePoolSectionLayout() {
@@ -1861,6 +1868,8 @@ function updatePoolSectionLayout() {
     section.classList.toggle('pool-section-empty', !hasPills);
     section.style.order = String(hasPills ? baseOrder : offset + baseOrder);
   });
+
+  updatePoolToggleAllButton();
 }
 
 function togglePoolSection(section) {
@@ -1886,6 +1895,57 @@ function togglePoolSection(section) {
   } else {
     collapsedPoolSections.delete(label);
   }
+
+  updatePoolToggleAllButton();
+}
+
+function updatePoolToggleAllButton() {
+  if (!elements.poolToggleAll) {
+    return;
+  }
+
+  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  if (!sections.length) {
+    elements.poolToggleAll.disabled = true;
+    elements.poolToggleAll.textContent = 'Collapse All';
+    return;
+  }
+
+  const allCollapsed = sections.every(section => section.classList.contains('pool-section-collapsed'));
+  elements.poolToggleAll.disabled = false;
+  elements.poolToggleAll.textContent = allCollapsed ? 'Reveal All' : 'Collapse All';
+}
+
+function toggleAllPoolSections() {
+  const sections = [...elements.pool.querySelectorAll('.pool-section')];
+  if (!sections.length) {
+    return;
+  }
+
+  const allCollapsed = sections.every(section => section.classList.contains('pool-section-collapsed'));
+
+  sections.forEach(section => {
+    const label = section.dataset.poolLabel;
+    if (!label) {
+      return;
+    }
+
+    const willCollapse = !allCollapsed;
+    section.classList.toggle('pool-section-collapsed', willCollapse);
+
+    const labelButton = section.querySelector('.pool-section-label');
+    if (labelButton) {
+      labelButton.setAttribute('aria-expanded', willCollapse ? 'false' : 'true');
+    }
+
+    if (willCollapse) {
+      collapsedPoolSections.add(label);
+    } else {
+      collapsedPoolSections.delete(label);
+    }
+  });
+
+  updatePoolToggleAllButton();
 }
 
 function makePill(item) {
