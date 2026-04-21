@@ -437,6 +437,50 @@ h1 {
   80% { transform: translateX(4px); }
 }
 
+@keyframes card-completion-flash {
+  0%, 8% {
+    background: rgba(6, 24, 39, 0.9);
+    border-color: #2d6f8e;
+    box-shadow: 0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45);
+    transform: scale(1);
+  }
+  12%, 24%,
+  44%, 56%,
+  76%, 88% {
+    background: rgba(10, 34, 52, 0.95);
+    border-color: #7fdbff;
+    box-shadow: 0 0 28px rgba(127, 219, 255, 0.38), inset 0 0 28px rgba(127, 219, 255, 0.1);
+    transform: scale(1.015);
+  }
+  30%, 38%,
+  62%, 70%,
+  92%, 100% {
+    background: rgba(6, 24, 39, 0.9);
+    border-color: #2d6f8e;
+    box-shadow: 0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45);
+    transform: scale(1);
+  }
+}
+
+@keyframes card-completion-text-flash {
+  0%, 8% {
+    color: #d8f9ff;
+    text-shadow: none;
+  }
+  12%, 24%,
+  44%, 56%,
+  76%, 88% {
+    color: #a7ebff;
+    text-shadow: 0 0 10px #7fdbff;
+  }
+  30%, 38%,
+  62%, 70%,
+  92%, 100% {
+    color: #d8f9ff;
+    text-shadow: none;
+  }
+}
+
 #reset-btn {
   padding: 7px 0;
   width: 100%;
@@ -542,6 +586,19 @@ h1 {
   background: var(--card-surface);
   border-color: var(--card-border);
   box-shadow: 0 0 22px rgba(127, 219, 255, 0.28), inset 0 0 24px rgba(127, 219, 255, 0.07);
+}
+
+.category.card-completing .card-summary {
+  cursor: default;
+}
+
+.category.card-completing {
+  will-change: transform, filter, box-shadow, border-color;
+}
+
+.category.card-completing .cat-title,
+.category.card-completing .sub-pills.prefilled-name .placed-pill {
+  will-change: color, text-shadow, filter;
 }
 
 .grid-divider {
@@ -714,6 +771,10 @@ h1 {
 .category.card-locked .card-body,
 .category:focus-within .card-body {
   display: flex;
+}
+
+.category.card-completing .card-body {
+  display: none !important;
 }
 
 .settings-modal-overlay {

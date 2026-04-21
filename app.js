@@ -22,6 +22,7 @@ const POOL_SECTION_ORDER = [
 ];
 
 const LAST_POOL_SECTION_LABEL = 'Notes';
+const CARD_COMPLETION_ANIMATION_MS = 1050;
 
 const elements = {
   errorBanner: document.getElementById('error-banner'),
@@ -53,8 +54,11 @@ let placedLog = {};
 let sectionOptions = [];
 let draggingId = null;
 let selectedPill = null;
+let suppressCompletionAnimation = false;
 let unitCatalog = [];
 let unitCache = new Map();
+
+const completionAnimationHandles = new WeakMap();
 
 const isMobile = () => window.matchMedia('(pointer: coarse)').matches;
 
@@ -507,44 +511,50 @@ function solveCurrentGame() {
     return;
   }
 
-  if (selectedPill) {
-    selectedPill.classList.remove('tap-selected');
-    selectedPill = null;
-  }
+  suppressCompletionAnimation = true;
 
-  clearTapTargets();
-  clearDropZoneHints();
+  try {
+    if (selectedPill) {
+      selectedPill.classList.remove('tap-selected');
+      selectedPill = null;
+    }
 
-  const placements = allItems
-    .flatMap(item => [...item.correctCats].map(categoryId => ({ item, categoryId })))
-    .sort((left, right) => {
-      const leftParentRank = left.item.parentId ? 1 : 0;
-      const rightParentRank = right.item.parentId ? 1 : 0;
-      if (leftParentRank !== rightParentRank) {
-        return leftParentRank - rightParentRank;
-      }
+    clearTapTargets();
+    clearDropZoneHints();
 
-      const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      if (leftOrder !== rightOrder) {
-        return leftOrder - rightOrder;
-      }
+    const placements = allItems
+      .flatMap(item => [...item.correctCats].map(categoryId => ({ item, categoryId })))
+      .sort((left, right) => {
+        const leftParentRank = left.item.parentId ? 1 : 0;
+        const rightParentRank = right.item.parentId ? 1 : 0;
+        if (leftParentRank !== rightParentRank) {
+          return leftParentRank - rightParentRank;
+        }
 
-      if (left.categoryId !== right.categoryId) {
-        return left.categoryId.localeCompare(right.categoryId);
-      }
+        const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+        const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+        if (leftOrder !== rightOrder) {
+          return leftOrder - rightOrder;
+        }
 
-      if (left.item.type !== right.item.type) {
-        return left.item.type.localeCompare(right.item.type);
-      }
+        if (left.categoryId !== right.categoryId) {
+          return left.categoryId.localeCompare(right.categoryId);
+        }
 
-      return left.item.label.localeCompare(right.item.label);
+        if (left.item.type !== right.item.type) {
+          return left.item.type.localeCompare(right.item.type);
+        }
+
+        return left.item.label.localeCompare(right.item.label);
+      });
+
+    placements.forEach(({ item, categoryId }) => {
+      draggingId = item.id;
+      handleDrop(categoryId, item.type, item.parentId || null);
     });
-
-  placements.forEach(({ item, categoryId }) => {
-    draggingId = item.id;
-    handleDrop(categoryId, item.type, item.parentId || null);
-  });
+  } finally {
+    suppressCompletionAnimation = false;
+  }
 
   draggingId = null;
   document.querySelectorAll('.category').forEach(card => {
@@ -1339,6 +1349,213 @@ function updateZoneCompletionState(zone) {
   }
 }
 
+function cancelPendingCardCompletion(card) {
+  if (!card) {
+    return false;
+  }
+
+  const pendingHandles = completionAnimationHandles.get(card);
+  if (pendingHandles) {
+    if (pendingHandles.timeoutId) {
+      window.clearTimeout(pendingHandles.timeoutId);
+    }
+
+    if (pendingHandles.animations) {
+      pendingHandles.animations.forEach(animation => {
+        try {
+          animation.cancel();
+        } catch (error) {
+          // Ignore stale animation handles.
+        }
+      });
+    }
+
+    completionAnimationHandles.delete(card);
+  }
+
+  if (!card.classList.contains('card-completing')) {
+    return false;
+  }
+
+  card.classList.remove('card-completing');
+  return true;
+}
+
+function playCardCompletionAnimations(card) {
+  if (
+    !card ||
+    !card.isConnected ||
+    !card.classList.contains('card-completing') ||
+    typeof card.animate !== 'function'
+  ) {
+    return [];
+  }
+
+  const animations = [];
+
+  animations.push(card.animate(
+    [
+      {
+        borderColor: '#2d6f8e',
+        boxShadow: '0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45)',
+        filter: 'brightness(1)',
+        transform: 'scale(1)',
+      },
+      {
+        borderColor: '#7fdbff',
+        boxShadow: '0 0 32px rgba(127, 219, 255, 0.46), inset 0 0 30px rgba(127, 219, 255, 0.12)',
+        filter: 'brightness(1.38)',
+        transform: 'scale(1.02)',
+        offset: 0.14,
+      },
+      {
+        borderColor: '#2d6f8e',
+        boxShadow: '0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45)',
+        filter: 'brightness(1)',
+        transform: 'scale(1)',
+        offset: 0.28,
+      },
+      {
+        borderColor: '#7fdbff',
+        boxShadow: '0 0 32px rgba(127, 219, 255, 0.46), inset 0 0 30px rgba(127, 219, 255, 0.12)',
+        filter: 'brightness(1.38)',
+        transform: 'scale(1.02)',
+        offset: 0.48,
+      },
+      {
+        borderColor: '#2d6f8e',
+        boxShadow: '0 0 14px rgba(127, 219, 255, 0.12), inset 0 0 20px rgba(0, 0, 0, 0.45)',
+        filter: 'brightness(1)',
+        transform: 'scale(1)',
+        offset: 0.62,
+      },
+      {
+        borderColor: '#7fdbff',
+        boxShadow: '0 0 32px rgba(127, 219, 255, 0.46), inset 0 0 30px rgba(127, 219, 255, 0.12)',
+        filter: 'brightness(1.38)',
+        transform: 'scale(1.02)',
+        offset: 0.82,
+      },
+      {
+        borderColor: '#7fdbff',
+        boxShadow: '0 0 32px rgba(127, 219, 255, 0.46), inset 0 0 30px rgba(127, 219, 255, 0.12)',
+        filter: 'brightness(1.22)',
+        transform: 'scale(1)',
+      },
+    ],
+    {
+      duration: CARD_COMPLETION_ANIMATION_MS,
+      easing: 'ease-in-out',
+      fill: 'forwards',
+    }
+  ));
+
+  card.querySelectorAll('.cat-title, .sub-pills.prefilled-name .placed-pill').forEach(element => {
+    if (typeof element.animate !== 'function') {
+      return;
+    }
+
+    animations.push(element.animate(
+      [
+        { color: '#d8f9ff', textShadow: 'none', filter: 'brightness(1)' },
+        { color: '#a7ebff', textShadow: '0 0 14px #7fdbff', filter: 'brightness(1.4)', offset: 0.14 },
+        { color: '#d8f9ff', textShadow: 'none', filter: 'brightness(1)', offset: 0.28 },
+        { color: '#a7ebff', textShadow: '0 0 14px #7fdbff', filter: 'brightness(1.4)', offset: 0.48 },
+        { color: '#d8f9ff', textShadow: 'none', filter: 'brightness(1)', offset: 0.62 },
+        { color: '#a7ebff', textShadow: '0 0 14px #7fdbff', filter: 'brightness(1.4)', offset: 0.82 },
+        { color: '#a7ebff', textShadow: '0 0 10px #7fdbff', filter: 'brightness(1.2)' },
+      ],
+      {
+        duration: CARD_COMPLETION_ANIMATION_MS,
+        easing: 'ease-in-out',
+        fill: 'forwards',
+      }
+    ));
+  });
+
+  return animations;
+}
+
+function finishCardCompletion(card) {
+  if (!card) {
+    return;
+  }
+
+  const pendingHandles = completionAnimationHandles.get(card);
+  if (pendingHandles) {
+    if (pendingHandles.timeoutId) {
+      window.clearTimeout(pendingHandles.timeoutId);
+    }
+
+    if (pendingHandles.animations) {
+      pendingHandles.animations.forEach(animation => {
+        try {
+          animation.cancel();
+        } catch (error) {
+          // Ignore stale animation handles.
+        }
+      });
+    }
+
+    completionAnimationHandles.delete(card);
+  }
+
+  if (!card.isConnected) {
+    return;
+  }
+
+  if (!card.classList.contains('card-completing')) {
+    return;
+  }
+
+  card.classList.remove('card-completing');
+  card.classList.add('card-complete');
+  updateCompletedCardLayout();
+}
+
+function beginCardCompletion(card) {
+  if (!card || card.classList.contains('card-complete') || card.classList.contains('card-completing')) {
+    return;
+  }
+
+  stripCardOpenState(card, { includeLock: true, suppressHover: false });
+
+  if (suppressCompletionAnimation) {
+    card.classList.add('card-complete');
+    updateCompletedCardLayout();
+    return;
+  }
+
+  card.classList.add('card-completing');
+  updateCompletedCardLayout();
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      const activeHandles = completionAnimationHandles.get(card);
+      if (!activeHandles || !card.classList.contains('card-completing')) {
+        return;
+      }
+
+      const animations = playCardCompletionAnimations(card);
+      activeHandles.animations = animations;
+
+      if (animations.length) {
+        Promise.allSettled(animations.map(animation => animation.finished)).then(() => {
+          if (completionAnimationHandles.get(card) === activeHandles) {
+            finishCardCompletion(card);
+          }
+        });
+      }
+    });
+  });
+
+  const timeoutId = window.setTimeout(() => {
+    finishCardCompletion(card);
+  }, CARD_COMPLETION_ANIMATION_MS + 160);
+
+  completionAnimationHandles.set(card, { timeoutId, animations: [] });
+}
+
 function updateCardCompletionState(card) {
   if (!card) {
     return;
@@ -1350,13 +1567,26 @@ function updateCardCompletionState(card) {
     actionableZones.length > 0 &&
     actionableZones.every(zone => zone.classList.contains('complete'));
   const wasComplete = card.classList.contains('card-complete');
-  card.classList.toggle('card-complete', isComplete);
+  const wasCompleting = card.classList.contains('card-completing');
 
-  if (wasComplete !== isComplete) {
-    if (isComplete) {
-      stripCardOpenState(card, { includeLock: true, suppressHover: false });
+  if (isComplete) {
+    if (!wasComplete && !wasCompleting) {
+      beginCardCompletion(card);
     }
+    return;
+  }
 
+  let changed = false;
+  if (cancelPendingCardCompletion(card)) {
+    changed = true;
+  }
+
+  if (wasComplete) {
+    card.classList.remove('card-complete');
+    changed = true;
+  }
+
+  if (changed) {
     updateCompletedCardLayout();
   }
 }
@@ -1569,8 +1799,8 @@ function updateCompletedCardLayout() {
   }
 
   const columnCount = gridColumnCount();
-  const incompleteCards = cards.filter(card => !card.classList.contains('card-complete'));
-  const completedCards = cards.filter(card => card.classList.contains('card-complete'));
+  const incompleteCards = cards.filter(card => !card.classList.contains('card-complete') || card.classList.contains('card-completing'));
+  const completedCards = cards.filter(card => card.classList.contains('card-complete') && !card.classList.contains('card-completing'));
   const isAllUnitsMode = groupedUnitsMode();
   const preserveColumnSlots = isAllUnitsMode || (incompleteCards.length > 0 && completedCards.length > 0);
 
@@ -1716,7 +1946,12 @@ function clearCardOpenStateForNewPick() {
 }
 
 function markCardOpenAfterPlacement(card) {
-  if (!card || card.classList.contains('card-locked') || card.classList.contains('card-complete')) {
+  if (
+    !card ||
+    card.classList.contains('card-locked') ||
+    card.classList.contains('card-complete') ||
+    card.classList.contains('card-completing')
+  ) {
     return;
   }
 
@@ -1724,7 +1959,7 @@ function markCardOpenAfterPlacement(card) {
 }
 
 function expandCardForDrag(card) {
-  if (!card || !draggingId || isMobile()) {
+  if (!card || !draggingId || isMobile() || card.classList.contains('card-completing')) {
     return;
   }
 
@@ -1756,6 +1991,7 @@ function attachCardInteractionListeners() {
       if (
         isMobile() ||
         hasLockedCards() ||
+        card.classList.contains('card-completing') ||
         card.classList.contains('card-locked') ||
         card.classList.contains('card-hover-open') ||
         card.classList.contains('card-hover-suppressed')
@@ -1780,6 +2016,10 @@ function attachCardInteractionListeners() {
 
     summary.addEventListener('click', event => {
       event.stopPropagation();
+
+      if (card.classList.contains('card-completing')) {
+        return;
+      }
 
       if (card.classList.contains('card-post-drop-open') && !card.classList.contains('card-locked')) {
         stripCardOpenState(card, { suppressHover: true });
