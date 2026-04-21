@@ -104,6 +104,32 @@ function poolSectionRank(label) {
   return index === -1 ? POOL_SECTION_ORDER.length : index;
 }
 
+function lockedPoolLabelsFromCards() {
+  const labels = new Set();
+
+  document.querySelectorAll('.category.card-locked').forEach(card => {
+    card.querySelectorAll('.subsection[data-key]').forEach(subsection => {
+      const key = subsection.dataset.key;
+      if (!key || subsection.classList.contains('prefilled-name-section')) {
+        return;
+      }
+
+      labels.add(poolLabelFor(key));
+    });
+  });
+
+  return labels;
+}
+
+function updatePoolLockedSectionMarkers() {
+  const lockedLabels = lockedPoolLabelsFromCards();
+
+  document.querySelectorAll('.pool-section').forEach(section => {
+    const poolLabel = section.dataset.poolLabel;
+    section.classList.toggle('pool-section-has-locked-card', Boolean(poolLabel) && lockedLabels.has(poolLabel));
+  });
+}
+
 function subsectionsFor(category) {
   return Object.keys(category)
     .filter(key => !META_KEYS.has(key))
@@ -1537,6 +1563,7 @@ function updateCompletedCardLayout() {
   }
 
   normalizeCardSummaryHeights();
+  updatePoolLockedSectionMarkers();
 }
 
 function normalizeCardSummaryHeights() {
@@ -1856,6 +1883,7 @@ function buildPool() {
 
   updatePoolSectionLayout();
   updatePoolToggleAllButton();
+  updatePoolLockedSectionMarkers();
 }
 
 function updatePoolSectionLayout() {
