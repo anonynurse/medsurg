@@ -138,10 +138,9 @@ function updatePoolLockedSectionMarkers() {
     const poolLabel = section.dataset.poolLabel;
     const state = poolLabel ? lockedStates.get(poolLabel) : null;
     const hasIncomplete = Boolean(state?.hasIncomplete);
-    const hasCompleteOnly = Boolean(state?.hasComplete) && !hasIncomplete;
 
     section.classList.toggle('pool-section-has-locked-card', hasIncomplete);
-    section.classList.toggle('pool-section-locked-complete', hasCompleteOnly);
+    section.classList.remove('pool-section-locked-complete');
   });
 }
 
