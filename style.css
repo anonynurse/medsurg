@@ -343,10 +343,9 @@ h1 {
   border-bottom-color: #7fdbff;
 }
 
-.pool-section-has-locked-card .pool-section-label-text::before {
-  content: '* ';
-  color: #a7ebff;
-  text-shadow: 0 0 6px rgba(127, 219, 255, 0.25);
+.pool-section-has-locked-card .pool-section-label-text {
+  color: #c9f4ff;
+  text-shadow: 0 0 8px rgba(127, 219, 255, 0.22);
 }
 
 .pool-section-collapsed .pool-row {
