@@ -353,6 +353,16 @@ h1 {
   text-shadow: 0 0 10px rgba(127, 219, 255, 0.38);
 }
 
+.pool-section-locked-complete .pool-section-label {
+  color: rgba(123, 197, 222, 0.48);
+  border-bottom-color: rgba(75, 151, 186, 0.35);
+}
+
+.pool-section-locked-complete .pool-section-label-text {
+  color: rgba(123, 197, 222, 0.48);
+  text-shadow: none;
+}
+
 .pool-section-collapsed .pool-row {
   display: none;
 }

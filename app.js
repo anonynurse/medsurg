@@ -104,33 +104,44 @@ function poolSectionRank(label) {
   return index === -1 ? POOL_SECTION_ORDER.length : index;
 }
 
-function lockedPoolLabelsFromCards() {
-  const labels = new Set();
+function lockedPoolLabelStates() {
+  const states = new Map();
 
   document.querySelectorAll('.category.card-locked').forEach(card => {
     card.querySelectorAll('.subsection[data-key]').forEach(subsection => {
       const key = subsection.dataset.key;
-      if (
-        !key ||
-        subsection.classList.contains('prefilled-name-section') ||
-        subsection.classList.contains('subsection-complete')
-      ) {
+      if (!key || subsection.classList.contains('prefilled-name-section')) {
         return;
       }
 
-      labels.add(poolLabelFor(key));
+      const poolLabel = poolLabelFor(key);
+      if (!states.has(poolLabel)) {
+        states.set(poolLabel, { hasIncomplete: false, hasComplete: false });
+      }
+
+      const state = states.get(poolLabel);
+      if (subsection.classList.contains('subsection-complete')) {
+        state.hasComplete = true;
+      } else {
+        state.hasIncomplete = true;
+      }
     });
   });
 
-  return labels;
+  return states;
 }
 
 function updatePoolLockedSectionMarkers() {
-  const lockedLabels = lockedPoolLabelsFromCards();
+  const lockedStates = lockedPoolLabelStates();
 
   document.querySelectorAll('.pool-section').forEach(section => {
     const poolLabel = section.dataset.poolLabel;
-    section.classList.toggle('pool-section-has-locked-card', Boolean(poolLabel) && lockedLabels.has(poolLabel));
+    const state = poolLabel ? lockedStates.get(poolLabel) : null;
+    const hasIncomplete = Boolean(state?.hasIncomplete);
+    const hasCompleteOnly = Boolean(state?.hasComplete) && !hasIncomplete;
+
+    section.classList.toggle('pool-section-has-locked-card', hasIncomplete);
+    section.classList.toggle('pool-section-locked-complete', hasCompleteOnly);
   });
 }
 
