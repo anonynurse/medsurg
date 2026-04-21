@@ -1310,13 +1310,14 @@ function updateZoneCompletionState(zone) {
   }
 
   const subsection = zone.closest('.subsection');
+  const shouldAutoCollapsePoolSection = hasLockedCards();
 
   if (zone.dataset.prefilled === 'true') {
     zone.classList.add('complete');
     subsection?.classList.add('subsection-complete');
     updateCardCompletionState(zone.closest('.category'));
     const lockedStates = updatePoolLockedSectionMarkers();
-    if (subsection?.dataset.key) {
+    if (shouldAutoCollapsePoolSection && subsection?.dataset.key) {
       const poolLabel = poolLabelFor(subsection.dataset.key);
       const labelState = lockedStates.get(poolLabel);
       if (!labelState?.hasIncomplete) {
@@ -1339,7 +1340,7 @@ function updateZoneCompletionState(zone) {
   updateCardCompletionState(zone.closest('.category'));
   const lockedStates = updatePoolLockedSectionMarkers();
 
-  if (isComplete && subsection?.dataset.key) {
+  if (shouldAutoCollapsePoolSection && isComplete && subsection?.dataset.key) {
     const poolLabel = poolLabelFor(subsection.dataset.key);
     const labelState = lockedStates.get(poolLabel);
     if (!labelState?.hasIncomplete) {

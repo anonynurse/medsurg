@@ -1,0 +1,95 @@
+{
+  "title": "Hypertension and Stroke",
+  "tables": [
+    {
+      "table_name": "Chronic Hypertension",
+      "rows": {
+        "Name": "Chronic Hypertension",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Ischemic Stroke",
+      "rows": {
+        "Name": "Ischemic Stroke",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Transient Ischemic Attack",
+      "rows": {
+        "Name": "Transient Ischemic Attack",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Hemorrhagic Stroke",
+      "rows": {
+        "Name": "Hemorrhagic Stroke",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Left Brain Damage",
+      "rows": {
+        "Name": "Left Brain Damage",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Right Brain Damage",
+      "rows": {
+        "Name": "Right Brain Damage",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    }
+  ]
+}

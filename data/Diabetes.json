@@ -1,0 +1,258 @@
+{
+  "title": "Diabetes",
+  "tables": [
+    {
+      "table_name": "Pancreas - islets of langerhans",
+      "rows": {
+        "Name": "Pancreas - islets of langerhans",
+        "Function (Beta cells)": "Make insulin",
+        "Function (Alpha cells)": "Make glucagon",
+        "Function (Dela cells)": "Make somatostatin (tells liver to release glucose)",
+        "Function (Epsilon cells)": "Make ghrelin (hunger signalling"
+      }
+    },
+    {
+      "table_name": "Prediabetes",
+      "rows": {
+        "Name": "Prediabetes",
+        "Description": "Impaired glucose tolerance",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": [
+          "Fasting glucose 6.1 - 6.9 mmol/L (normal 4 - 6)",
+          "HbA1c 6.0-6.4% (normal < 6)"
+        ],
+        "Clinical Manifestations": "High serum glucose can damage blood vessels, leading to heart disease stroke, kidney and eye injury",
+        "Management": [
+          "Maintain healthy weight",
+          "Regular exercise",
+          "Healthy diet - low sugar low alcohol",
+          "Medications to reduce risk factors"
+        ],
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Type 1 Diabetes Mellitus",
+      "rows": {
+        "Name": "Type 1 Diabetes Mellitus",
+        "Description": [
+          "Autoimmune destruction of beta cells in the pancreas",
+          "Little to no insulin production"
+        ],
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": [
+          "3Ps - polyuria (peeing), polydipsia (thirst), polyphagia (hunger)",
+          "Weakness, fatigue, weight loss, acute visual changes",
+          "Onset usually < 30 years old"
+        ],
+        "Management": [
+          "Requires insulin therapy",
+          "Blood glucose monitoring",
+          "Nutrition and exercise"
+        ],
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Type 2 Diabetes Mellitus",
+      "rows": {
+        "Name": "Type 2 Diabetes Mellitus",
+        "Description": "Pancreas produces insulin but it is insufficient or poorly used",
+        "Etiology": "Insulin resistance",
+        "Risk Factors": [
+          "Overweight (80 - 90%)",
+          "Latin american, indigenous, asian, african descents",
+          "Gestational diabetes or macrocosmic infant",
+          "History of: hypertension, vascular disease, DLE (discoid lupus erythematosus), PCOS, schizophrenia (metabolic syndrome from meds)"
+        ],
+        "Pathophysiology": "",
+        "Diagnostics": [
+          "Screening every 3 years in pts over 40 or high risk",
+          "Fasting glucose > 7 mmol/L",
+          "HbA1c > 6.5%"
+        ],
+        "Clinical Manifestations": [
+          "Gradual onset",
+          "Overweight",
+          "Fatigue",
+          "Recurrent infections and prolonged healing",
+          "Visual acuity changes",
+          "Peripheral neuropathy"
+        ],
+        "Management": [
+          "Medications (biguanides, sulphonylureas, meglitinides, thiazolidinediones, glucagon-like peptide GLP-1)",
+          "Nutrition and exercise",
+          "Blood glucose monitoring",
+          "Foot care"
+        ],
+        "Medication (biguanide)": [
+          "Ex. metformin",
+          "Increases insulin sensitivity in the tissues, and reduces hepatic glucose production",
+          "Assess renal function (contraindicated CKD 4 or 5), monitor b9 and b19",
+          "Must be discontinued before radiological or contrast procedures"
+        ],
+        "Medication (sulphonylurea)": [
+          "Ex. glyburide, glimepiride",
+          "Stimulate insulin production in the beta cells and increase insulin receptor sensitivity (may decrease hepatic glucose production)",
+          "Use cautiously in older pts with renal impairment, risk of hypoglycemia",
+          "Sulfa allergy",
+          "Usually admin q1d at breakfast"
+        ],
+        "Medication (meglitinide)": [
+          "Ex repaglinide",
+          "Stimulate beta cells to close K channels which opens Ca channels, resulting in increased insulin production",
+          "Rapidly absorbed and eliminated, risk for hypoglycemia",
+          "Take 30 min before meal, do not take if NPO",
+          "Caution if liver disease or renal insufficient"
+        ],
+        "Medication (thiazolidinedione)": [
+          "Ex pioglitazone (reduces hepatic fat, can be used with renal insufficiency), rosiglitazone",
+          "Insulin sensitizers that act on intracellular metabolic pathway to enhance insulin action in fat and skeletal tissue",
+          "Lowers triglycerides and improves HDLS",
+          "Side effects: weight gain, edema - not recommended for pt with CHF"
+        ],
+        "Medication (GLP-1)": [
+          "Ex. Semaglutide",
+          "Admin SubQ",
+          "Cardiovascular benefits",
+          "Approved use for weightloss",
+          "2nd line therapy for DM2",
+          "Not approved for pediatrics"
+        ],
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Hypoglycemia",
+      "rows": {
+        "Name": "Hypoglycemia",
+        "Description": "Too much insulin or low blood sugar",
+        "Diagnostic": "Glucose < 4 mmol/ L",
+        "Clinical Manifestations": [
+          "Changes in vision",
+          "Cool clammy skin",
+          "Faintness, dizziness, syncope",
+          "Headache",
+          "Hunger, nausea",
+          "Tremors, unsteady gait",
+          "Tachycardia, palpitations",
+          "Slurred speech",
+          "Confusion, stupor, coma"
+        ],
+        "Management": [
+          "Ingestion of 15-20g simple carbs; reassess blood glucose after 15min; repeat 15-20g carbs if necessary",
+          "If unable to swallow - D50 or IM glucagon",
+          "Focused assessment - RR HR LOC",
+          "Ensure sitting or lying down"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperglycemia",
+      "rows": {
+        "Name": "Hyperglycemia",
+        "Description": "Not enough insulin or excess blood sugar",
+        "Diagnostic": "",
+        "Pathophysiology": "",
+        "Clinical Manifestations": "",
+        "Management": ""
+      }
+    },
+    {
+      "table_name": "Diabetic KetoAcidosis",
+      "rows": {
+        "Name": "Diabetic KetoAcidosis",
+        "Description": [
+          "Acute metabolic complication of diabetes",
+          "Ketonemia, hyperglycemia, metabolic acidosis"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperosmolar Hyperglycemic State",
+      "rows": {
+        "Name": "Hyperosmolar Hyperglycemic State",
+        "Description": "Extremely high blood glucose but ketones are absent or minimal",
+        "Diagnostics": [
+          "Serum glucose > 34 mmol/L",
+          "Serum hyperosmolarity"
+        ],
+        "Clinical manifestations": [
+          "Somnolence \u2192 coma",
+          "Seizures",
+          "Hemiparesis",
+          "Aphasia"
+        ],
+        "Management": ""
+      }
+    },
+    {
+      "table_name": "Complications - Atherosclerosis",
+      "rows": {
+        "Name": "Complications - Atherosclerosis",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Complications - Retinopathy",
+      "rows": {
+        "Name": "Complications - Retinopathy",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Complications - Nephropathy",
+      "rows": {
+        "Name": "Complications - Nephropathy",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Complications - Neuropathy",
+      "rows": {
+        "Name": "Complications - Neuropathy",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    }
+  ]
+}

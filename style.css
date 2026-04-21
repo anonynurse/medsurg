@@ -230,6 +230,7 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 1;
 }
 
 .pool-toggle-all {
@@ -521,6 +522,10 @@ h1 {
   flex: 1 1 0;
   min-width: 0;
   overflow-y: auto;
+  position: relative;
+  z-index: 2;
+  margin-left: -16px;
+  padding-left: 16px;
   padding-right: 4px;
 }
 

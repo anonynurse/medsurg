@@ -1,6 +1,8 @@
 {
   "units": [
+    "Diabetes.json",
     "Endocrine.json",
+    "Hypertension and Stroke.json",
     "Musculoskeletal.json",
     "Neurological.json"
   ]
