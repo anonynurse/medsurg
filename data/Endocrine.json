@@ -108,7 +108,7 @@
         "Nursing": [
           "Avoid calcium, iron, antacids, soy products within 4 hours of medication",
           "Regular blood tests (TSH, T4)",
-          "Increase fiber and fluid inake",
+          "Increase fiber and fluid intake",
           "Avoid exposure to cold"
         ]
       }
@@ -192,7 +192,7 @@
       "rows": {
         "Name": "Hyperparathyroidism",
         "Description (primary)": "Enlargement of one or more of the glands (causes overproduction of PTH); causes high calcium levels which can cause a variety of health problems",
-        "Description (secondary)": "Chronic low calcium in body, body overcompensates (with increased PTH); common in kidne disease, or after intestinal surgeries or disease",
+        "Description (secondary)": "Chronic low calcium in body, body overcompensates (with increased PTH); common in kidney disease, or after intestinal surgeries or disease",
         "Clinical Manifestations": "",
         "Management": [
           "\u201cWatchful waiting\u201d - monitor Ca levels",
@@ -234,13 +234,34 @@
       "table_name": "Cushing\u2019s Syndrome",
       "rows": {
         "Name": "Cushing\u2019s Syndrome",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
+        "Description": "Hypersecretion of cortisol or ACTH",
+        "Etiology": "Body creates or ingests too many glucocorticoids (betamethasone, methylprednisolone) or pituitary tumor",
+        "Risk Factors": "Corticosteroid use",
         "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Treatment": "",
+        "Diagnostics": [
+          "Done in 2 steps: 1 confirm hydrocortisone, 2 determine cause.",
+          "24hr urinary free cortisol",
+          "Late night saliva cortisol",
+          "Dexamethasone Suppression Test (pt takes dexamethasone and cortisol is measured, low and high versions)",
+          "Plasma ACTH level (adrenocorticotropic levels measured)",
+          "CT of adrenal glands",
+          "MRI of pituitary",
+          "Inferior Petrosal Sinus Sampling (measure ACTV from veins draining pituitary)"
+        ],
+        "Clinical Manifestations": [
+          "Fatty hump between shoulders, or over clavicle",
+          "Rounded (moon) face",
+          "Stretch marks",
+          "Pendulous abdomen",
+          "Ecchymosis / easy bruising",
+          "Weight gain with atrophy",
+          "Thinning / receding hairline, increased body and facial hair",
+          "Hypertension, T2DM, slow wound healing, thin skin and subq tissue"
+        ],
+        "Treatment": [
+          "Suppress ACTH from pituitary",
+          "If tumor cause - radiation / surgery; if pituitary gland - hypophysectomy"
+        ],
         "Nursing": ""
       }
     },
@@ -248,34 +269,81 @@
       "table_name": "Addison\u2019s Disease",
       "rows": {
         "Name": "Addison\u2019s Disease",
-        "Description": "",
-        "Etiology": "",
+        "Description": "Adrenal insufficiency (glucocorticoids, mineralocorticoids)",
+        "Etiology": "Destruction of the adrenal cortex: autoimmune, infection, sudden cessation of high dose steroid",
         "Risk Factors": "",
         "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Treatment": "",
-        "Nursing": ""
+        "Diagnostics": [
+          "1. Detect low cortisol 2. Confirm adrenal failure 3. Identify cause",
+          "Morning serum cortisol (cortisol normally highest in the morning)",
+          "ACTH stimulation test - uses cosyntropin synthetic version",
+          "Plasma ACTH level",
+          "CT of adrenal glands"
+        ],
+        "Clinical Manifestations": [
+          "Bronze discoloration of the skin",
+          "Progressive anemia, low BP, weakness",
+          "vitiligo",
+          "Crisis - fever, syncope, convulsions, hypoglycemia, hyponatremia, severe vomiting/diarrhea; can lead to circulatory collapse"
+        ],
+        "Treatment": [
+          "Hydrocortisone, prednisone, or dexamethasone (replaces cortisol, pred and dex longer acting)",
+          "Fludrocortisone (replaces aldosterone, restores electro balance and maintains bp)",
+          "Salt supplementation",
+          "Extra steroid doses during stress",
+          "Crisis - high dose IV hydrocortisone,large volume IV fluids with saline and dextrose; manage shock state"
+        ],
+        "Nursing": [
+          "Recognize early signs of crisis",
+          "Teach self administering corticosteroids in emergency with vomiting",
+          "Maintain adequate electrolyte and fluid intake"
+        ]
       }
     },
     {
-      "table_name": "Posterior Pituitary",
+      "table_name": "Pituitary Gland",
       "rows": {
-        "Name": "Posterior Pituitary",
-        "Function": "",
-        "Notes": ""
+        "Name": "Pituitary Gland",
+        "Function (anterior)": [
+          "GH",
+          "ACTH",
+          "TSH",
+          "FSH and LH",
+          "PRL"
+        ],
+        "Function (posterior)": [
+          "ADH",
+          "Oxytoxin"
+        ]
       }
     },
     {
       "table_name": "SIADH",
       "rows": {
         "Name": "SIADH",
-        "Description": "",
-        "Etiology": "",
+        "Description": [
+          "Impaired water secretion",
+          "Posterior Pituitary - hormonal hypersecretion"
+        ],
+        "Etiology": "CNS disorder (stroke, infection, trauma), small cell lung carcinoma, some drugs (SSRIs, carbamazepine), pulmonary diseases",
         "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
+        "Pathophysiology": "Excessive amount of serum ADH, the usual feedback mechanism does not decrease secretion",
+        "Diagnostics": [
+          "Serum sodium - hyponatremia ( < 135 mEq/L)",
+          "Serum Osmolality - Low (<275 mOsm/kg)",
+          "Urine Sodium - High (>20\u201340 mEq/L)",
+          "Urine Osmolality - Inappropriately high (>100 mOsm/kg)"
+        ],
+        "Clinical Manifestations": [
+          "\u201cSoaked inside\u201d (dilution)",
+          "Hyponatremia (dilutional), low serum osmolality, concentrated urine, nausea, confusion, seizures, fluid retention"
+        ],
+        "Management": [
+          "Goal - restore normal fluid volume and serum osmolality",
+          "Fluid and sodium restriction",
+          "Replace electrolyte losses - hypertonic solution slowly with lasix",
+          "DDAVP - reduces overcorrection of hyponatremia"
+        ],
         "Treatment": "",
         "Nursing": ""
       }
@@ -284,13 +352,31 @@
       "table_name": "Diabetes Insipidus",
       "rows": {
         "Name": "Diabetes Insipidus",
-        "Description": "",
-        "Etiology": "",
+        "Description": "Posterior Pituitary - hormonal deficiency",
+        "Description (central / neurogenic)": "Interference with ADH synthesis / release (brain tumor, head injury, cns infection)",
+        "Description (nephrogenic)": "Inadequate renal response to ADH (renal damage)",
+        "Description (primary)": "Uncommon - Excessive water intake (tumor in thirst center, psychological disorder)",
+        "Etiology": "Head trauma, pituitary surgery, tumors, autoimmune destruction, genetic",
         "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Treatment": "",
+        "Pathophysiology": "Decrease in ADH (vasopressin) leads to inability to concentrate urine",
+        "Diagnostics": [
+          "Serum Osmolality - Increased (>295 mOsm/kg)",
+          "Urine Osmolality - Low (<300 mOsm/kg)",
+          "Urine Specific Gravity - Low (<1.005)",
+          "Serum Sodium - Increased (hypernatremia)",
+          "Water Deprivation Test - Urine remains dilute despite dehydration",
+          "Desmopressin (ADH) Stimulation Test - Urine concentrates in central; little/no change in nephrogenic",
+          "MRI of Brain / Pituitary - May show pituitary or hypothalamic abnormalities",
+          "24-Hour Urine Volume - Polyuria (>3 L/day in adults)"
+        ],
+        "Clinical Manifestations": [
+          "\u201cDry inside\u201d",
+          "Polyuria, polydipsia, hypernatremia",
+          "Nocturia",
+          "Weightloss, low turgor, hypotension",
+          "Very large urine output - 5 to 20 L / day (> 3 L./day is polyuria)"
+        ],
+        "Treatment": "Desmopressin",
         "Nursing": ""
       }
     },
@@ -298,12 +384,62 @@
       "table_name": "Cerebral Salt Wasting Syndrome",
       "rows": {
         "Name": "Cerebral Salt Wasting Syndrome",
-        "Description": "",
+        "Description": "rare, seen in patients with cerebral tumours, subarachnoid bleeds, trans-sphenoidal pituitary injury, meningitis",
         "Etiology": "",
         "Risk Factors": "",
         "Pathophysiology": "",
         "Diagnostics": "",
-        "Clinical Manifestations": "",
+        "Clinical Manifestations": [
+          "Mimics SIADH except\u2026 (hypovolemic, SIADH has mild fluid overload)",
+          "Hyponatremia",
+          "High urine sodium",
+          "High urine output",
+          "Hypovolemia (hypotension, tachyc, low turgor, weight loss)"
+        ],
+        "Management": [
+          "Replace sodium and fluids",
+          "Salt supplement",
+          "Fludrocortisone"
+        ],
+        "Treatment": "Treat the underlying neurological cause",
+        "Nursing": [
+          "Strict IO",
+          "Daily weights",
+          "Monitor serum sodium frequently",
+          "Assess for neuro changes",
+          "Watch for overcorrection of sodium"
+        ]
+      }
+    },
+    {
+      "table_name": "Pancreas - islets of langerhans",
+      "rows": {
+        "Name": "Pancreas - islets of langerhans",
+        "Function (Beta cells)": "Make insulin",
+        "Function (Alpha cells)": "Make glucagon",
+        "Function (Dela cells)": "Make somatostatin (tells liver to release glucose)",
+        "Function (Epsilon cells)": "Make ghrelin (hunger signalling"
+      }
+    },
+    {
+      "table_name": "Prediabetes",
+      "rows": {
+        "Name": "Prediabetes",
+        "Description": "Impaired glucose tolerance",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Diagnostics": [
+          "Fasting glucose 6.1 - 6.9 mmol/L (normal 4 - 6)",
+          "HbA1c 6.0-6.4% (normal < 6)"
+        ],
+        "Clinical Manifestations": "High serum glucose can damage blood vessels, leading to heart disease stroke, kidney and eye injury",
+        "Management": [
+          "Maintain healthy weight",
+          "Regular exercise",
+          "Healthy diet - low sugar low alcohol",
+          "Medications to reduce risk factors"
+        ],
         "Treatment": "",
         "Nursing": ""
       }
@@ -312,12 +448,24 @@
       "table_name": "Type 1 Diabetes Mellitus",
       "rows": {
         "Name": "Type 1 Diabetes Mellitus",
-        "Description": "",
+        "Description": [
+          "Autoimmune destruction of beta cells in the pancreas",
+          "Little to no insulin production"
+        ],
         "Etiology": "",
         "Risk Factors": "",
         "Pathophysiology": "",
         "Diagnostics": "",
-        "Clinical Manifestations": "",
+        "Clinical Manifestations": [
+          "3Ps - polyuria (peeing), polydipsia (thirst), polyphagia (hunger)",
+          "Weakness, fatigue, weight loss, acute visual changes",
+          "Onset usually < 30 years old"
+        ],
+        "Management": [
+          "Requires insulin therapy",
+          "Blood glucose monitoring",
+          "Nutrition and exercise"
+        ],
         "Treatment": "",
         "Nursing": ""
       }
@@ -326,14 +474,134 @@
       "table_name": "Type 2 Diabetes Mellitus",
       "rows": {
         "Name": "Type 2 Diabetes Mellitus",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
+        "Description": "Pancreas produces insulin but it is insufficient or poorly used",
+        "Etiology": "Insulin resistance",
+        "Risk Factors": [
+          "Overweight (80 - 90%)",
+          "Latin american, indigenous, asian, african descents",
+          "Gestational diabetes or macrocosmic infant",
+          "History of: hypertension, vascular disease, DLE (discoid lupus erythematosus), PCOS, schizophrenia (metabolic syndrome from meds)"
+        ],
         "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
+        "Diagnostics": [
+          "Screening every 3 years in pts over 40 or high risk",
+          "Fasting glucose > 7 mmol/L",
+          "HbA1c > 6.5%"
+        ],
+        "Clinical Manifestations": [
+          "Gradual onset",
+          "Overweight",
+          "Fatigue",
+          "Recurrent infections and prolonged healing",
+          "Visual acuity changes",
+          "Peripheral neuropathy"
+        ],
+        "Management": [
+          "Medications (biguanides, sulphonylureas, meglitinides, thiazolidinediones, glucagon-like peptide GLP-1)",
+          "Nutrition and exercise",
+          "Blood glucose monitoring",
+          "Foot care"
+        ],
+        "Medication (biguanide)": [
+          "Ex. metformin",
+          "Increases insulin sensitivity in the tissues, and reduces hepatic glucose production",
+          "Assess renal function (contraindicated CKD 4 or 5), monitor b9 and b19",
+          "Must be discontinued before radiological or contrast procedures"
+        ],
+        "Medication (sulphonylurea)": [
+          "Ex. glyburide, glimepiride",
+          "Stimulate insulin production in the beta cells and increase insulin receptor sensitivity (may decrease hepatic glucose production)",
+          "Use cautiously in older pts with renal impairment, risk of hypoglycemia",
+          "Sulfa allergy",
+          "Usually admin q1d at breakfast"
+        ],
+        "Medication (meglitinide)": [
+          "Ex repaglinide",
+          "Stimulate beta cells to close K channels which opens Ca channels, resulting in increased insulin production",
+          "Rapidly absorbed and eliminated, risk for hypoglycemia",
+          "Take 30 min before meal, do not take if NPO",
+          "Caution if liver disease or renal insufficient"
+        ],
+        "Medication (thiazolidinedione)": [
+          "Ex pioglitazone (reduces hepatic fat, can be used with renal insufficiency), rosiglitazone",
+          "Insulin sensitizers that act on intracellular metabolic pathway to enhance insulin action in fat and skeletal tissue",
+          "Lowers triglycerides and improves HDLS",
+          "Side effects: weight gain, edema - not recommended for pt with CHF"
+        ],
+        "Medication (GLP-1)": [
+          "Ex. Semaglutide",
+          "Admin SubQ",
+          "Cardiovascular benefits",
+          "Approved use for weightloss",
+          "2nd line therapy for DM2",
+          "Not approved for pediatrics"
+        ],
         "Treatment": "",
         "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Hypoglycemia",
+      "rows": {
+        "Name": "Hypoglycemia",
+        "Description": "Too much insulin or low blood sugar",
+        "Diagnostic": "Glucose < 4 mmol/ L",
+        "Clinical Manifestations": [
+          "Changes in vision",
+          "Cool clammy skin",
+          "Faintness, dizziness, syncope",
+          "Headache",
+          "Hunger, nausea",
+          "Tremors, unsteady gait",
+          "Tachycardia, palpitations",
+          "Slurred speech",
+          "Confusion, stupor, coma"
+        ],
+        "Management": [
+          "Ingestion of 15-20g simple carbs; reassess blood glucose after 15min; repeat 15-20g carbs if necessary",
+          "If unable to swallow - D50 or IM glucagon",
+          "Focused assessment - RR HR LOC",
+          "Ensure sitting or lying down"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperglycemia",
+      "rows": {
+        "Name": "Hyperglycemia",
+        "Description": "Not enough insulin or excess blood sugar",
+        "Diagnostic": "",
+        "Pathophysiology": "",
+        "Clinical Manifestations": "",
+        "Management": ""
+      }
+    },
+    {
+      "table_name": "Diabetic KetoAcidosis",
+      "rows": {
+        "Name": "Diabetic KetoAcidosis",
+        "Description": [
+          "Acute metabolic complication of diabetes",
+          "Ketonemia, hyperglycemia, metabolic acidosis"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperosmolar Hyperglycemic State",
+      "rows": {
+        "Name": "Hyperosmolar Hyperglycemic State",
+        "Description": "Extremely high blood glucose but ketones are absent or minimal",
+        "Diagnostics": [
+          "Serum glucose > 34 mmol/L",
+          "Serum hyperosmolarity"
+        ],
+        "Clinical manifestations": [
+          "Somnolence \u2192 coma",
+          "Seizures",
+          "Hemiparesis",
+          "Aphasia"
+        ],
+        "Management": ""
       }
     }
   ]
