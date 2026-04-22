@@ -117,7 +117,7 @@
       "table_name": "Hashimoto\u2019s Thyroiditis",
       "rows": {
         "Name": "Hashimoto\u2019s Thyroiditis",
-        "Definition": "Chronic autoimmune disease that destroys the thyroid gland",
+        "Description": "Chronic autoimmune disease that destroys the thyroid gland",
         "Underlying Mechanism": "Immune system attacks thyroid",
         "Onset": "Gradual, develops over years",
         "Common Trigger": "Autoimmune process",
@@ -137,7 +137,7 @@
       "table_name": "Myxedema Coma",
       "rows": {
         "Name": "Myxedema Coma",
-        "Definition": "Life-threatening extreme form of severe hypothyroidism",
+        "Description": "Life-threatening extreme form of severe hypothyroidism",
         "Underlying Mechanism": "Decompensated hypothyroidism causing metabolic failure",
         "Onset": "Sudden deterioration in patients with severe untreated hypothyroidism",
         "Common Trigger": "Infection, cold exposure, trauma, surgery, sedatives",
@@ -160,7 +160,7 @@
         "Description": "Life threatening hypermetabolic crisis",
         "Etiology": "Infection, surgery, stopping meds",
         "Risk Factors": "",
-        "Pathophysiology": "Massive thyroid hormone surge -",
+        "Pathophysiology": "Massive thyroid hormone surge",
         "Diagnostics": "",
         "Clinical Manifestations": [
           "Extreme SNS activation",
@@ -274,7 +274,7 @@
         "Risk Factors": "",
         "Pathophysiology": "",
         "Diagnostics": [
-          "1. Detect low cortisol 2. Confirm adrenal failure 3. Identify cause",
+          "Detect low cortisol -> Confirm adrenal failure ->Identify cause",
           "Morning serum cortisol (cortisol normally highest in the morning)",
           "ACTH stimulation test - uses cosyntropin synthetic version",
           "Plasma ACTH level",

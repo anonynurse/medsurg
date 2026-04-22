@@ -62,33 +62,27 @@
       }
     },
     {
-      "table_name": "Left Brain Damage",
+      "table_name": "Brain Damage",
       "rows": {
-        "Name": "Left Brain Damage",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": ""
-      }
-    },
-    {
-      "table_name": "Right Brain Damage",
-      "rows": {
-        "Name": "Right Brain Damage",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
-        "Nursing": ""
+        "Name": "Brain Damage",
+        "Brain damage (right)": [
+          "Paralyzed left side",
+          "Left side neglect",
+          "Spatial-perceptual deficits",
+          "Tends to deny or minimize problems",
+          "Rapid performance, short attention span",
+          "Impulsive; safety problems",
+          "Impaired judgement",
+          "Impaired time concepts"
+        ],
+        "Brain damage (left)": [
+          "Paralyzed right side",
+          "Impaired speech - language, aphasias",
+          "Impaired right-left discrimination",
+          "Slow performance, cautious",
+          "Aware of deficits, depression, anxiety",
+          "Impaired comprehension related to language, math"
+        ]
       }
     }
   ]

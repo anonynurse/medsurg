@@ -135,7 +135,7 @@
       "rows": {
         "Name": "Hypoglycemia",
         "Description": "Too much insulin or low blood sugar",
-        "Diagnostic": "Glucose < 4 mmol/ L",
+        "Diagnostics": "Glucose < 4 mmol/ L",
         "Clinical Manifestations": [
           "Changes in vision",
           "Cool clammy skin",
@@ -160,7 +160,7 @@
       "rows": {
         "Name": "Hyperglycemia",
         "Description": "Not enough insulin or excess blood sugar",
-        "Diagnostic": "",
+        "Diagnostics": "",
         "Pathophysiology": "",
         "Clinical Manifestations": "",
         "Management": ""

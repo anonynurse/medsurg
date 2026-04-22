@@ -1,0 +1,164 @@
+{
+  "title": "GI",
+  "tables": [
+    {
+      "table_name": "GERD",
+      "rows": {
+        "Name": "GERD",
+        "Description": "Clinically significant alteration that occurs due to reflux of gastric contents into the lower esophagus",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": [
+          "Hiatal hernia",
+          "Incompetent Lower Esophageal Sphincter"
+        ],
+        "Assessment": "",
+        "Diagnostics": [
+          "Endoscopy",
+          "Barium Swallow"
+        ],
+        "Clinical Manifestations": "Complaints of heartburn after eating",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Gastritis",
+      "rows": {
+        "Name": "Gastritis",
+        "Description": "Inflammation of gastric mucosa that occurs due to breakdown of the normal gastric mucosal layer; acute or chronic",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Upper GI Bleed",
+      "rows": {
+        "Name": "Upper GI Bleed",
+        "Description": "Loss of blood from upper GI; severity depends on origin of the bleed",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Peptic Ulcer Disease",
+      "rows": {
+        "Name": "Peptic Ulcer Disease",
+        "Description": "Erosion of GI mucosa d/t HCl and pepsin; lower esophagus, stomach and duodenum are susceptible",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Acute Abdominal Pain",
+      "rows": {
+        "Name": "Acute Abdominal Pain",
+        "Description": "Severe unrelenting abdominal pain",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": [
+          "Acute pain",
+          "Rebound tenderness or guarding",
+          "Abdominal distension",
+          "Abdominal rigidity (peritonitis)"
+        ],
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Ulcerative Colitis",
+      "rows": {
+        "Name": "Ulcerative Colitis",
+        "Description": "Inflammatory bowel disease",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Intestinal Obstruction",
+      "rows": {
+        "Name": "Intestinal Obstruction",
+        "Description": [
+          "Partial or complete blockage of the intestine",
+          "Medical emergency"
+        ],
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations (small intestine)": [
+          "Rapid onset",
+          "Frequent copious vominging",
+          "Cramp like intermittent pain",
+          "May still pass feces for short period",
+          "High risk of dehyrdation"
+        ],
+        "Clinical Manifestations (large intestine)": [
+          "Gradual onset",
+          "Usually no vomiting",
+          "Low grade cramping",
+          "Absolute constipation",
+          "Abdominal distension"
+        ],
+        "Management": [
+          "NG decompression",
+          "NPO with IV fluids",
+          "Surgery to remove the obstruction and damaged bowel"
+        ],
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Diverticulosis/itis",
+      "rows": {
+        "Name": "Diverticulosis/itis",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    }
+  ]
+}

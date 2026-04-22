@@ -10,18 +10,22 @@ const POOL_GROUPS = [
   },
 ];
 
-const POOL_SECTION_ORDER = [
+const SECTION_DISPLAY_ORDER = [
   'Description',
   'Etiology',
   'Risk Factors',
   'Pathophysiology',
+  'Assessment',
   'Diagnostics',
   'Clinical Manifestations',
+  'Management',
   'Treatment',
   'Nursing',
+  'Notes',
 ];
-
-const LAST_POOL_SECTION_LABEL = 'Notes';
+const SECTION_DISPLAY_ORDER_INDEX = new Map(
+  SECTION_DISPLAY_ORDER.map((label, index) => [label, index])
+);
 const CARD_COMPLETION_ANIMATION_MS = 1050;
 
 const elements = {
@@ -51,6 +55,8 @@ let baseCategories = [];
 let collapsedPoolSections = new Set();
 let enabledSectionKeys = new Set();
 let enabledUnitIds = new Set();
+let expectedCountBySlot = new Map();
+let itemsById = new Map();
 let placedLog = {};
 let sectionOptions = [];
 let draggingId = null;
@@ -101,12 +107,23 @@ function poolLabelFor(key) {
 }
 
 function poolSectionRank(label) {
-  if (label === LAST_POOL_SECTION_LABEL) {
-    return POOL_SECTION_ORDER.length + 1;
+  const index = SECTION_DISPLAY_ORDER_INDEX.get(label);
+  return index === undefined ? SECTION_DISPLAY_ORDER.length : index;
+}
+
+function compareSectionOrder(leftLabel, rightLabel, leftSeenIndex = 0, rightSeenIndex = 0) {
+  const leftRank = poolSectionRank(leftLabel);
+  const rightRank = poolSectionRank(rightLabel);
+
+  if (leftRank !== rightRank) {
+    return leftRank - rightRank;
   }
 
-  const index = POOL_SECTION_ORDER.indexOf(label);
-  return index === -1 ? POOL_SECTION_ORDER.length : index;
+  if (leftSeenIndex !== rightSeenIndex) {
+    return leftSeenIndex - rightSeenIndex;
+  }
+
+  return String(leftLabel).localeCompare(String(rightLabel));
 }
 
 function lockedPoolLabelStates() {
@@ -152,9 +169,21 @@ function updatePoolLockedSectionMarkers() {
 }
 
 function subsectionsFor(category) {
-  return Object.keys(category)
+  const subsections = Object.keys(category)
     .filter(key => !META_KEYS.has(key))
-    .map(key => ({ id: keyToId(key), key, label: keyToLabel(key) }));
+    .map((key, index) => ({
+      id: keyToId(key),
+      key,
+      label: keyToLabel(key),
+      sortLabel: poolLabelFor(key),
+      sourceIndex: index,
+    }));
+
+  subsections.sort((left, right) =>
+    compareSectionOrder(left.sortLabel, right.sortLabel, left.sourceIndex, right.sourceIndex)
+  );
+
+  return subsections.map(({ sortLabel, sourceIndex, ...subsection }) => subsection);
 }
 
 function shuffle(items) {
@@ -184,6 +213,8 @@ function renderGridMessage(message) {
 
 function resetState({ preserveProgress = false } = {}) {
   allItems = [];
+  expectedCountBySlot = new Map();
+  itemsById = new Map();
   if (!preserveProgress) {
     placedLog = {};
   }
@@ -322,6 +353,7 @@ function playableSubsectionsFor(category) {
 
 function deriveSectionOptions(categories) {
   const sectionMap = new Map();
+  let nextSectionIndex = 0;
 
   categories.forEach(category => {
     playableSubsectionsFor(category).forEach(subsection => {
@@ -331,21 +363,17 @@ function deriveSectionOptions(categories) {
         sectionMap.set(poolLabel, {
           key: poolLabel,
           label: poolLabel,
+          sourceIndex: nextSectionIndex++,
         });
       }
     });
   });
 
-  return [...sectionMap.values()].sort((left, right) => {
-    const leftRank = poolSectionRank(left.label);
-    const rightRank = poolSectionRank(right.label);
-
-    if (leftRank !== rightRank) {
-      return leftRank - rightRank;
-    }
-
-    return left.label.localeCompare(right.label);
-  });
+  return [...sectionMap.values()]
+    .sort((left, right) =>
+      compareSectionOrder(left.label, right.label, left.sourceIndex, right.sourceIndex)
+    )
+    .map(({ sourceIndex, ...option }) => option);
 }
 
 function syncSectionFilters(options, preserveFilters = false) {
@@ -505,6 +533,7 @@ function renderCurrentGameFromState() {
   }
 
   allItems = parseData(categories);
+  rebuildDerivedItemIndexes();
   buildGrid(categories);
   buildPool();
 
@@ -537,29 +566,7 @@ function solveCurrentGame() {
 
     const placements = allItems
       .flatMap(item => [...item.correctCats].map(categoryId => ({ item, categoryId })))
-      .sort((left, right) => {
-        const leftParentRank = left.item.parentId ? 1 : 0;
-        const rightParentRank = right.item.parentId ? 1 : 0;
-        if (leftParentRank !== rightParentRank) {
-          return leftParentRank - rightParentRank;
-        }
-
-        const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-        const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-        if (leftOrder !== rightOrder) {
-          return leftOrder - rightOrder;
-        }
-
-        if (left.categoryId !== right.categoryId) {
-          return left.categoryId.localeCompare(right.categoryId);
-        }
-
-        if (left.item.type !== right.item.type) {
-          return left.item.type.localeCompare(right.item.type);
-        }
-
-        return left.item.label.localeCompare(right.item.label);
-      });
+      .sort(comparePlacementRecords);
 
     placements.forEach(({ item, categoryId }) => {
       draggingId = item.id;
@@ -647,35 +654,10 @@ function reapplyCurrentProgress() {
         ...parseSlotKey(slotKey),
       }))
     )
-    .sort((left, right) => {
-      const leftParentRank = left.item.parentId ? 1 : 0;
-      const rightParentRank = right.item.parentId ? 1 : 0;
-      if (leftParentRank !== rightParentRank) {
-        return leftParentRank - rightParentRank;
-      }
-
-      const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
-      if (leftOrder !== rightOrder) {
-        return leftOrder - rightOrder;
-      }
-
-      if (left.categoryId !== right.categoryId) {
-        return left.categoryId.localeCompare(right.categoryId);
-      }
-
-      if (left.subsectionId !== right.subsectionId) {
-        return left.subsectionId.localeCompare(right.subsectionId);
-      }
-
-      return left.item.label.localeCompare(right.item.label);
-    });
+    .sort(comparePlacementRecords);
 
   placements.forEach(({ item, categoryId, subsectionId, parentItemId }) => {
-    const zoneId = parentItemId
-      ? `nested-${categoryId}-${subsectionId}-${parentItemId}`
-      : `pills-${categoryId}-${subsectionId}`;
-    const zone = document.getElementById(zoneId);
+    const zone = document.getElementById(zoneIdFor(categoryId, subsectionId, parentItemId));
     if (!zone) {
       return;
     }
@@ -1180,45 +1162,40 @@ function redundantNameRowValue(category) {
 }
 
 function prepareCategoryForAllUnits(category) {
-  if (category.gameType === 'row-match') {
-    return {
-      ...category,
-      label: `${category.unitName} | ${category.label}`,
-    };
-  }
-
-  const nameValue = redundantNameRowValue(category);
-  if (!nameValue) {
-    return {
-      ...category,
-      label: `${category.unitName} | ${category.label}`,
-    };
-  }
-
-  return {
-    ...category,
-    label: category.unitName,
-    prefilledSections: {
-      Name: [nameValue],
-    },
-  };
+  return prepareCategoryForDisplay(category, true);
 }
 
 function prepareCategoryForSingleUnit(category) {
+  return prepareCategoryForDisplay(category, false);
+}
+
+function prepareCategoryForDisplay(category, groupedMode) {
+  const groupedLabel = `${category.unitName} | ${category.label}`;
+
   if (category.gameType === 'row-match') {
-    return { ...category };
+    return groupedMode
+      ? {
+          ...category,
+          label: groupedLabel,
+        }
+      : { ...category };
   }
 
   const nameValue = redundantNameRowValue(category);
   if (!nameValue) {
-    return { ...category };
+    return groupedMode
+      ? {
+          ...category,
+          label: groupedLabel,
+        }
+      : { ...category };
   }
 
   return {
     ...category,
-    label: '',
+    label: groupedMode ? category.unitName : '',
     prefilledSections: {
-      ...(category.prefilledSections || {}),
+      ...(groupedMode ? {} : (category.prefilledSections || {})),
       Name: [nameValue],
     },
   };
@@ -1229,15 +1206,15 @@ function isPrefilledSection(category, key) {
 }
 
 function parseData(categories) {
-  const itemMap = {};
+  const itemMap = new Map();
 
   function addItem(label, hint, typeId, typeKey, poolLabel, categoryId, parentId, sortOrder) {
     const orderKey = sortOrder === null || sortOrder === undefined ? '' : `|order-${sortOrder}`;
     const itemKey = `${label.toLowerCase()}|${typeId}${orderKey}` + (parentId ? `|child-of-${parentId}` : '');
     const id = itemKey.replace(/[^a-z0-9]/g, '-');
 
-    if (!itemMap[itemKey]) {
-      itemMap[itemKey] = {
+    if (!itemMap.has(itemKey)) {
+      itemMap.set(itemKey, {
         id,
         label,
         hint,
@@ -1248,11 +1225,12 @@ function parseData(categories) {
         parentId: parentId || null,
         children: [],
         sortOrder: sortOrder ?? null,
-      };
+      });
     }
 
-    itemMap[itemKey].correctCats.add(categoryId);
-    return id;
+    const item = itemMap.get(itemKey);
+    item.correctCats.add(categoryId);
+    return item;
   }
 
   categories.forEach(category => {
@@ -1280,7 +1258,7 @@ function parseData(categories) {
         }
 
         if (typeof rawEntry === 'object' && rawEntry && rawEntry.label) {
-          const parentId = addItem(
+          const parentItem = addItem(
             rawEntry.label,
             null,
             subsection.id,
@@ -1301,23 +1279,20 @@ function parseData(categories) {
                 const childEntry = parseDisplayEntry(childRaw);
                 const childLabel = childEntry ? childEntry.label : String(childRaw).trim();
                 const childHint = childEntry ? childEntry.hint : null;
-                const childId = addItem(
+                addItem(
                   childLabel,
                   childHint,
                   nestedTypeId,
                   nestedKey,
                   nestedTypeLabel,
                   category.id,
-                  parentId,
+                  parentItem.id,
                   childEntry ? childEntry.order : null
                 );
 
-                const parentItem = Object.values(itemMap).find(item => item.id === parentId);
-                if (parentItem && !parentItem.children.find(child => child.typeId === nestedTypeId)) {
+                if (!parentItem.children.find(child => child.typeId === nestedTypeId)) {
                   parentItem.children.push({ typeId: nestedTypeId, typeLabel: nestedTypeLabel });
                 }
-
-                return childId;
               });
             });
         }
@@ -1325,7 +1300,53 @@ function parseData(categories) {
     });
   });
 
-  return Object.values(itemMap);
+  return [...itemMap.values()];
+}
+
+function rebuildDerivedItemIndexes() {
+  expectedCountBySlot = new Map();
+  itemsById = new Map();
+
+  allItems.forEach(item => {
+    itemsById.set(item.id, item);
+
+    item.correctCats.forEach(categoryId => {
+      const slotKey = slotKeyFor(categoryId, item.type, item.parentId || null);
+      expectedCountBySlot.set(slotKey, (expectedCountBySlot.get(slotKey) || 0) + 1);
+    });
+  });
+}
+
+function comparePlacementRecords(left, right) {
+  const leftParentRank = left.item.parentId ? 1 : 0;
+  const rightParentRank = right.item.parentId ? 1 : 0;
+  if (leftParentRank !== rightParentRank) {
+    return leftParentRank - rightParentRank;
+  }
+
+  const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+  const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+  if (leftOrder !== rightOrder) {
+    return leftOrder - rightOrder;
+  }
+
+  if (left.categoryId !== right.categoryId) {
+    return left.categoryId.localeCompare(right.categoryId);
+  }
+
+  const leftSubsectionId = left.subsectionId || left.item.type;
+  const rightSubsectionId = right.subsectionId || right.item.type;
+  if (leftSubsectionId !== rightSubsectionId) {
+    return leftSubsectionId.localeCompare(rightSubsectionId);
+  }
+
+  return left.item.label.localeCompare(right.item.label);
+}
+
+function zoneIdFor(categoryId, subsectionId, parentItemId = null) {
+  return parentItemId
+    ? `nested-${categoryId}-${subsectionId}-${parentItemId}`
+    : `pills-${categoryId}-${subsectionId}`;
 }
 
 function buildGrid(categories) {
@@ -1352,7 +1373,7 @@ function buildGrid(categories) {
       ? `
         <div class="subsection prefilled-name-section" data-key="${nameHeader.key}">
           <div class="sub-pills prefilled-name"
-               id="pills-${category.id}-${nameHeader.id}"
+               id="${zoneIdFor(category.id, nameHeader.id)}"
                data-cat="${category.id}"
                data-sub="${nameHeader.id}"></div>
         </div>
@@ -1364,7 +1385,7 @@ function buildGrid(categories) {
         <div class="subsection" data-key="${subsection.key}">
           <div class="sub-label">${subsection.label}</div>
           <div class="sub-pills"
-               id="pills-${category.id}-${subsection.id}"
+               id="${zoneIdFor(category.id, subsection.id)}"
                data-cat="${category.id}"
                data-sub="${subsection.id}"
                data-pool-label="${poolLabelFor(subsection.key)}"></div>
@@ -1403,7 +1424,7 @@ function applyPrefilledSections(category) {
   }
 
   Object.entries(category.prefilledSections).forEach(([key, entries]) => {
-    const zone = document.getElementById(`pills-${category.id}-${keyToId(key)}`);
+    const zone = document.getElementById(zoneIdFor(category.id, keyToId(key)));
     if (!zone) {
       return;
     }
@@ -1433,11 +1454,7 @@ function applyPrefilledSections(category) {
 }
 
 function expectedCountForZone(categoryId, subsectionId, parentItemId = null) {
-  return allItems.filter(item =>
-    item.correctCats.has(categoryId) &&
-    item.type === subsectionId &&
-    (item.parentId || null) === parentItemId
-  ).length;
+  return expectedCountBySlot.get(slotKeyFor(categoryId, subsectionId, parentItemId)) || 0;
 }
 
 function countPlacedInZone(zone) {
@@ -2260,24 +2277,21 @@ function buildPool() {
   elements.poolContent.innerHTML = '';
 
   const sectionMap = new Map();
+  let nextSectionIndex = 0;
   allItems.forEach(item => {
     if (!sectionMap.has(item.poolLabel)) {
-      sectionMap.set(item.poolLabel, []);
+      sectionMap.set(item.poolLabel, {
+        items: [],
+        sourceIndex: nextSectionIndex++,
+      });
     }
 
-    sectionMap.get(item.poolLabel).push(item);
+    sectionMap.get(item.poolLabel).items.push(item);
   });
 
-  const sections = [...sectionMap.entries()].sort(([leftLabel], [rightLabel]) => {
-    const leftRank = poolSectionRank(leftLabel);
-    const rightRank = poolSectionRank(rightLabel);
-
-    if (leftRank !== rightRank) {
-      return leftRank - rightRank;
-    }
-
-    return leftLabel.localeCompare(rightLabel);
-  });
+  const sections = [...sectionMap.entries()].sort(([leftLabel, leftData], [rightLabel, rightData]) =>
+    compareSectionOrder(leftLabel, rightLabel, leftData.sourceIndex, rightData.sourceIndex)
+  );
 
   if (!sections.length) {
     renderPoolMessage('No study items in this unit yet.');
@@ -2286,7 +2300,8 @@ function buildPool() {
 
   collapsedPoolSections = new Set(sections.map(([label]) => label));
 
-  sections.forEach(([label, items], index) => {
+  sections.forEach(([label, sectionData], index) => {
+    const items = sectionData.items;
     const section = document.createElement('div');
     section.className = 'pool-section';
     section.dataset.baseOrder = String(index);
@@ -2359,7 +2374,7 @@ function collapsePoolSectionByLabel(label) {
     return;
   }
 
-  const section = [...elements.poolContent.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
+  const section = findPoolSectionByLabel(label);
   setPoolSectionCollapsed(section, true);
 }
 
@@ -2368,7 +2383,7 @@ function openPoolSectionByLabel(label) {
     return null;
   }
 
-  const section = [...elements.poolContent.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
+  const section = findPoolSectionByLabel(label);
   if (!section) {
     return null;
   }
@@ -2425,6 +2440,16 @@ function togglePoolSection(section) {
   const willCollapse = !section.classList.contains('pool-section-collapsed');
   setPoolSectionCollapsed(section, willCollapse);
   updatePoolToggleAllButton();
+}
+
+function findPoolSectionByLabel(label) {
+  if (!label || !elements.poolContent) {
+    return null;
+  }
+
+  return [...elements.poolContent.querySelectorAll('.pool-section')].find(
+    entry => entry.dataset.poolLabel === label
+  ) || null;
 }
 
 function updatePoolToggleAllButton() {
@@ -2591,7 +2616,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     return;
   }
 
-  const item = allItems.find(entry => entry.id === draggingId);
+  const item = itemsById.get(draggingId);
   if (!item) {
     return;
   }
@@ -2635,10 +2660,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
 
   const placed = makePlacedPillElement(item, categoryId);
 
-  const zoneId = parentItemId
-    ? `nested-${categoryId}-${subsectionId}-${parentItemId}`
-    : `pills-${categoryId}-${subsectionId}`;
-  const zone = document.getElementById(zoneId);
+  const zone = document.getElementById(zoneIdFor(categoryId, subsectionId, parentItemId));
 
   if (zone) {
     insertPlacedPill(zone, placed, item.sortOrder);

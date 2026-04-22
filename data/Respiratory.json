@@ -1,0 +1,137 @@
+{
+  "title": "Respiratory",
+  "tables": [
+    {
+      "table_name": "Epistaxis",
+      "rows": {
+        "Name": "Epistaxis",
+        "Description": "nosebleed",
+        "Etiology": [
+          "Trauma",
+          "Blood pressure is not a cause but can worsen"
+        ],
+        "Risk Factors": "",
+        "Pathophysiology (anterior)": "Kessielbach plexus",
+        "Pathophysiology (posterior)": "Woodruff plexus",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Allergic Rhinitis",
+      "rows": {
+        "Name": "Allergic Rhinitis",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Peritonsillar Abscess",
+      "rows": {
+        "Name": "Peritonsillar Abscess",
+        "Description": "Severe infection of the tonsil",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Influenza",
+      "rows": {
+        "Name": "Influenza",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Bronchitis",
+      "rows": {
+        "Name": "Bronchitis",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Pneumonia",
+      "rows": {
+        "Name": "Pneumonia",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "Tuberculosis",
+      "rows": {
+        "Name": "Tuberculosis",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    },
+    {
+      "table_name": "COPD",
+      "rows": {
+        "Name": "COPD",
+        "Description": "",
+        "Etiology": "",
+        "Risk Factors": "",
+        "Pathophysiology": "",
+        "Assessment": "",
+        "Diagnostics": "",
+        "Clinical Manifestations": "",
+        "Management": "",
+        "Treatment": "",
+        "Nursing": ""
+      }
+    }
+  ]
+}

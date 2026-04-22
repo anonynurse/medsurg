@@ -1,0 +1,300 @@
+{
+  "title": "Electrolyte",
+  "tables": [
+    {
+      "table_name": "Fluids",
+      "rows": {
+        "Name": "Fluids",
+        "Compartment (ICF)": [
+          "Intracellular fluid",
+          "Largest compartment ~ 28L",
+          "Fluid inside the cells"
+        ],
+        "Compartment (ISF)": [
+          "Interstitial fluid",
+          "Fluid between the cells",
+          "~ 10L"
+        ],
+        "Compartment (IVF)": [
+          "Intravascular fluid",
+          "Plasma",
+          "~3 L"
+        ],
+        "Fluid Spacing (first)": "Normal distribution of fluid in ICF and ECF",
+        "Fluid Spacing (second)": "Abnormal accumulation of interstitial fluid",
+        "Fluid Spacing (third)": "Fluid accumulation in an area where it cannot be easily exchanged",
+        "Notes": ""
+      }
+    },
+    {
+      "table_name": "Hyponatremia",
+      "rows": {
+        "Name": "Hyponatremia",
+        "Causes": [
+          "Fluid overload",
+          "SIADH",
+          "Diuretics"
+        ],
+        "Signs": [
+          "Headache",
+          "Confusion",
+          "Nausea",
+          "Seizures"
+        ],
+        "Treatment": [
+          "Fluid Restriction",
+          "Hypertonic Saline (severe)",
+          "Treat cause"
+        ]
+      }
+    },
+    {
+      "table_name": "Sodium",
+      "rows": {
+        "Name": "Sodium",
+        "Function": [
+          "Fluid balance",
+          "General electrolyte - nerve / muscle"
+        ],
+        "Range": "135 - 145 mEq/L",
+        "Organs": "Kidneys",
+        "Sources": "Salt"
+      }
+    },
+    {
+      "table_name": "Hypernatremia",
+      "rows": {
+        "Name": "Hypernatremia",
+        "Causes": [
+          "Fluid overload",
+          "SIADH",
+          "Diuretics"
+        ],
+        "Signs": [
+          "Headache",
+          "Confusion",
+          "Nausea",
+          "Seizures"
+        ],
+        "Treatment": [
+          "Fluid Restriction",
+          "Hypertonic Saline (severe)",
+          "Treat cause"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypokalemia",
+      "rows": {
+        "Name": "Hypokalemia",
+        "Causes": [
+          "Diuretics",
+          "GI loss"
+        ],
+        "Signs": [
+          "Weakness, Cramps",
+          "U Waves",
+          "Dysrhythmias"
+        ],
+        "Treatment": "Oral / IV - slowly"
+      }
+    },
+    {
+      "table_name": "Potassium",
+      "rows": {
+        "Name": "Potassium",
+        "Function": [
+          "Major cation in the ICF",
+          "Cardiac Rhythm",
+          "Affects nerve transmission",
+          "Assists skeletal and cardiac muscle",
+          "Affects acid-base balance via H+",
+          "Needs to be ingested daily"
+        ],
+        "Range": "3.5 - 5.0 mEq/L",
+        "Organs": "Heart",
+        "Sources": [
+          "Banana",
+          "Spinach",
+          "Avocado"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperkalemia",
+      "rows": {
+        "Name": "Hyperkalemia",
+        "Causes": [
+          "Renal failure",
+          "ACE inhibitors"
+        ],
+        "Signs": [
+          "Muscle weakness",
+          "Peaked T waves",
+          "Dysrhythmias"
+        ],
+        "Treatment": [
+          "Calcium gluconate",
+          "Insulin + glucose",
+          "Diuretics",
+          "Cation exchange",
+          "Dialysis"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypocalcemia",
+      "rows": {
+        "Name": "Hypocalcemia",
+        "Causes": [
+          "Hypoparathyroid",
+          "Renal failure"
+        ],
+        "Signs": [
+          "Trousseaus - blood pressure cuff makes hand spasm into a claw",
+          "Chvosteks - tapping face causes twitches",
+          "Seizures"
+        ],
+        "Treatment": [
+          "Calcium gluconate",
+          "Vitamin D"
+        ]
+      }
+    },
+    {
+      "table_name": "Calcium",
+      "rows": {
+        "Name": "Calcium",
+        "Function": [
+          "Bone health",
+          "Muscle contraction",
+          "Blood clotting"
+        ],
+        "Range": "2.10 - 2.50 mmol/L",
+        "Organs": "Bones",
+        "Sources": [
+          "Milk",
+          "Soy",
+          "Kale",
+          "Broccoli"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypercalcemia",
+      "rows": {
+        "Name": "Hypercalcemia",
+        "Causes": [
+          "Hyperparathyroid",
+          "Malignancy"
+        ],
+        "Signs": [
+          "\u201cStones and bones\u201d",
+          "weakness"
+        ],
+        "Treatment": [
+          "IV fluids",
+          "Bisphosonates",
+          "calcitonin"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypomagnesemia",
+      "rows": {
+        "Name": "Hypomagnesemia",
+        "Causes": [
+          "Alcoholism",
+          "Diuretics"
+        ],
+        "Signs": [
+          "Tremors",
+          "Torsades",
+          "Seizures",
+          "Hyperactive deep tendon reflexes"
+        ],
+        "Treatment": "Oral / IV replacement"
+      }
+    },
+    {
+      "table_name": "Magnesium",
+      "rows": {
+        "Name": "Magnesium",
+        "Function": [
+          "Neuromuscular",
+          "Cardiac stability",
+          "Enzyme reactions",
+          "DNA and protein synthesis"
+        ],
+        "Range": "0.65 - 1.05 mmol / L",
+        "Organs": "GI and Renal",
+        "Sources": [
+          "Dark chocolate",
+          "Pumpkin seeds",
+          "Whole grains"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypermagnesemia",
+      "rows": {
+        "Name": "Hypermagnesemia",
+        "Causes": "Renal failure",
+        "Signs": [
+          "Hypotension",
+          "Bradycardia",
+          "Decreased reflexes"
+        ],
+        "Treatment": [
+          "IV of opposite electrolyte (calcium)",
+          "Fluids",
+          "Dialysis"
+        ]
+      }
+    },
+    {
+      "table_name": "Hypophosphatemia",
+      "rows": {
+        "Name": "Hypophosphatemia",
+        "Causes": [
+          "Malnutrition",
+          "Refeeding"
+        ],
+        "Signs": "WeaknessRespiratory failure",
+        "Treatment": "Oral / IV replacement"
+      }
+    },
+    {
+      "table_name": "Phosphate",
+      "rows": {
+        "Name": "Phosphate",
+        "Function": [
+          "Energy - ATP",
+          "Bone formation",
+          "Acid-base balance"
+        ],
+        "Range": "1.0 - 1.5 mmol/L",
+        "Organs": "",
+        "Sources": [
+          "Meat",
+          "Cheese"
+        ]
+      }
+    },
+    {
+      "table_name": "Hyperphosphatemia",
+      "rows": {
+        "Name": "Hyperphosphatemia",
+        "Causes": "Renal failure",
+        "Signs": [
+          "Itching",
+          "Hypocalcemia signs"
+        ],
+        "Treatment": [
+          "Electrolyte binders",
+          "Dialysis"
+        ]
+      }
+    }
+  ]
+}
