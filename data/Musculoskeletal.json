@@ -2,6 +2,7 @@
   "title": "Musculoskeletal",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "Osteomyelitis",
       "rows": {
         "Name": "Osteomyelitis",
@@ -37,6 +38,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Osteoporosis",
       "rows": {
         "Name": "Osteoporosis",
@@ -87,6 +89,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Osteoarthritis",
       "rows": {
         "Name": "Osteoarthritis",
@@ -131,6 +134,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Rheumatoid Arthritis",
       "rows": {
         "Name": "Rheumatoid Arthritis",
@@ -185,6 +189,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Soft Tissue Injury",
       "rows": {
         "Name": "Soft Tissue Injury",
@@ -207,6 +212,7 @@
       }
     },
     {
+      "display_order": 5,
       "table_name": "Fractures",
       "rows": {
         "Name": "Fractures",
@@ -239,6 +245,7 @@
       }
     },
     {
+      "display_order": 6,
       "table_name": "Traction",
       "rows": {
         "Name": "Traction",
@@ -272,6 +279,7 @@
       }
     },
     {
+      "display_order": 7,
       "table_name": "Cast Care",
       "rows": {
         "Name": "Cast Care",
@@ -320,6 +328,7 @@
       }
     },
     {
+      "display_order": 8,
       "table_name": "Compartment Syndrome",
       "rows": {
         "Name": "Compartment Syndrome",
@@ -336,6 +345,7 @@
       }
     },
     {
+      "display_order": 9,
       "table_name": "Hip Fractures",
       "rows": {
         "Name": "Hip Fractures",

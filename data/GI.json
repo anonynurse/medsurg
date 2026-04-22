@@ -2,6 +2,7 @@
   "title": "GI",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "GERD",
       "rows": {
         "Name": "GERD",
@@ -24,6 +25,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Gastritis",
       "rows": {
         "Name": "Gastritis",
@@ -40,6 +42,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Upper GI Bleed",
       "rows": {
         "Name": "Upper GI Bleed",
@@ -56,6 +59,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Peptic Ulcer Disease",
       "rows": {
         "Name": "Peptic Ulcer Disease",
@@ -72,6 +76,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Acute Abdominal Pain",
       "rows": {
         "Name": "Acute Abdominal Pain",
@@ -93,6 +98,7 @@
       }
     },
     {
+      "display_order": 5,
       "table_name": "Ulcerative Colitis",
       "rows": {
         "Name": "Ulcerative Colitis",
@@ -109,6 +115,7 @@
       }
     },
     {
+      "display_order": 6,
       "table_name": "Intestinal Obstruction",
       "rows": {
         "Name": "Intestinal Obstruction",
@@ -145,6 +152,7 @@
       }
     },
     {
+      "display_order": 7,
       "table_name": "Diverticulosis/itis",
       "rows": {
         "Name": "Diverticulosis/itis",

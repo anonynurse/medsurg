@@ -1,7 +1,17 @@
 const DATA_MANIFEST_PATH = './data/manifest.json';
 const ALL_UNITS_OPTION = 'all-units';
 const ALL_SECTIONS_OPTION = 'all-sections';
-const META_KEYS = new Set(['id', 'label', 'unitName', 'prefilledSections', 'gameType', 'tableName']);
+const META_KEYS = new Set([
+  'id',
+  'label',
+  'unitName',
+  'prefilledSections',
+  'gameType',
+  'tableName',
+  'display_order',
+  'source_order',
+  'sourceOrder',
+]);
 
 const POOL_GROUPS = [
   {
@@ -872,19 +882,40 @@ async function loadUnitCategories(unit) {
   return normalized;
 }
 
+function numericSourceOrder(value, fallbackIndex) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : fallbackIndex;
+}
+
+function orderedEntries(entries, getSourceOrder) {
+  return [...entries]
+    .map((entry, index) => ({
+      entry,
+      index,
+      sourceOrder: numericSourceOrder(getSourceOrder(entry), index),
+    }))
+    .sort((left, right) => {
+      if (left.sourceOrder !== right.sourceOrder) {
+        return left.sourceOrder - right.sourceOrder;
+      }
+
+      return left.index - right.index;
+    });
+}
+
 function normalizeUnitData(rawData, unitName) {
   const unitSlug = slugify(unitName);
 
   if (Array.isArray(rawData)) {
-    return rawData
-      .map((category, index) => normalizeLegacyCategory(category, unitName, unitSlug, index))
+    return orderedEntries(rawData, category => category?.display_order ?? category?.source_order)
+      .map(({ entry: category }, index) => normalizeLegacyCategory(category, unitName, unitSlug, index))
       .filter(Boolean);
   }
 
   if (rawData && Array.isArray(rawData.tables)) {
     const displayUnitName = String(rawData.title || unitName).trim() || unitName;
-    return rawData.tables
-      .flatMap((table, index) => normalizeTableCategories(table, displayUnitName, unitSlug, index))
+    return orderedEntries(rawData.tables, table => table?.display_order ?? table?.source_order)
+      .flatMap(({ entry: table }, index) => normalizeTableCategories(table, displayUnitName, unitSlug, index))
       .filter(Boolean);
   }
 
@@ -899,7 +930,7 @@ function normalizeLegacyCategory(category, unitName, unitSlug, index) {
   };
 
   Object.entries(category).forEach(([key, value]) => {
-    if (key === 'id' || key === 'label') {
+    if (META_KEYS.has(key)) {
       return;
     }
 
@@ -1750,16 +1781,6 @@ function updateCardCompletionState(card) {
 }
 
 function gridColumnCount() {
-  const availableWidth = elements.gridWrapper?.clientWidth || window.innerWidth;
-
-  if (availableWidth >= 1180) {
-    return 5;
-  }
-
-  if (availableWidth >= 860) {
-    return 4;
-  }
-
   return 3;
 }
 

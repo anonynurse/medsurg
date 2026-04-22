@@ -2,6 +2,7 @@
   "title": "Neurological",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "Trigeminal Neuralgia",
       "rows": {
         "Name": "Trigeminal Neuralgia",
@@ -38,6 +39,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Bells Palsy",
       "rows": {
         "Name": "Bells Palsy",
@@ -71,6 +73,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Seizure Disorders",
       "rows": {
         "Name": "Seizure Disorders",
@@ -167,6 +170,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Multiple Sclerosis",
       "rows": {
         "Name": "Multiple Sclerosis",
@@ -222,6 +226,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Parkinson\u2019s Disease",
       "rows": {
         "Name": "Parkinson\u2019s Disease",
@@ -288,6 +293,7 @@
       }
     },
     {
+      "display_order": 5,
       "table_name": "Guillain-Barre Syndrome",
       "rows": {
         "Name": "Guillain-Barre Syndrome",

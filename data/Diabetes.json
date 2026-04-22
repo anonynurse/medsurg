@@ -2,6 +2,7 @@
   "title": "Diabetes",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "Pancreas - islets of langerhans",
       "rows": {
         "Name": "Pancreas - islets of langerhans",
@@ -12,6 +13,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Prediabetes",
       "rows": {
         "Name": "Prediabetes",
@@ -35,6 +37,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Type 1 Diabetes Mellitus",
       "rows": {
         "Name": "Type 1 Diabetes Mellitus",
@@ -61,6 +64,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Type 2 Diabetes Mellitus",
       "rows": {
         "Name": "Type 2 Diabetes Mellitus",
@@ -131,6 +135,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Hypoglycemia",
       "rows": {
         "Name": "Hypoglycemia",
@@ -156,6 +161,7 @@
       }
     },
     {
+      "display_order": 5,
       "table_name": "Hyperglycemia",
       "rows": {
         "Name": "Hyperglycemia",
@@ -167,6 +173,7 @@
       }
     },
     {
+      "display_order": 6,
       "table_name": "Diabetic KetoAcidosis",
       "rows": {
         "Name": "Diabetic KetoAcidosis",
@@ -177,6 +184,7 @@
       }
     },
     {
+      "display_order": 7,
       "table_name": "Hyperosmolar Hyperglycemic State",
       "rows": {
         "Name": "Hyperosmolar Hyperglycemic State",
@@ -195,6 +203,7 @@
       }
     },
     {
+      "display_order": 8,
       "table_name": "Complications - Atherosclerosis",
       "rows": {
         "Name": "Complications - Atherosclerosis",
@@ -210,6 +219,7 @@
       }
     },
     {
+      "display_order": 9,
       "table_name": "Complications - Retinopathy",
       "rows": {
         "Name": "Complications - Retinopathy",
@@ -225,6 +235,7 @@
       }
     },
     {
+      "display_order": 10,
       "table_name": "Complications - Nephropathy",
       "rows": {
         "Name": "Complications - Nephropathy",
@@ -240,6 +251,7 @@
       }
     },
     {
+      "display_order": 11,
       "table_name": "Complications - Neuropathy",
       "rows": {
         "Name": "Complications - Neuropathy",

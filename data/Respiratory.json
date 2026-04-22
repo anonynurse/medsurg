@@ -2,6 +2,7 @@
   "title": "Respiratory",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "Epistaxis",
       "rows": {
         "Name": "Epistaxis",
@@ -22,6 +23,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Allergic Rhinitis",
       "rows": {
         "Name": "Allergic Rhinitis",
@@ -38,6 +40,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Peritonsillar Abscess",
       "rows": {
         "Name": "Peritonsillar Abscess",
@@ -54,6 +57,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Influenza",
       "rows": {
         "Name": "Influenza",
@@ -70,6 +74,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Bronchitis",
       "rows": {
         "Name": "Bronchitis",
@@ -86,6 +91,7 @@
       }
     },
     {
+      "display_order": 5,
       "table_name": "Pneumonia",
       "rows": {
         "Name": "Pneumonia",
@@ -102,6 +108,7 @@
       }
     },
     {
+      "display_order": 6,
       "table_name": "Tuberculosis",
       "rows": {
         "Name": "Tuberculosis",
@@ -118,6 +125,7 @@
       }
     },
     {
+      "display_order": 7,
       "table_name": "COPD",
       "rows": {
         "Name": "COPD",

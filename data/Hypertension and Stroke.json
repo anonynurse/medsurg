@@ -2,6 +2,7 @@
   "title": "Hypertension and Stroke",
   "tables": [
     {
+      "display_order": 0,
       "table_name": "Chronic Hypertension",
       "rows": {
         "Name": "Chronic Hypertension",
@@ -17,6 +18,7 @@
       }
     },
     {
+      "display_order": 1,
       "table_name": "Ischemic Stroke",
       "rows": {
         "Name": "Ischemic Stroke",
@@ -32,6 +34,7 @@
       }
     },
     {
+      "display_order": 2,
       "table_name": "Transient Ischemic Attack",
       "rows": {
         "Name": "Transient Ischemic Attack",
@@ -47,6 +50,7 @@
       }
     },
     {
+      "display_order": 3,
       "table_name": "Hemorrhagic Stroke",
       "rows": {
         "Name": "Hemorrhagic Stroke",
@@ -62,6 +66,7 @@
       }
     },
     {
+      "display_order": 4,
       "table_name": "Brain Damage",
       "rows": {
         "Name": "Brain Damage",
