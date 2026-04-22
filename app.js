@@ -182,9 +182,11 @@ function renderGridMessage(message) {
   elements.grid.innerHTML = `<div class="category"><div class="cat-title">${message}</div></div>`;
 }
 
-function resetState() {
+function resetState({ preserveProgress = false } = {}) {
   allItems = [];
-  placedLog = {};
+  if (!preserveProgress) {
+    placedLog = {};
+  }
   draggingId = null;
   selectedPill = null;
   elements.resetBtn.style.display = 'none';
@@ -477,7 +479,7 @@ function renderSettingsPanel() {
 }
 
 function renderCurrentGameFromState() {
-  resetState();
+  resetState({ preserveProgress: true });
   clearError();
 
   if (unitCatalog.length > 0 && enabledUnitIds.size === 0) {
@@ -502,10 +504,18 @@ function renderCurrentGameFromState() {
     return;
   }
 
-  buildGrid(categories);
   allItems = parseData(categories);
+  buildGrid(categories);
   buildPool();
-  document.querySelectorAll('.sub-pills').forEach(updateZoneCompletionState);
+
+  suppressCompletionAnimation = true;
+  try {
+    reapplyCurrentProgress();
+    document.querySelectorAll('.sub-pills').forEach(updateZoneCompletionState);
+  } finally {
+    suppressCompletionAnimation = false;
+  }
+
   renderSettingsPanel();
 }
 
@@ -566,9 +576,126 @@ function solveCurrentGame() {
   updateCompletedCardLayout();
 }
 
+function currentSlotKeysForItem(item) {
+  return new Set(
+    [...item.correctCats].map(categoryId => slotKeyFor(categoryId, item.type, item.parentId || null))
+  );
+}
+
+function currentPlacedSlotsForItem(item) {
+  const itemPlacements = placedLog[item.id];
+  if (!itemPlacements) {
+    return [];
+  }
+
+  const currentSlots = currentSlotKeysForItem(item);
+  return [...itemPlacements].filter(slotKey => currentSlots.has(slotKey));
+}
+
+function parseSlotKey(slotKey) {
+  const [categoryId, subsectionId, parentItemId] = String(slotKey).split('|');
+  return {
+    categoryId,
+    subsectionId,
+    parentItemId: parentItemId || null,
+  };
+}
+
+function makePlacedPillElement(item, categoryId) {
+  const placed = document.createElement('span');
+  placed.className = 'placed-pill';
+  placed.dataset.itemId = item.id;
+  placed.dataset.cat = categoryId;
+  if (item.sortOrder !== null) {
+    placed.dataset.sortOrder = String(item.sortOrder);
+  }
+  placed.innerHTML = item.hint
+    ? `${item.label} <span class="hint">(${item.hint})</span>`
+    : item.label;
+
+  return placed;
+}
+
+function syncPoolWithCurrentProgress() {
+  allItems.forEach(item => {
+    const pill = document.getElementById(`pill-${item.id}`);
+    if (!pill) {
+      return;
+    }
+
+    const remaining = item.correctCats.size - currentPlacedSlotsForItem(item).length;
+    if (remaining <= 0) {
+      pill.remove();
+      return;
+    }
+
+    const badge = pill.querySelector('.remaining-badge');
+    if (badge) {
+      badge.textContent = remaining;
+    }
+  });
+
+  updatePoolSectionLayout();
+}
+
+function reapplyCurrentProgress() {
+  const placements = allItems
+    .flatMap(item =>
+      currentPlacedSlotsForItem(item).map(slotKey => ({
+        item,
+        slotKey,
+        ...parseSlotKey(slotKey),
+      }))
+    )
+    .sort((left, right) => {
+      const leftParentRank = left.item.parentId ? 1 : 0;
+      const rightParentRank = right.item.parentId ? 1 : 0;
+      if (leftParentRank !== rightParentRank) {
+        return leftParentRank - rightParentRank;
+      }
+
+      const leftOrder = left.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      const rightOrder = right.item.sortOrder ?? Number.MAX_SAFE_INTEGER;
+      if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+      }
+
+      if (left.categoryId !== right.categoryId) {
+        return left.categoryId.localeCompare(right.categoryId);
+      }
+
+      if (left.subsectionId !== right.subsectionId) {
+        return left.subsectionId.localeCompare(right.subsectionId);
+      }
+
+      return left.item.label.localeCompare(right.item.label);
+    });
+
+  placements.forEach(({ item, categoryId, subsectionId, parentItemId }) => {
+    const zoneId = parentItemId
+      ? `nested-${categoryId}-${subsectionId}-${parentItemId}`
+      : `pills-${categoryId}-${subsectionId}`;
+    const zone = document.getElementById(zoneId);
+    if (!zone) {
+      return;
+    }
+
+    const placed = makePlacedPillElement(item, categoryId);
+    insertPlacedPill(zone, placed, item.sortOrder);
+    updateZoneCompletionState(zone);
+
+    if (item.children.length) {
+      revealChildren(item, categoryId);
+    }
+  });
+
+  syncPoolWithCurrentProgress();
+  checkComplete();
+}
+
 function bindUi() {
   elements.resetBtn.addEventListener('click', () => {
-    void initGame({ preserveFilters: true, reusePreparedCategories: true });
+    void initGame({ preserveFilters: true, reusePreparedCategories: true, resetProgress: true });
   });
 
   elements.unitPickerButton?.addEventListener('click', event => {
@@ -618,7 +745,7 @@ function bindUi() {
   });
 
   elements.settingsActionRestart?.addEventListener('click', () => {
-    void initGame({ preserveFilters: true, reusePreparedCategories: true });
+    void initGame({ preserveFilters: true, reusePreparedCategories: true, resetProgress: true });
   });
 
   elements.settingsClose?.addEventListener('click', () => {
@@ -1239,7 +1366,8 @@ function buildGrid(categories) {
           <div class="sub-pills"
                id="pills-${category.id}-${subsection.id}"
                data-cat="${category.id}"
-               data-sub="${subsection.id}"></div>
+               data-sub="${subsection.id}"
+               data-pool-label="${poolLabelFor(subsection.key)}"></div>
         </div>
       `)
       .join('');
@@ -2340,16 +2468,37 @@ function makePill(item) {
     selectedPill = pill;
     draggingId = item.id;
     pill.classList.add('tap-selected');
-    document.querySelectorAll('.sub-pills').forEach(zone => {
-      if (zone.dataset.prefilled === 'true') {
-        return;
-      }
-
-      zone.classList.add('tap-target');
-    });
+    highlightTapTargetsForItem(item);
   });
 
   return pill;
+}
+
+function isTapTargetForItem(zone, item) {
+  if (!zone || zone.dataset.prefilled === 'true' || zone.classList.contains('complete')) {
+    return false;
+  }
+
+  const zonePoolLabel = zone.dataset.poolLabel;
+  if (zonePoolLabel) {
+    return zonePoolLabel === item.poolLabel;
+  }
+
+  return zone.dataset.sub === item.type;
+}
+
+function highlightTapTargetsForItem(item) {
+  clearTapTargets();
+
+  if (!item) {
+    return;
+  }
+
+  document.querySelectorAll('.sub-pills').forEach(zone => {
+    if (isTapTargetForItem(zone, item)) {
+      zone.classList.add('tap-target');
+    }
+  });
 }
 
 function revealChildren(parentItem, categoryId) {
@@ -2374,6 +2523,7 @@ function revealChildren(parentItem, categoryId) {
            id="${zoneId}"
            data-cat="${categoryId}"
            data-sub="${child.typeId}"
+           data-pool-label="${child.typeLabel}"
            data-parent-item-id="${parentItem.id}"></div>
     `;
     wrapper.appendChild(zoneContainer);
@@ -2431,16 +2581,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
 
   placedLog[item.id].add(slotKey);
 
-  const placed = document.createElement('span');
-  placed.className = 'placed-pill';
-  placed.dataset.itemId = item.id;
-  placed.dataset.cat = categoryId;
-  if (item.sortOrder !== null) {
-    placed.dataset.sortOrder = String(item.sortOrder);
-  }
-  placed.innerHTML = item.hint
-    ? `${item.label} <span class="hint">(${item.hint})</span>`
-    : item.label;
+  const placed = makePlacedPillElement(item, categoryId);
 
   const zoneId = parentItemId
     ? `nested-${categoryId}-${subsectionId}-${parentItemId}`
@@ -2458,7 +2599,7 @@ function handleDrop(categoryId, subsectionId, parentItemId) {
     revealChildren(item, categoryId);
   }
 
-  const remaining = item.correctCats.size - placedLog[item.id].size;
+  const remaining = item.correctCats.size - currentPlacedSlotsForItem(item).length;
   if (remaining <= 0) {
     pill.remove();
   } else {
@@ -2534,11 +2675,13 @@ function parseDisplayEntry(rawEntry) {
 
   if (rawEntry && typeof rawEntry === 'object' && typeof rawEntry.text === 'string') {
     const parsedTextEntry = parseDisplayText(rawEntry.text);
+    const mergedHint = [parsedTextEntry.hint, typeof rawEntry.hint === 'string' ? rawEntry.hint.trim() : '']
+      .filter(Boolean)
+      .join('; ');
+
     return {
       label: parsedTextEntry.label,
-      hint: typeof rawEntry.hint === 'string' && rawEntry.hint.trim()
-        ? rawEntry.hint.trim()
-        : parsedTextEntry.hint,
+      hint: mergedHint || null,
       order: Number.isFinite(rawEntry.order) ? Number(rawEntry.order) : parsedTextEntry.order,
     };
   }
@@ -2556,10 +2699,33 @@ function parseDisplayText(rawText) {
     order = ordered.order;
   }
 
-  const hintMatch = text.match(/^(.+?)\s*(?:\(([^)]+)\)|\[([^\]]+)\])\s*$/);
+  const hints = [];
+  text = text
+    .replace(/\(([^()]*)\)|\[([^\]]*)\]/g, (_, parenHint, bracketHint) => {
+      const hint = String(parenHint || bracketHint || '').trim();
+      if (hint) {
+        hints.push(hint);
+      }
+      return '';
+    })
+    .replace(/\(([^()]*)$/g, (_, trailingHint) => {
+      const hint = String(trailingHint || '').trim();
+      if (hint) {
+        hints.push(hint);
+      }
+      return '';
+    });
+
+  text = text
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([,.;:?!])/g, '$1')
+    .replace(/([,;:])(?=\S)/g, '$1 ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
   return {
-    label: hintMatch ? hintMatch[1].trim() : text.trim(),
-    hint: hintMatch ? (hintMatch[2] || hintMatch[3]).trim() : null,
+    label: text.trim(),
+    hint: hints.length ? hints.join('; ') : null,
     order,
   };
 }
@@ -2644,8 +2810,12 @@ function checkComplete() {
   elements.resetBtn.style.display = 'block';
 }
 
-async function initGame({ preserveFilters = false, reusePreparedCategories = false } = {}) {
+async function initGame({ preserveFilters = false, reusePreparedCategories = false, resetProgress = false } = {}) {
   clearError();
+
+  if (resetProgress) {
+    placedLog = {};
+  }
 
   try {
     if (!reusePreparedCategories || !baseCategories.length) {
@@ -2657,7 +2827,7 @@ async function initGame({ preserveFilters = false, reusePreparedCategories = fal
     sectionOptions = nextSectionOptions;
     renderCurrentGameFromState();
   } catch (error) {
-    resetState();
+    resetState({ preserveProgress: true });
     baseCategories = [];
     sectionOptions = [];
     enabledSectionKeys = new Set();
