@@ -2219,6 +2219,7 @@ function attachDropZoneListeners() {
       event.stopPropagation();
 
       if (!selectedPill) {
+        focusPoolSectionForZone(zone);
         return;
       }
 
@@ -2230,6 +2231,8 @@ function attachDropZoneListeners() {
       subsection.dataset.clickPlacementAttached = 'true';
       subsection.addEventListener('click', event => {
         if (!selectedPill) {
+          const subsectionZone = subsection.querySelector('.sub-pills');
+          focusPoolSectionForZone(subsectionZone);
           return;
         }
 
@@ -2358,6 +2361,46 @@ function collapsePoolSectionByLabel(label) {
 
   const section = [...elements.poolContent.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
   setPoolSectionCollapsed(section, true);
+}
+
+function openPoolSectionByLabel(label) {
+  if (!label || !elements.poolContent) {
+    return null;
+  }
+
+  const section = [...elements.poolContent.querySelectorAll('.pool-section')].find(entry => entry.dataset.poolLabel === label);
+  if (!section) {
+    return null;
+  }
+
+  setPoolSectionCollapsed(section, false);
+  updatePoolToggleAllButton();
+  return section;
+}
+
+function focusPoolSectionForZone(zone) {
+  if (
+    !zone ||
+    !elements.poolContent ||
+    zone.dataset.prefilled === 'true' ||
+    zone.classList.contains('complete')
+  ) {
+    return;
+  }
+
+  const poolLabel =
+    zone.dataset.poolLabel ||
+    (zone.dataset.sub ? poolLabelFor(zone.dataset.sub) : null);
+  const section = openPoolSectionByLabel(poolLabel);
+  if (!section) {
+    return;
+  }
+
+  section.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+    inline: 'nearest',
+  });
 }
 
 function togglePoolSection(section) {
