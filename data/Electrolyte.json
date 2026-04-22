@@ -3,32 +3,6 @@
   "tables": [
     {
       "display_order": 0,
-      "table_name": "Fluids",
-      "rows": {
-        "Name": "Fluids",
-        "Compartment (ICF)": [
-          "Intracellular fluid",
-          "Largest compartment ~ 28L",
-          "Fluid inside the cells"
-        ],
-        "Compartment (ISF)": [
-          "Interstitial fluid",
-          "Fluid between the cells",
-          "~ 10L"
-        ],
-        "Compartment (IVF)": [
-          "Intravascular fluid",
-          "Plasma",
-          "~3 L"
-        ],
-        "Fluid Spacing (first)": "Normal distribution of fluid in ICF and ECF",
-        "Fluid Spacing (second)": "Abnormal accumulation of interstitial fluid",
-        "Fluid Spacing (third)": "Fluid accumulation in an area where it cannot be easily exchanged",
-        "Notes": ""
-      }
-    },
-    {
-      "display_order": 1,
       "table_name": "Hyponatremia",
       "rows": {
         "Name": "Hyponatremia",
@@ -51,7 +25,7 @@
       }
     },
     {
-      "display_order": 2,
+      "display_order": 1,
       "table_name": "Sodium",
       "rows": {
         "Name": "Sodium",
@@ -65,7 +39,7 @@
       }
     },
     {
-      "display_order": 3,
+      "display_order": 2,
       "table_name": "Hypernatremia",
       "rows": {
         "Name": "Hypernatremia",
@@ -88,7 +62,7 @@
       }
     },
     {
-      "display_order": 4,
+      "display_order": 3,
       "table_name": "Hypokalemia",
       "rows": {
         "Name": "Hypokalemia",
@@ -105,7 +79,7 @@
       }
     },
     {
-      "display_order": 5,
+      "display_order": 4,
       "table_name": "Potassium",
       "rows": {
         "Name": "Potassium",
@@ -127,7 +101,7 @@
       }
     },
     {
-      "display_order": 6,
+      "display_order": 5,
       "table_name": "Hyperkalemia",
       "rows": {
         "Name": "Hyperkalemia",
@@ -150,7 +124,7 @@
       }
     },
     {
-      "display_order": 7,
+      "display_order": 6,
       "table_name": "Hypocalcemia",
       "rows": {
         "Name": "Hypocalcemia",
@@ -170,7 +144,7 @@
       }
     },
     {
-      "display_order": 8,
+      "display_order": 7,
       "table_name": "Calcium",
       "rows": {
         "Name": "Calcium",
@@ -190,7 +164,7 @@
       }
     },
     {
-      "display_order": 9,
+      "display_order": 8,
       "table_name": "Hypercalcemia",
       "rows": {
         "Name": "Hypercalcemia",
@@ -210,7 +184,7 @@
       }
     },
     {
-      "display_order": 10,
+      "display_order": 9,
       "table_name": "Hypomagnesemia",
       "rows": {
         "Name": "Hypomagnesemia",
@@ -228,7 +202,7 @@
       }
     },
     {
-      "display_order": 11,
+      "display_order": 10,
       "table_name": "Magnesium",
       "rows": {
         "Name": "Magnesium",
@@ -248,7 +222,7 @@
       }
     },
     {
-      "display_order": 12,
+      "display_order": 11,
       "table_name": "Hypermagnesemia",
       "rows": {
         "Name": "Hypermagnesemia",
@@ -266,7 +240,7 @@
       }
     },
     {
-      "display_order": 13,
+      "display_order": 12,
       "table_name": "Hypophosphatemia",
       "rows": {
         "Name": "Hypophosphatemia",
@@ -279,7 +253,7 @@
       }
     },
     {
-      "display_order": 14,
+      "display_order": 13,
       "table_name": "Phosphate",
       "rows": {
         "Name": "Phosphate",
@@ -297,7 +271,7 @@
       }
     },
     {
-      "display_order": 15,
+      "display_order": 14,
       "table_name": "Hyperphosphatemia",
       "rows": {
         "Name": "Hyperphosphatemia",
@@ -310,6 +284,32 @@
           "Electrolyte binders",
           "Dialysis"
         ]
+      }
+    },
+    {
+      "display_order": 15,
+      "table_name": "Fluids",
+      "rows": {
+        "Name": "Fluids",
+        "Compartment (ICF)": [
+          "Intracellular fluid",
+          "Largest compartment ~ 28L",
+          "Fluid inside the cells"
+        ],
+        "Compartment (ISF)": [
+          "Interstitial fluid",
+          "Fluid between the cells",
+          "~ 10L"
+        ],
+        "Compartment (IVF)": [
+          "Intravascular fluid",
+          "Plasma",
+          "~3 L"
+        ],
+        "Fluid Spacing (first)": "Normal distribution of fluid in ICF and ECF",
+        "Fluid Spacing (second)": "Abnormal accumulation of interstitial fluid",
+        "Fluid Spacing (third)": "Fluid accumulation in an area where it cannot be easily exchanged",
+        "Notes": ""
       }
     }
   ]
