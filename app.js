@@ -2396,10 +2396,19 @@ function focusPoolSectionForZone(zone) {
     return;
   }
 
-  section.scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'nearest',
+  window.requestAnimationFrame(() => {
+    if (!elements.poolContent || !section.isConnected) {
+      return;
+    }
+
+    const poolRect = elements.poolContent.getBoundingClientRect();
+    const sectionRect = section.getBoundingClientRect();
+    const targetTop = elements.poolContent.scrollTop + (sectionRect.top - poolRect.top);
+
+    elements.poolContent.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: 'smooth',
+    });
   });
 }
 
