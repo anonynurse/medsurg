@@ -6,14 +6,33 @@
       "table_name": "Chronic Hypertension",
       "rows": {
         "Name": "Chronic Hypertension",
-        "Description": "",
+        "Description": "SBP > 140 mmHg and/or DBP > 90 mmHg",
         "Etiology": "",
         "Risk Factors": "",
         "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
-        "Treatment": "",
+        "Diagnostics": [
+          "Requires multiple findings over several weeks",
+          "Basic Met Panel (K Na BUN Creat)",
+          "Lipid Panel",
+          "TTE (assess for HF)"
+        ],
+        "Clinical Manifestations": "Signs appear very late and indicate organ damage",
+        "Management": [
+          "Home BP monitoring",
+          "Weight Management",
+          "Regular moderate exercise (30-60min, 4-7d/week)",
+          "Smoking cessation",
+          "Alcohol management",
+          "Stress management"
+        ],
+        "Treatment (loop diuretic)": "furosemide - inhibits reabsorption in the loop of henle (H20 Na and K secretion) - first choice for renal failure",
+        "Treatment (Thiazide diuretic)": "hydrochlorothiazide - inhibits absorption in the distal convoluted tubule (H20 Na and K secretion)",
+        "Treatment (K Sparing diuretic)": "spironolactone - blocks aldostorone in the distal tubule - H20 and Na secreted, K spared.",
+        "Treatment (ACEinhibitors)": "\u201cprils\u201d- inhibs conversion of Ang 1 to 2, prevents vasoconstrict, reduces aldosterone - side effect - cough, hyperkalemia",
+        "Treatment (ARBs)": "\u201cSartans\u201d - prevents Ang 2 from binding to receptors weaker effect that ACEinhibs and no cough, lower hyperkalemia risk, but risk for angioedema and renal fail",
+        "Treatment (B blockers)": "\u201colols\u201d - block \u03b2 andrenergic receptors (1 heart, 2 lungs, can be selective or not), reduce cardiac output",
+        "Treatment (CCBs )": "\u201cipines\u201d or diltiazem / verapamil - block movement of Ca into cells, vasodilation",
+        "Treatment (\u03912 agonist )": "Clonidine - lowers CO SVR and BP via lowering NE via the negative feedback receptor - sides dry mouth impotent sleep disturb, avoid sudden withdrawal",
         "Nursing": ""
       }
     },
@@ -22,12 +41,32 @@
       "table_name": "Ischemic Stroke",
       "rows": {
         "Name": "Ischemic Stroke",
-        "Description": "",
+        "Description": "Partial or complete occlusion of a cerebral blood vessel, more common type",
         "Etiology": "",
-        "Risk Factors": "",
-        "Pathophysiology": "",
+        "Risk Factors (nonmodifiable)": [
+          "Risk increases with age, doubling after 55 (2/3rds of all strokes occur in people over 65)",
+          "Men initially higher risk",
+          "Indigenous, african, south asian heritage",
+          "Arteriovenous malformations"
+        ],
+        "Risk Factors (modifiable)": [
+          "Hypertension",
+          "Heart disease - afib, mi, valve abnormalities, congenital defects",
+          "Diabetes, obesity",
+          "Smoking, alcohol, oral contraceptives"
+        ],
+        "Pathophysiology (thrombolic)": [
+          "Thrombus forms in diseased or narrowed blood vessel in the brain",
+          "30 - 50% of the time preceded by a TIA",
+          "2 / 3rds associated with HTN or diabetes"
+        ],
+        "Pathophysiology (embolic)": [
+          "Embolus, typically formed in the heart (afib) lodges in a cerebral artery",
+          "onset usually sudden with severe neuro deficts",
+          "Second most common cause"
+        ],
         "Diagnostics": "",
-        "Clinical Manifestations": "",
+        "Clinical Manifestations": "Usually DO NOT have decreased LOC unless in brainstem",
         "Management": "",
         "Treatment": "",
         "Nursing": ""
@@ -38,13 +77,40 @@
       "table_name": "Transient Ischemic Attack",
       "rows": {
         "Name": "Transient Ischemic Attack",
-        "Description": "",
-        "Etiology": "",
-        "Risk Factors": "",
+        "Description": [
+          "Temporary neurologic dysfunction from a brief interruption in cerebral blood flow",
+          "Easy to ignore as symptoms are mild or resolve within 60 minutes",
+          "Account for 15%"
+        ],
+        "Etiology": "Can be caused by micro-emboli or plaque that temporarily blocks an artery",
+        "Risk Factors": [
+          "Hypertension - most important",
+          "Vascular malforms",
+          "Coagulation disorders",
+          "Trauma, tumors, aneurysms"
+        ],
         "Pathophysiology": "",
-        "Diagnostics": "",
-        "Clinical Manifestations": "",
-        "Management": "",
+        "Diagnostics": [
+          "Patients are now at a higher risk for stroke, requiring additional assessments",
+          "MRI to assess carotid and cerebral arteries and brain tissues"
+        ],
+        "Clinical Manifestations": [
+          "Visual deficits \u2013 blurred or double vision, tunnel vision or blindness in one eye",
+          "Motor deficits \u2013 weakness in arms, legs and hands, facial droop and ataxia",
+          "Sensory perception \u2013 numbness (hands, face, arms, or legs); vertigo",
+          "Speech deficits \u2013 aphasia, dysarthria (slurred speech)"
+        ],
+        "Assessment": [
+          "Vital signs, ABCs, focused neurological assessment",
+          "Complete neurological workup along with an ECG and CT scan"
+        ],
+        "Management": [
+          "Reduce blood pressure",
+          "Asprin or antiplatelet medication",
+          "Assess and adjust serum cholesterol",
+          "Control diabetes or chronic illness",
+          "promote healthy lifestyle - smoking cessation, heart healthy, active lifestyle"
+        ],
         "Treatment": "",
         "Nursing": ""
       }
