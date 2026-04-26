@@ -44,21 +44,17 @@
       "rows": {
         "Name": "Hypernatremia",
         "Causes": [
-          "Fluid overload",
-          "SIADH",
-          "Diuretics"
+          "Dehydration",
+          "DI",
+          "Excess intake"
         ],
         "Signs": [
-          "Headache",
-          "Confusion",
-          "Nausea",
+          "Thirst",
+          "Dry mucosa",
+          "Agitation",
           "Seizures"
         ],
-        "Treatment": [
-          "Fluid Restriction",
-          "Hypertonic Saline (severe)",
-          "Treat cause"
-        ]
+        "Treatment": "Oral / IV fluids - hypotonic"
       }
     },
     {
